@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addons>
+<addon id="repository.spartacus" version="1.2" name="Spartacus Repo" provider-name="spartacus">
+	<extension point="xbmc.addon.repository" name="Spartacus Repo">
+		<info compressed="false">https://github.com/Quihico/repository.spartacus/raw/master/zips/addons.xml</info>
+		<checksum>https://github.com/Quihico/repository.spartacus/raw/master/zips/addons.xml.md5</checksum>
+		<datadir zip="true">https://raw.github.com/Quihico/repository.spartacus/master/zips/</datadir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary>Spartacus</summary>
+		<description></description>
+		<platform>all</platform>
+	</extension>
+</addon>
+
+<addon id="service.TotalRevolution.settings"
+       name="[COLOR=dodgerblue]T[/COLOR]otal[COLOR=dodgerblue]R[/COLOR]evolution Configuration"
+       version="5.0"
+       provider-name="TotalRevolution (modded by TotalRevolution)">
+   <requires>
+   	<import addon="xbmc.python" version="2.1.0"/>
+  </requires>
+  <extension point="xbmc.python.script" library="default.py"></extension>
+  <extension point="xbmc.service"       library="service.py" start="startup"></extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="af">TotalRevolution Konfigurasie</summary>
+    <summary lang="bg">Настройки на TotalRevolution</summary>
+    <summary lang="ca">Configuració de TotalRevolution</summary>
+    <summary lang="cs">TotalRevolution Nastavení</summary>
+    <summary lang="da">TotalRevolution konfiguration</summary>
+    <summary lang="de">TotalRevolution-Konfiguration</summary>
+    <summary lang="el">Διαμόρφωση του TotalRevolution</summary>
+    <summary lang="en">TotalRevolution Configuration</summary>
+    <summary lang="en_AU">TotalRevolution Configuration</summary>
+    <summary lang="en_NZ">TotalRevolution Configuration</summary>
+    <summary lang="en_US">TotalRevolution Configuration</summary>
+    <summary lang="es">Configuración de TotalRevolution</summary>
+    <summary lang="es_MX">Configuración de TotalRevolution</summary>
+    <summary lang="et">TotalRevolution Seadistus</summary>
+    <summary lang="fi">TotalRevolution-asetukset</summary>
+    <summary lang="fr">Configuration TotalRevolution</summary>
+    <summary lang="fr_CA">Configuration d'TotalRevolution</summary>
+    <summary lang="gl">Configuración do TotalRevolution</summary>
+    <summary lang="he">הגדרות TotalRevolution</summary>
+    <summary lang="hr">TotalRevolution podešavanje</summary>
+    <summary lang="hu">TotalRevolution konfiguráció</summary>
+    <summary lang="it">Impostazioni TotalRevolution</summary>
+    <summary lang="ja">TotalRevolution設定</summary>
+    <summary lang="ko">TotalRevolution 설정</summary>
+    <summary lang="lt">TotalRevolution konfigūravimas</summary>
+    <summary lang="nl">TotalRevolution Configuratie</summary>
+    <summary lang="no">TotalRevolution-konfigurasjon</summary>
+    <summary lang="pl">Konfiguracja TotalRevolution</summary>
+    <summary lang="pt">Configuração TotalRevolution</summary>
+    <summary lang="pt_BR">Configuração TotalRevolution</summary>
+    <summary lang="ru">Конфигурация TotalRevolution</summary>
+    <summary lang="sk">Konfigurácia TotalRevolution</summary>
+    <summary lang="sl">Prilagoditev </summary>
+    <summary lang="sv">TotalRevolution-konfiguration</summary>
+    <summary lang="tr">TotalRevolution Yapılandırması</summary>
+    <summary lang="zh">TotalRevolution 设置</summary>
+    <description lang="bg">Ползвайте добавката за да управлявате операционната система, в основата на TotalRevolution. Чрез добавката можете да настроите всичко и така не се налага да се притеснявате какво работи под Kodi.[CR][CR]От добавката можете да променяте настройките на мрежовите връзки, клавиатурната подредба и да включвате/изключвате отдалечения достъп посредством Samba или SSH.</description>
+    <description lang="ca">Utilitza aquest complement per configurar el sistema operatiu subjacent del sistema TotalRevolution. Des d'aquí es pot gestionar tot el sistema, de manera que no s'ha de preocupar sobre el que s'executa sota el Kodi.[CR][CR]Des d'aquí es pot canviar la connectivitat de la xarxa, la distribució del teclat i idioma i activar / desactivar l'accés remot inclòs samba i SSH.</description>
+    <description lang="cs">Použijte toto rozšíření pro správu vašeho TotalRevolution systému. Odtud můžete spravovat celý systém, takže nemusíte mít strach o to, co běží pod kapotou. [CR] [CR] Odtud můžete změnit připojení k síti, rozložení klávesnice, jazyk a povolit nebo zakázat vzdálený přístup, včetně Samby a SSH.</description>
+    <description lang="da">Brug denne addon til at styre dit TotalRevolution systems underliggende operativsystem. Herfra kan du styre hele systemet, så du ikke behøver at bekymre dig om, hvad der kører under motorhjelmen. [CR] [CR] Herfra kan du ændre din netværksforbindelse, dit tastaturlayout og sprog og aktivere/deaktivere fjernadgang, herunder Samba og SSH.</description>
+    <description lang="de">Verwenden Sie dieses Addon, um das Betriebssystem, auf dem TotalRevolution läuft, zu administrieren. Von hier aus können Sie das gesamte System verwalten ohne sich Gedanken machen zu müssen, was genau im System abläuft.[CR][CR]Hier haben Sie die Möglichkeit Netzwerkeinstellungen, Tastaturlayouts oder Systemdienste, wie SSH oder Samba, zu konfigurieren.</description>
+    <description lang="el">Χρησιμοποιήστε αυτό το πρόσθετο για να διαχειριστείτε το λειτουργικό σύστημα TotalRevolution. Από εδώ μπορείτε να διαχειριστείτε ολόκληρο το σύστημα ούτως ώστε να μη χρειάζεται να ανησυχείτε σχετικά με το τι τρέχει στο υπόβαθρο.[CR][CR]Μπορείτε, επίσης, να αλλάξετε τη συνδεσιμότητα του δικτύου σας, τη διάταξη του πληκτρολογίου σας και τη γλώσσα, καθώς και να ενεργοποιήσετε/απενεργοποιήσετε την απομακρυσμένη πρόσβαση μέσω Samba και SSH.</description>
+    <description lang="en">Use this addon to manage your TotalRevolution system's underlying operating system. From here you can manage the entire system so you don't have to worry about what runs under the hood.[CR][CR]From here you can change your network connectivity, your keyboard layout and language and enable/disable remote access including Samba and SSH.</description>
+    <description lang="en_AU">Use this addon to manage your TotalRevolution system's underlying operating system. From here you can manage the entire system so you don't have to worry about what runs under the hood.[CR][CR]From here you can change your network connectivity, your keyboard layout and language and enable/disable remote access including Samba and SSH.</description>
+    <description lang="en_NZ">Use this addon to manage your TotalRevolution system's underlying operating system. From here you can manage the entire system so you don't have to worry about what runs under the hood.[CR][CR]From here you can change your network connectivity, your keyboard layout and language and enable/disable remote access including Samba and SSH.</description>
+    <description lang="en_US">Use this addon to manage your TotalRevolution system's underlying operating system. From here you can manage the entire system so you don't have to worry about what runs under the hood.[CR][CR]From here you can change your network connectivity, your keyboard layout and language and enable/disable remote access including Samba and SSH.</description>
+    <description lang="es">Usa este add-on para administrar el sistema TotalRevolution. Desde aquí podrás controlar el sistema al completo (Conexiones de red, teclado, acceso remoto, samba y SSH)</description>
+    <description lang="es_AR">Usá esta extensión para administrar el sistema operativo subyacente a tu sistema TotalRevolution. Desde acá podés administrar el sistema en su totalidad sin tener que preocuparte por lo que pasa debajo del capó.[CR][CR]Desde acá podés cambiar la conexión de red, la distribución del teclado y el lenguaje y habilitar/deshabilitar el acceso remoto, incluyendo Samba y SSH.</description>
+    <description lang="es_MX">Usa este complemento para configurar el sistema operativo de tu TotalRevolution. Desde aquí puedes administrar todo el sistema fácilmente.[CR][CR]Desde aquí puedes cambiar la configuración de red, distribución del teclado, lenguaje del sistema y configurar Samba y SSH para controlar el acceso remoto al sistema.</description>
+    <description lang="et">See  lisa on TotalRevolution operatsioonisüsteemi häälestamiseks. Siit saad hallata kogu süsteemi, ilma et oleks vaja kaane alla piiluda.[CR][CR] Siit saab seada võrguühenduse parameetreid, klaviatuuripaigutust, keelt ning lubada/keelata kaugligipääsu, sealhulgas Samba ja SSH.</description>
+    <description lang="fi">Käytä tätä lisäosaa muokataksesi TotalRevolutionin alla olevaa käyttöjärjestelmää. Täältä voit muokata koko järjestelmää välittämättä siitä, mitä konepellin alta löytyy.[CR][CR]Voit muokata verkkoasetuksia, näppäimistön tyyppiä, kieliasetuksia sekä yhteysasetuksia, mukaanlukien Samba ja SSH.</description>
+    <description lang="fr">Utilisez cette extension pour configurer votre système d'exploitation TotalRevolution. Vous pouvez gérer l'intégralité du système simplement sans vous soucier des détails techniques.[CR][CR]Vous pouvez modifier la connexion au réseau, la disposition du clavier ou la langue du système. Vous pouvez aussi activer les accès distants comme Samba ou SSH.</description>
+    <description lang="fr_CA">Utilisez cet addiciel pour gérer le système d'exploitation sous-jacent de votre système TotalRevolution. D'ici vous pouvez gérer votre système au complet sans vous soucier de ce qui tourne sous la capot.[CR][CR]D'ici vous pouvez changer vos paramètres de connexion réseau, l'agencement et la langue de votre clavier et activer/désactiver l'accès distant incluant Samba et SSH.</description>
+    <description lang="he">בעזרת הרחבה זו ניתן לנהל את מערכת ההפעלה של TotalRevolution. מכאן ניתן לנהל כל אחד ממאפייני המערכת כך שאין צורך לדאוג מה קורה מתחת לממשק המשתמש.[CR][CR]ניתן לשנות הגדרות רשת, מערך מקלדת ושפה וגם להפעיל/לנטרל שירותי גישה מרחוק כולל Samba ו-SSH.</description>
+    <description lang="hr">Koristite ovaj dodatak za upravljanje TotalRevolution operativnim sustavom. Odavdje možete upravljati cijelim sustavom stoga se ne morate brinuti što je pokrenuto u pozadini.[CR][CR]Odavdje možete promijeniti mrežno povezivenje, vaš raspored tipkovnice i jezik, omogućiti/onemogućiti udaljeni pristup uključujući Sambu i SSH.</description>
+    <description lang="hu">Ez a kiegészítő vezérli az TotalRevolution rendszer alatti operációs rendszer beállításait. Innen kezelheti a teljes rendszert, tehát nem szükséges aggódnia mi van a motorháztető alatt. [CR][CR] Innen állíthatóak be a hálózati kapcsolatok, billentyűzet kiosztás és nyelvezet valamint a távoli hozzáférések engedélyezése/letiltása beleértve a Samba-t és SSH-t is.</description>
+    <description lang="it">Usa questo addon per gestire le impostazioni del sistema operativo di TotalRevolution. Da qui puoi gestire l'intero sistema senza necessità di una conoscenza avanzata del software sottostante.[CR][CR]Puoi modificare le connessioni di rete, il layout e la lingua della tastiera così come abilitare/disabilitare l'accesso remoto tramite Samba e SSH</description>
+    <description lang="ja">このアドオンを使用してTotalRevolutionシステムのオペレーティング·システムを管理してください。ここからでシステム全体を管理することができます。「CR][CR]ここから、ネットワーク接続とキーボードのレイアウト/言語を変更、またはリモートアクセス（SambaとSSHも含む）を有効/無効することもできます。</description>
+    <description lang="lt">Naudokite šį priedą operacines sistemos, kuris pagrįsta jūsų TotalRevolution sistema, tvarkymui. Čia jūs galite valdyta visą sistemą, kad jums netektų rūpintis kas vyksta po gaubtu..[CR][CR]Čia galite pakeisti tinklo nustatymus, klaviatūros išdėstymą ir kalbą bei įjungti/išjungti nuotolinę prieigą, įskaitant Samba ir SSH.</description>
+    <description lang="nl">Gebruik deze addon om het onderliggende TotalRevolution systeem in te stellen. Vanaf hier kunt u het gehele systeem aanpassen, zodat u zich geen zorgen hoeft te maken over wat er onderhuids gebeurt.[CR][CR]Vanaf hier kunt u de netwerkverbindingen aanpassen, uw toetsenbordlayout en -taal, alsook een externe verbinding inclusief Samba en SSH in- of uitschakelen.</description>
+    <description lang="no">Bruk dette tillegget for å konfigurere TotalRevolutions underliggende operativsystem. Herfra kan du konfigurere hele systemet slik at du ikke trenger å bekymre deg om hva som skjer under panseret.[CR][CR]Du kan endre nettverksinnstillinger, tastatur, språk og aktivere eller deaktivere nettverkstilgang slik som Samba og SSH.</description>
+    <description lang="pl">Za pomocą tej wtyczki możesz zarządzać systemem TotalRevolution. Z tego miejsca masz kontrolę nad całym systemem.[CR][CR] Zarządzasz połączeniem sieciowym, układem klawiatury i językiem systemu oraz możesz włączyć lub wyłączyć dostęp zdalny, w tym Sambę i SSH.</description>
+    <description lang="pt">Utilize este addon para gerir o sistema operativo que está na base do TotalRevolution. Aqui pode gerir todo o sistema, para não ter de se preocupar com aquilo que se passa nos bastidores.[CR][CR] Daqui, pode alterar as suas ligações de rede, disposição do teclado e idiomas. Também pode activar/desactivar acesso remoto, incluindo Samba e SSH.</description>
+    <description lang="pt_BR">Utilize este addon para gerir o sistema operativo que está na base do TotalRevolution. Aqui pode gerir todo o sistema, para não ter de se preocupar com aquilo que se passa nos bastidores.[CR][CR] Daqui, pode alterar as suas ligações de rede, disposição do teclado e idiomas. Também pode activar/desactivar acesso remoto, incluindo Samba e SSH.</description>
+    <description lang="ru">Данное дополнение предназначено для управления системными настройками TotalRevolution. С помощью удобного интерфейса Вы можете управлять настройками системы (включая низкоуровневые настройки ОС) через удобный интерфейс.[CR][CR]Здесь Вы также сможете изменить способ соединения с сетью, настроить раскладку клавиатуры, выбрать язык интерфейса, а также включить удаленный доступ по SSH и/или Samba.</description>
+    <description lang="sk">Tento doplnok slúži na správu operačného systému, na ktorom beží TotalRevolution. Odtiaľto je možné spravovať celý systém bez nutnosti znalostí o tom, čo beží pod kapotou.[CR][CR]Je tu možné meniť sieťové nastavenia, rozloženie a jazyk klávesnice alebo povoliť/zakázať vzdialený prístup prostredníctvom Samby a SSH.</description>
+    <description lang="sl">S tem dodatkom upravljate operacijski sistem, ki deluje pod pokrovom sistema TotalRevolution. Odtod lahko upravljate s celotnim sistemom, tako da je skrb o tem, kar teče pod pokrovom, odveč.[CR][CR]Odtod lahko spremenite svojo omrežno povezljivost, postavitev tipkovnice in jezik ter omogočite/onemogočite oddaljeni dostop, vključno s Sambo in SSH.</description>
+    <description lang="sv">Använd detta tillägg för att hantera ditt TotalRevolution-systems underliggande operativ. Härifrån kan du hantera hela systemet så du inte behöver oroa dig för vad som körs under skalet.[CR][CR]Härifrån kan du ändra din nätverksanslutning, tangentbordslayout och språk, samt aktivera/inaktivera fjärråtkomst inklusive Samba och SSH.</description>
+    <description lang="tr">Bu eklentiyi kullanarak TotalRevolution sisteminizin temelindeki işletim sistemini yönetin. Buradan tüm sistemi yönetebilirsiniz bu yüzden sistemin altında neler olduğu hakkında endişelenmenize gerek yok.[CR][CR]Buradan ağ bağlantısı, klavye düzeni ve dilini değiştirip, Samba ve SSH gibi uzaktan erişimi etkinleştirip/devre dışı bırakabilirsiniz.</description>
+    <description lang="zh">使用此插件管理你的 TotalRevolution 系统的底层操作系统。它使你可以在无需深入了解的情况下管理整个系统。[CR][CR]在这里，你可以修改网络设置、键盘布局、语言以及启用/禁用 Samba 和 SSH 等远程访问功能。</description>
+    <platform>all</platform>
+  </extension>
+</addon>
+
+<addon
+  id="skin.aeon.nox.5"
+  version="0.1"
+  name="Aeon Nox"
+  provider-name="BigNoid">
+	<requires>
+		<import addon="xbmc.gui" version="5.3.0"/>
+		<import addon="script.grab.fanart" version="0.12.8"/>
+		<import addon="script.skinshortcuts" version="0.2.4"/>
+		<import addon="service.library.data.provider" version="0.0.1"/>
+	</requires>
+	<extension
+	  point="xbmc.gui.skin"
+	  debugging="false"
+	  effectslowdown="0.75">
+		<res width="1920" height="1080" aspect="16:9" default="true" folder="1080i" />
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary lang="de">Aeon Nox 5: Redux</summary>
+		<summary lang="el">Aeon Nox 5: Redux</summary>
+		<summary lang="en">Aeon Nox 5: Redux</summary>
+		<summary lang="en_AU">Aeon Nox 5: Redux</summary>
+		<summary lang="en_NZ">Aeon Nox 5: Redux</summary>
+		<summary lang="en_US">Aeon Nox 5: Redux</summary>
+		<summary lang="es">Aeon Nox 5: Redux</summary>
+		<summary lang="fi">Aeon Nox 5: Redux</summary>
+		<summary lang="fr">Aeon Nox 5: Redux</summary>
+		<summary lang="fr_CA">Aeon Nox 5 : Redux</summary>
+		<summary lang="gl">Aeon Nox 5: Redux</summary>
+		<summary lang="he">Aeon Nox 5: Redux</summary>
+		<summary lang="hu">Aeon Nox 5: Redux</summary>
+		<summary lang="is">Aeon Nox 5: Redux</summary>
+		<summary lang="it">Aeon Nox 5: Redux</summary>
+		<summary lang="ko">Aeon Nox 5: Redux</summary>
+		<summary lang="lt">Aeon Nox 5: Redux</summary>
+		<summary lang="ms">Aeon Nox 5: Redux</summary>
+		<summary lang="nl">Aeon Nox 5: Redux</summary>
+		<summary lang="no">Aeon Nox 5: Redux</summary>
+		<summary lang="pl">Aeon Nox 5: Redux</summary>
+		<summary lang="pt">Aeon Nox 5: Redux</summary>
+		<summary lang="pt_BR">Aeon Nox 5: Redux</summary>
+		<summary lang="ru">Aeon Nox 5: Redux</summary>
+		<summary lang="sk">Aeon Nox 5: Redux</summary>
+		<summary lang="sv">Aeon Nox 5: Redux</summary>
+		<summary lang="th">Aeon Nox 5: Redux</summary>
+		<summary lang="vi">Aeon Nox 5: Redux - Sự trở về</summary>
+		<summary lang="zh">Aeon Nox 5: Redux</summary>
+		<description lang="de">Redux: Komplett neu designed für ein modernes Aussehen und das klassische Aeon-Feeling beizubehalten.</description>
+		<description lang="el">Redux: Πλήρως επανασχεδιασμένο για να προσφέρει μια μοντέρνα αισθητική, διατηρώντας ταυτόχρονα την κλασική ομορφιά του Aeon.</description>
+		<description lang="en">Redux: Completely redesigned to create a modern look, while retaining the classic Aeon feel.</description>
+		<description lang="en_AU">Redux: Completely redesigned to create a modern look, while retaining the classic Aeon feel.</description>
+		<description lang="en_NZ">Redux: Completely redesigned to create a modern look, while retaining the classic Aeon feel.</description>
+		<description lang="en_US">Redux: Completely redesigned to create a modern look, while retaining the classic Aeon feel.</description>
+		<description lang="es">Redux: Completamente rediseñado para crear un aspecto moderno, pero conservando el toque clásico Aeon.</description>
+		<description lang="fi">Redux: Täysin uudelleensuunniteltu moderni ulkoasu, kuitenkin tuntuen klassiselta Aeon:lta.</description>
+		<description lang="fr">Redux: Totalement revu pour créer un look moderne, en gardant l'expérience Aeon.</description>
+		<description lang="fr_CA">Redux : complètement remanié pour créer une apparence moderne, tout en conservant l'esprit classique d'Aeon.</description>
+		<description lang="he">Redux: עיצוב חדש היוצר מראה מודרני אך משמר את ההרגשה של Aeon הקלאסי.</description>
+		<description lang="hr">Redux: Potpuno preoblikovan moderan izgled, uz zadržani klasični Aeon osjećaj.</description>
+		<description lang="hu">Redux: Teljesen áttervezett modern kinézet, de megtartva a klasszikus Aeon érzetet.</description>
+		<description lang="is">Redux: Endurhannað nútímalegt útlit í anda Aeon.</description>
+		<description lang="it">Redux: Completamente ridisegnato per creare un look moderno, mantenendo la consueta qualità Aeon.</description>
+		<description lang="ko">Redux: 고전적인 Aeon 느낌을 유지하면서 현대적인 모습으로 완전히 다시 디자인하여 만들었습니다.</description>
+		<description lang="lt">Redux: pilnai atnaujinta, kad sukurtų modernią išvaizdą, išlaikant klasikinio Aeon pojūtį.</description>
+		<description lang="ms">Redux: Direka semula sepenuhnya untuk hasilkan penampilan modern, tetapi masih mengekalkan penampilan Aeon klasik.</description>
+		<description lang="nl">Redux: Volledig opnieuw ontworpen om een ​​moderne look te creëren, met behoud van het klassieke Aeon gevoel.</description>
+		<description lang="no">Redux: Helt redesignet for å gi deg en moderne utforming, samtidig som man beholder den klassiske Aeon følelsen.</description>
+		<description lang="pl">Redux: Całkowicie przeprojektowana skóra Aeon, o nowoczesnym wyglądzie, zachowując klasyczny układ skóry Aeon.</description>
+		<description lang="pt">Redux: Completamente redesenhado para criar um visual moderno enquanto retém o toque clássico Aeon.</description>
+		<description lang="pt_BR">Redux: Design completamente novo para criar um look moderno, mantendo o feeling do Aeon Clássico.</description>
+		<description lang="ru">Redux: полностью переделенная, модернизированная классическая обложка Aeon.</description>
+		<description lang="sk">Redux: Kompletne prepracovaný dizajn s moderným vzhľadom pri zachovaní klasického štýlu Aeon.</description>
+		<description lang="sv">Redux: Totalt omarbetad för att skapa ett modernt utseende, samtidigt som man behåller den klassiska Aeon-känslan.</description>
+		<description lang="th">Redux: การออกแบบใหม่หมดจด เพื่อสร้างรูปลักษณ์ทันสมัย, ​​ขณะที่ยังคงความรู้สึกคลาสสิคของ Aeon.</description>
+		<description lang="vi">Redux: Thiết kế lại hoàn toàn để tạo nên một phong cách hiện đại, trong khi đó vẫn duy trì một cảm giác Aeon cổ điển.</description>
+		<platform>all</platform>
+	</extension>
+</addon>
+
+<addon
+    id="skin.arctic.zephyr"
+    version="0.1"
+    name="Arctic: Zephyr"
+    provider-name="jurialmunkey">
+    <requires>
+        <import addon="xbmc.gui" version="5.3.0"/>
+        <import addon="script.skinshortcuts" version="0.4.0"/>
+        <import addon="service.library.data.provider" version="0.0.7"/>
+    </requires>
+    <extension
+    point="xbmc.gui.skin"
+    defaultthemename="Textures.xbt"
+    debugging="false"
+    effectslowdown="1">
+        <res width="1920" height="1080" aspect="16:9" default="true" folder="1080i" />
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="de">Klar, minimalistisch, elegant, einfach, leicht</summary>
+        <summary lang="en">Clean, minimal, elegant, simple, light.</summary>
+        <summary lang="en_AU">Clean, minimal, elegant, simple, light.</summary>
+        <summary lang="en_US">Clean, minimal, elegant, simple, light.</summary>
+        <summary lang="es">Limpio, minimalista, elegante, simple, ligero.</summary>
+        <summary lang="fr">Clair, minimaliste, élégant, simple et léger.</summary>
+        <summary lang="fr_CA">Net, minimal, élégant, simple, léger.</summary>
+        <summary lang="lt">Švari, minimali, elegantiška, paprasta, lengva.</summary>
+        <summary lang="nl">Schoon, minimaal, elegant, simpel, licht.</summary>
+        <summary lang="no">Rent, minimalt, elegant, enkelt, lett.</summary>
+        <summary lang="pl">Prosta, minimalista, elegancka i lekka</summary>
+        <summary lang="pt_BR">Limpa, simplista, elegante, leve.</summary>
+        <summary lang="ro">Curat, minimalist, elegant, simplu, ușor</summary>
+        <summary lang="ru">Опрятный, минималистичный, элегантный, простой, светлый.</summary>
+        <description lang="de">Arctic: Zephyr ist die dritte Iteration des Arctic Skins von jurialmunkey und ein minimalistisches, klares und simples Interface für deine Medien mit dem gewissen Etwas.</description>
+        <description lang="en">Arctic: Zephyr is the third iteration of the Arctic skin created by jurialmunkey. Arctic focuses on being simple, clean and minimalistic with a light spin.</description>
+        <description lang="en_AU">Arctic: Zephyr is the third iteration of the Arctic skin created by jurialmunkey. Arctic focuses on being simple, clean and minimalistic with a light spin.</description>
+        <description lang="en_US">Arctic: Zephyr is the third iteration of the Arctic skin created by jurialmunkey. Arctic focuses on being simple, clean and minimalistic with a light spin.</description>
+        <description lang="es">Arctic: Zephyr es la tercera versión de Arctic skin creada por jurialmunkey. La skin Arctic se centra en ser simple, limplia y minimalista con un toque de luminosidad.</description>
+        <description lang="fr">Arctic: Zephyr est la 3ème version du skin Arctic créé par jurialmunkey. Arctic se focalise sur le fait d'être simple, claire et minimaliste.</description>
+        <description lang="fr_CA">Arctique : Zéphyr est la troisième version de l'habillage Arctique créé par jurialmunkey. Arctique se veut être simple, net et minimaliste tout en étant léger. </description>
+        <description lang="lt">Arctic: Zephyr yra trečia Arctic teminės išvaizdos, kurios autorius yra jurialmunkey, iteracija. Arctic sutelkia dėmesį ties paprastumu, švarumu ir minimalizmu su lengvu veikimu.</description>
+        <description lang="nl">Arctic: Zephyr is de derde herhaling van de arctic skin ge creëerd door jurialmunkey. Arctic focust zich op een eenvoudig zeinde, schoon en minimaal met een lichte twist.</description>
+        <description lang="no">Arctic: Zephyr er den tredje iterasjonen av Arctic skallet som ble laget av jurialmunkey. Arctic fokuserer på å være enkel, rent og minimalistisk med et snev av letthet.</description>
+        <description lang="pl">Arctic: Zephyr jest trzecią wersją oryginalnej skóry Arctic stworzonej przez jurialmunkey. Arctic skupia się na prostocie i minimalizmie z lekką dozą szaleństwa.</description>
+        <description lang="pt_BR">Arctic: Zephyr é a terceira iteração da interface Arctic criada por jurialmunkey. Arctic foi criada para ser simples, limpa e minimalistica.</description>
+        <description lang="ru">Arctic: Zephyr это третий виток обложки Arctic, созданной jurialmunkey. Arctic старается быть простой, опрятной и минималистичной.</description>
+        <platform>all</platform>
+    </extension>
+</addon>
+
+<addon
+  id="skin.mimic"
+  version="0.1"
+  name="Mimic"
+  provider-name="bryanbrazil">
+	<requires>
+		<import addon="xbmc.gui" version="5.3.0"/>
+		<import addon="script.grab.fanart" version="0.13.2"/>
+		<import addon="script.skinshortcuts" version="0.4.5"/>
+		<import addon="service.library.data.provider" version="0.0.7"/>
+	</requires>
+	<extension
+	  point="xbmc.gui.skin"
+	  debugging="false"
+	  effectslowdown="0.75">
+		<res width="1920" height="1080" aspect="16:9" default="true" folder="1080i" />
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary lang="de">Mimic von bryanbrazil</summary>
+		<summary lang="en">Mimic by bryanbrazil</summary>
+		<summary lang="en_NZ">Mimic by bryanbrazil</summary>
+		<summary lang="en_US">Mimic by bryanbrazil</summary>
+		<summary lang="et">Mimic autorilt bryanbrazil</summary>
+		<summary lang="fr">Mimic par bryanbrazil</summary>
+		<summary lang="fr_CA">Mimique par bryanbrazil</summary>
+		<summary lang="ko">bryanbrazil이 만든 Mimic</summary>
+		<summary lang="lt">Mimic, sukurta bryanbrazil</summary>
+		<summary lang="ms">Mimic oleh byranbrazil</summary>
+		<summary lang="nl">Mimic door bryanbrazil</summary>
+		<summary lang="pl">Mimic autorstwa bryanbrazil</summary>
+		<summary lang="pt_BR">Mimic por bryanbrazil</summary>
+		<summary lang="sv">Mimic av bryanbrazil</summary>
+		<description lang="de">Mimic: Ein Kodi-Skin mit Einflüssen von reFocus und Aeon Nox. Vielen Dank an BigNoid und Jeroen.</description>
+		<description lang="en">Mimic: A Kodi skin with touches of reFocus and Aeon Nox. Many thanks to BigNoid and Jeroen.</description>
+		<description lang="en_NZ">Mimic: A Kodi skin with touches of reFocus and Aeon Nox. Many thanks to BigNoid and Jeroen.</description>
+		<description lang="en_US">Mimic: A Kodi skin with touches of reFocus and Aeon Nox. Many thanks to BigNoid and Jeroen.</description>
+		<description lang="et">Mimic on Kodi rüü, mis on saanud mõjutusi reFocus ja Aeon Nox rüüdest. Suured tänud, BigNoid ja Jeroen.</description>
+		<description lang="fr">Mimic: Un thème pour Kodi avec une légère inspiration des thèmes reFocus et Aeon Nox. De grands mercis à BigNoid et Jeroen.</description>
+		<description lang="fr_CA">Mimique : un habillage de Kodi avec des airs de reFocus et d'Aeon Nox grâce à BigNoid et Jeroen.</description>
+		<description lang="ko">Mimic: reFocus와 Aeon Nox를 수정한 Kodi 스킨. BigNoid와 Jeroen에게 깊은 감사를 드립니다.</description>
+		<description lang="lt">Mimic: Kodi teminė išvaizda, kurioje panaudoti elementai iš reFocus ir Aeon Nox. Didelis ačiū BigNoid ir Jeroen.</description>
+		<description lang="ms">Mimic: Kulit Kodi dengan sentuhan reFocus dan Aeon Nox. Ucapan terima kasih buat BigNoid dan Jeroen.</description>
+		<description lang="nl">Mimic is een Kodi skin geinspireerd door reFocus en Aeon Nox. Met dank aan BigNoid en Jeroen.</description>
+		<description lang="pl">Mimic: Skóra Kodi z domieszką skór reFocus i Aeon Nox. Wielkie podziękowania dla BigNoid i Jeroen.</description>
+		<description lang="pt_BR">Mimic: Uma skin Kodi con toques da reFocus e Aeon Nox. Meus agradecimentos a BigNoid e Jeroen.</description>
+		<description lang="sv">Mimic: Ett Kodi-skal med en touch av reFocus och Aeon Nox. Många tack till BigNoid och Jeroen.</description>
+		<platform>all</platform>
+	</extension>
+</addon>
+
+<addon id="skin.nebula" version="0.1" name="Nebula" provider-name="Tgx">
+    <requires>
+        <import addon="xbmc.gui" version="5.3.0"/>
+        <import addon="script.grab.fanart" version="0.12.8"/>
+        <import addon="script.favourites" version="3.2.0"/>
+        <import addon="service.skin.widgets" version="0.0.27"/>
+        <import addon="script.skinshortcuts" version="0.2.4"/>
+    </requires>
+    <extension point="xbmc.gui.skin" defaultthemename="Textures.xbt" debugging="false">
+        <res width="1920" height="1080" aspect="16:9" default="true" folder="1080i"/>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="de">Einfacher heller oder dunkler Skin für Full-HD Bildschirme mit vielen Extras.</summary>
+        <summary lang="el">Απλό και πλήρες, φωτεινό ή σκοτεινό κέλυφος, σχεδιασμένο για οθόνες υψηλής ανάλυσης (Full HD).</summary>
+        <summary lang="en">Simple and full-featured light or dark color skin designed for Full HD TV screens.</summary>
+        <summary lang="en_AU">Simple and full-featured light or dark colour skin designed for Full HD TV screens.</summary>
+        <summary lang="en_NZ">Simple and full-featured light or dark color skin designed for Full HD TV screens.</summary>
+        <summary lang="en_US">Simple and full-featured light or dark color skin designed for Full HD TV screens.</summary>
+        <summary lang="es">Un skin simple, de color claro u oscuro, y con todas las funciones, diseñado para televisores Full HD.</summary>
+        <summary lang="fr">Skins clair ou foncé simple et complet conçu pour des écrans TV Full HD.</summary>
+        <summary lang="fr_CA">Habillage simple et complet, de couleur claire ou sombre, conçu pour les écrans à HD intégrale.</summary>
+        <summary lang="he">מעטפת פשוטה ורבת תכונות בצבעים כהים או בהירים המותאמת במיוחד למסכים באבחנת Full HD.</summary>
+        <summary lang="it">Skin dal colore bianco o nero, semplice e completa, progettata per TV Full HD</summary>
+        <summary lang="ko">모든 기능을 지원하는 단순한 스킨으로  밝은 색상과 어두운 색상을 지원하며 Full HD TV 용으로 디자인하였습니다.</summary>
+        <summary lang="lt">Paprasta ir su visomis papildomomis funkcijomis, šviesi arba tamsi teminė išvaizda, sukurta FullHD TV ekranams.</summary>
+        <summary lang="ms">Kulit ringkas dan warna cerah atau gelap berfitur penuh untuk skrin TV HD Penuh.</summary>
+        <summary lang="nl">Eenvoudige en volledig gekenmerkte lichte of donkere skin ontworpen voor Full-HD TV-schermen.</summary>
+        <summary lang="pl">Prosta, w pełni funkcjonalna skóra zawierająca jasny i mroczny motyw, zaprojektowana dla ekranu telewizyjnych Full HD.</summary>
+        <summary lang="pt_BR">Skin simples e completa nas cores lihgt ou dark para telas Full HD TV.</summary>
+        <summary lang="ro">Costum simplu și complet pe alb sau pe negru proiectat pentru ecrane tv de înaltă definiție.</summary>
+        <description lang="de">Einfacher heller oder dunkler Skin für Full-HD Bildschirme mit vielen Extras.</description>
+        <description lang="el">Απλό και πλήρες, φωτεινό ή σκοτεινό κέλυφος, σχεδιασμένο για οθόνες υψηλής ανάλυσης (Full HD).</description>
+        <description lang="en">Simple and full-featured light or dark color skin designed for Full HD TV screens.</description>
+        <description lang="en_AU">Simple and full-featured light or dark colour skin designed for Full HD TV screens.</description>
+        <description lang="en_NZ">Simple and full-featured light or dark color skin designed for Full HD TV screens.</description>
+        <description lang="en_US">Simple and full-featured light or dark color skin designed for Full HD TV screens.</description>
+        <description lang="es">Un skin simple, de color claro u oscuro, y con todas las funciones, diseñado para televisores Full HD.</description>
+        <description lang="fr">Skins clair ou foncé simple et complet conçu pour des écrans TV Full HD.</description>
+        <description lang="fr_CA">Habillage simple et complet, de couleur claire ou sombre, conçu pour les écrans à HD intégrale.</description>
+        <description lang="he">מעטפת פשוטה ורבת תכונות בצבעים כהים או בהירים המותאמת במיוחד למסכים באבחנת Full HD.</description>
+        <description lang="it">Skin dal colore bianco o nero, semplice e completa, progettata per TV Full HD</description>
+        <description lang="ko">모든 기능을 지원하는 단순한 스킨으로  밝은 색상과 어두운 색상을 지원하며 Full HD TV 용으로 디자인하였습니다.</description>
+        <description lang="lt">Paprasta ir su visomis papildomomis funkcijomis, šviesi arba tamsi teminė išvaizda, sukurta FullHD TV ekranams.</description>
+        <description lang="ms">Kulit ringkas dan warna cerah atau gelap berfitur penuh direka untuk skrin TV HD Penuh.</description>
+        <description lang="nl">Eenvoudige en volledig gekenmerkte lichte of donkere skin ontworpen voor Full-HD TV-schermen.</description>
+        <description lang="pl">Prosta, w pełni funkcjonalna skóra zawierająca jasny i mroczny motyw, zaprojektowana dla ekranu telewizyjnych Full HD.</description>
+        <description lang="pt_BR">Skin simples e completa nas cores lihgt ou dark para telas Full HD TV.</description>
+        <description lang="ro">Costum simplu și complet pe alb sau pe negru proiectat pentru ecrane tv de înaltă definiție.</description>
+        <disclaimer lang="en">This skin does not work on Apple Tv 2</disclaimer>
+        <disclaimer lang="it">Questa skin non funziona su Apple Tv 2</disclaimer>
+        <license>Creative Commons Attribution-ShareAlike 3.0 Unported License</license>
+        <forum>http://forum.kodi.tv/forumdisplay.php?fid=211</forum>
+        <source>https://github.com/Tgxcorporation/skin.nebula</source>
+        <website>https://github.com/Tgxcorporation/skin.nebula/wiki</website>
+        <platform>all</platform>
+    </extension>
+</addon>
+
+<addon
+	id="skin.titan"
+	version="0.1"
+	name="Titan"
+	provider-name="marcelveldt">
+	<requires>
+		<import version="5.3.0" addon="xbmc.gui"/>
+		<import addon="script.skinshortcuts" version="0.4.4"/>
+		<import addon="script.titanskin.helpers" version="1.8.0"/>
+	</requires>
+	<extension
+    point="xbmc.gui.skin"
+    defaultthemename="Textures.xbt"
+    debugging="false">
+		<res width="1920" height="1080" aspect="16:9" default="true" folder="1080i" />
+		<res width="1920" height="1200" aspect="16:10" default="false" folder="1080i" />
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary lang="de">MediaPortal's Titan Skin portiert für Kodi mit jeder Menge Funktionen.</summary>
+		<summary lang="en">MediaPortal's Titan skin ported to Kodi enriched with lot's of features.</summary>
+		<summary lang="nl">De Titanskin van MediaPortal is geconverteerd naar Kodi en verrijkt met talloze functionaliteiten</summary>
+		<platform>all</platform>
+		<license>GPL v2.0</license>
+		<forum>http://forum.xbmc.org/showthread.php?tid=201061</forum>
+		<website></website>
+		<email></email>
+		<source></source>
+	</extension>
+</addon>
+</addons>
