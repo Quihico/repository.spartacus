@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.program.tbs" name="Maintenance"  provider-name="TotalRevolution" version="3.0.4">
+<addon id="plugin.program.tbs" name="Maintenance"  provider-name="TotalRevolution" version="3.0.5">
   <requires>
 	<import addon="xbmc.python" version="2.1.0"/>
     <import addon="script.module.addon.common" version="2.0.0"/>
@@ -12,7 +12,7 @@
     <summary lang="en">Maintenance - powered by TotalRevolution</summary>
 	<description>Your one stop add-on for everything you could possibly need. From general maintenance to tutorial guides you'll find it all in here.</description>
     <platform>all</platform>
-    <ref>9561732b09f9ee85faaf26829b733979</ref>
-    <ref2>9499c2d694d0b13f667973ed5fb32897</ref2>
+    <ref>4e278b37a07126860607f9ca41e530c5</ref>
+    <ref2>c4f42f50deccd3c03978b43f4eb78744</ref2>
   </extension>
 </addon>
