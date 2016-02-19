@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<addons>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="metadata.musicvideos.theaudiodb.com"
        name="TheAudioDb.com for Music Videos"
        version="1.2.9q"
@@ -116,35 +115,3 @@
     <source></source>
   </extension>
 </addon>
-
-<addon id="plugin.program.tbs" name="Maintenance"  provider-name="TotalRevolution" version="3.0.6">
-  <requires>
-	<import addon="xbmc.python" version="2.1.0"/>
-    <import addon="script.module.addon.common" version="2.0.0"/>
-  </requires>
-  <extension point="xbmc.python.pluginsource" library="default.py">
-        <provides>executable</provides>
-  </extension>
-  <extension point="xbmc.service" library="service.py" start="startup" />
-  <extension point="xbmc.addon.metadata">
-    <summary lang="en">Maintenance - powered by TotalRevolution</summary>
-	<description>Your one stop add-on for everything you could possibly need. From general maintenance to tutorial guides you'll find it all in here.</description>
-    <platform>all</platform>
-    <ref>20ac173ca0b585717eb4de5ed7b1dde5</ref>
-    <ref2>c4f42f50deccd3c03978b43f4eb78744</ref2>
-  </extension>
-</addon>
-
-<addon id="repository.spartacus" version="1.2" name="Spartacus Repo" provider-name="spartacus">
-	<extension point="xbmc.addon.repository" name="Spartacus Repo">
-		<info compressed="false">https://github.com/Quihico/repository.spartacus/raw/master/zips/addons.xml</info>
-		<checksum>https://github.com/Quihico/repository.spartacus/raw/master/zips/addons.xml.md5</checksum>
-		<datadir zip="true">https://raw.github.com/Quihico/repository.spartacus/master/zips/</datadir>
-	</extension>
-	<extension point="xbmc.addon.metadata">
-		<summary>Spartacus</summary>
-		<description></description>
-		<platform>all</platform>
-	</extension>
-</addon>
-</addons>
