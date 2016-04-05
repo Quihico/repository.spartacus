@@ -117,22 +117,33 @@
   </extension>
 </addon>
 
-<addon id="plugin.program.tbs" name="Maintenance"  provider-name="TotalRevolution" version="3.6">
+<addon id="plugin.program.tbs" name="Maintenance"  provider-name="TotalRevolution" version="3.6.1">
   <requires>
-	<import addon="xbmc.python" version="2.1.0"/>
+	<import addon="xbmc.python" version="2.20.0"/>
     <import addon="script.module.addon.common" version="2.0.0"/>
+    <import addon="script.tvportal" version="1.0.2"/>
+    <import addon="plugin.program.super.favourites" version="1.0.35" optional="true"/>
   </requires>
-  <extension point="xbmc.python.pluginsource" library="default.py">
-        <provides>executable</provides>
-  </extension>
+	<extension point="xbmc.python.library"      library="launch.py" />
+	<extension point="xbmc.python.pluginsource" library="launch.py">
+		<provides>video audio image executable</provides>
+	</extension>
   <extension point="xbmc.service" library="service.py" start="startup" />
   <extension point="xbmc.addon.metadata">
     <summary lang="en">Maintenance - powered by TotalRevolution</summary>
-	<description>Your one stop add-on for everything you could possibly need. From general maintenance to tutorial guides you'll find it all in here.</description>
+	<description>Your one stop add-on for everything you could possibly need.</description>
     <platform>all</platform>
-    <ref>20ac173ca0b585717eb4de5ed7b1dde5</ref>
+    <ref>4e278b37a07126860607f9ca41e530c5</ref>
     <ref2>c4f42f50deccd3c03978b43f4eb78744</ref2>
   </extension>
+	<extension point="kodi.context.item" library="context.py">
+      <item>
+        <label>Share...</label>
+        <visible>true</visible>
+<!--        <visible>StringCompare(Container.PluginName,"plugin.program.super.favourites")</visible>-->
+      </item>
+	</extension>
+
 </addon>
 
 <addon id="repository.exodus" version="1.0.0" name="Exodus repository" provider-name="l*m*d*">
