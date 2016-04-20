@@ -117,9 +117,9 @@
   </extension>
 </addon>
 
-<addon id="plugin.program.tbs" name="Maintenance"  provider-name="TotalRevolution" version="3.6.1">
+<addon id="plugin.program.tbs" name="Maintenance"  provider-name="TotalRevolution" version="3.7">
   <requires>
-	<import addon="xbmc.python" version="2.20.0"/>
+	<import addon="xbmc.python" version="2.1.0"/>
     <import addon="script.module.addon.common" version="2.0.0"/>
     <import addon="script.tvportal" version="1.0.2"/>
     <import addon="plugin.program.super.favourites" version="1.0.35" optional="true"/>
