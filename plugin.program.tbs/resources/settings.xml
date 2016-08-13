@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+	<category label="Options">
+<!------------------------------------------------------------------------------------------------
+                                         INSTRUCTIONS: 
+									
+          If you want to switch something off change default="true" to default="false".
+                  Likewise if you want to enable a function do the opposite.
+
+	  If there's an option you'd like the customer to be able to edit via settings change
+visible="false" to visible="true". Make sure you don't accidentally delete the /> after this tag.
+--------------------------------------------------------------------------------------------------
+				
+<!-- Is your system OpenELEC? If so you can push tar files as updates -->
+        <setting id="openelec" type="bool" default="false" visible="false"/>
+
+<!-- Enable the sections you want visible in the add-on, you can also choose to make these visible in the addon settings to the customer -->
+		<setting id="addonportal" type="bool" label="Add-On Portal Section[CR]" default="true" visible="false"/>
+		<setting id="communitybuilds" type="bool" label="Community Builds Section" default="true" visible="false"/>
+		<setting id="hardwareportal" type="bool" label="Hardware Reviews Section[CR]" default="false" visible="false"/>
+		<setting id="latestnews" type="bool" label="Latest News Section[CR]" default="true" visible="false"/>
+		<setting id="maintenance" type="bool" label="Maintenance Section[CR]" default="true" visible="false"/>
+		<setting id="tutorialportal" type="bool" label="Tutorials Section[CR]" default="true" visible="false"/>
+		
+<!-- Do you want all builds to show regardless of whether they've been marked as compatible or not? (Gotham/Helix/Isengard etc.) -->
+		<setting id="versionoverride" type="bool" label="- Show ALL Builds (some of these may not be compatible)[CR]" default="false" visible="false"/>
+
+<!------------------------- MAKE YOUTUBE ANNOUNCEMENT VIDEO ON STARTUP ----------------------------
+     Do you want to check for a new youtube video on startup? If you want to enable this option you will need to
+     create a text file online (use something like pastebin) and a url shortener like bit.ly. Full details online. -->
+	 
+		<setting id="startupvideo" type="bool" label="Check for important announcement video on startup" default="false" visible="false"/>
+
+<!-- This is your bit.ly link (or whatever static link you have for the text file) -->
+		<setting id="startupvideopath" default="<ENTER_URL_HERE>" visible="false"/>
+
+<!--------------------------------------------------------------------------------------------------
+
+     Set the download location - THIS MUST BE SET AS A WRITEABLE PATH ON YOUR DEVICE AND NOT IN THE KODI FOLDER!!!
+     Type the location where it says default="", so for example it may be something like default="/storage" -->
+        <setting id="zip" type="folder" label="Choose Backup Storage Location" default="/storage" visible="true"/>
+
+<!-- DO NOT EDIT THIS LINE -->
+ 		<setting id="dummy" label="[COLOR=yellow]Click here to check download path[/COLOR]" type="action" action="XBMC.RunScript(special://home/addons/plugin.program.tbs/checkPath.py)" option="close" visible="false"/>		
+ 		<setting id="dummy" label="[COLOR=yellow]Click here to check for updates[/COLOR]" type="action" action="XBMC.RunScript(special://home/addons/plugin.program.tbs/checknews.py)" option="close" visible="true"/>		
+
+<!-- Tutorials menu - select the ones you want to be shown -->
+		<setting id="tutorial_manual_search" type="bool" label="Tutorials - Enable Manual Search" default="true" visible="false"/>
+		<setting id="tutorial_all" type="bool" label="Tutorials - Enable All Guides" default="false" visible="false"/>
+		<setting id="tutorial_kodi" type="bool" label="Tutorials - Enable Kodi Specific" default="true" visible="false"/>
+		<setting id="tutorial_xbmc4xbox" type="bool" label="Tutorials - Enable XBMC4Xbox Specific" default="false" visible="false"/>
+		<setting id="tutorial_android" type="bool" label="Tutorials - Enable Android" default="false" visible="false"/>
+		<setting id="tutorial_atv" type="bool" label="Tutorials - Enable ATV" default="false" visible="false"/>
+		<setting id="tutorial_ios" type="bool" label="Tutorials - Enable ATV2/iOS" default="false" visible="false"/>
+		<setting id="tutorial_linux" type="bool" label="Tutorials - Enable Linux" default="false" visible="false"/>
+		<setting id="tutorial_pure_linux" type="bool" label="Tutorials - Enable Pure Linux" default="false" visible="false"/>
+		<setting id="tutorial_openelec" type="bool" label="Tutorials - Enable OpenELEC" default="true" visible="false"/>
+		<setting id="tutorial_osmc" type="bool" label="Tutorials - Enable OSMC" default="false" visible="false"/>
+		<setting id="tutorial_osx" type="bool" label="Tutorials - Enable OSX" default="false" visible="false"/>
+		<setting id="tutorial_raspbmc" type="bool" label="Tutorials - Enable Raspbmc" default="false" visible="false"/>
+		<setting id="tutorial_windows" type="bool" label="Tutorials - Enable Windows" default="false" visible="false"/>
+		<setting id="tutorial_allwinner" type="bool" label="Tutorials - Enable Allwinner Devices" default="false" visible="false"/>
+		<setting id="tutorial_aftv" type="bool" label="Tutorials - Enable Amazon Fire TV Devices" default="false" visible="false"/>
+		<setting id="tutorial_amlogic" type="bool" label="Tutorials - Enable AMLogic Devices" default="false" visible="false"/>
+		<setting id="tutorial_boxee" type="bool" label="Tutorials - Enable Boxee" default="false" visible="false"/>
+		<setting id="tutorial_intel" type="bool" label="Tutorials - Enable Intel Devices" default="false" visible="false"/>
+		<setting id="tutorial_rpi" type="bool" label="Tutorials - Enable Raspberry Pi" default="false" visible="false"/>
+		<setting id="tutorial_rockchip" type="bool" label="Tutorials - Enable Rockchip" default="false" visible="false"/>
+		<setting id="tutorial_xbox" type="bool" label="Tutorials - Enable Xbox" default="false" visible="false"/>
+		
+<!-- These are visible to the customer by default but you can change these to visible="false" if you want -->
+		<setting id="adult" type="bool" label="Enable XXX Content[CR]" default="false" visible="true"/>
+		<setting id="localcopy" type="bool" label="Keep local copies of downloaded builds" default="false" visible="true"/>
+		<setting id="favourites" type="bool" label="Keep my favourites when installing a build" default="false" visible="true"/>
+		<setting id="sources" type="bool" label="Keep my sources when installing a build" default="false" visible="true"/>
+        <setting id="internetcheck" type="bool" label="Warn if not connected to internet" default="true" visible="true"/>
+<!--		<setting id="cbnotifycheck" type="bool" label="Show important announcement from Community Build author" default="true" visible="true"/>-->
+		<setting id="wizard" type="bool" label="Use Third Party Community Builds" default="false"/>
+        <setting id="wizardurl1" type="text" label="Set 1st Community Build URL" default="" visible="!eq(-1,false)"/>
+        <setting id="wizardname1" type="text" label="Set 1st CB List Name" default="" visible="!eq(-2,false)"/>
+        <setting id="wizardurl2" type="text" label="Set 2nd Community Build URL" default="" visible="!eq(-3,false)"/>
+        <setting id="wizardname2" type="text" label="Set 2nd CB List Name" default="" visible="!eq(-4,false)"/>
+        <setting id="wizardurl3" type="text" label="Set 3rd Community Build URL" default="" visible="!eq(-5,false)"/>
+        <setting id="wizardname3" type="text" label="Set 3rd CB List Name" default="" visible="!eq(-6,false)"/>
+        <setting id="wizardurl4" type="text" label="Set 4th Community Build URL" default="" visible="!eq(-7,false)"/>
+        <setting id="wizardname4" type="text" label="Set 4th CB List Name" default="" visible="!eq(-8,false)"/>
+        <setting id="wizardurl5" type="text" label="Set 5th Community Build URL" default="" visible="!eq(-9,false)"/>
+        <setting id="wizardname5" type="text" label="Set 5th CB List Name" default="" visible="!eq(-10,false)"/>
+	</category>
+
+    <category label="Maintenance">
+		<setting id="cleancache" type="bool" label="Automatically clean cache" default="true"/>
+		<setting type="lsep" label="Will clear any old thumbnails not accessed in the past 14 days."/>
+		<setting type="lsep" label="[CR][CR]"/>
+    	<setting id="email" type="text" label="E-Mail Address (used for log uploader)" visible="true"/>
+		<setting type="lsep" label="[CR][CR]" visible="!eq(-1,false)"/>
+ 		<setting id="dummy" label="[COLOR=gold]Click here to upload a log[/COLOR]" type="action" action="XBMC.RunScript(special://home/addons/plugin.program.tbs/uploadLog.py)" option="close" visible="!eq(-2,false)"/>
+		<setting type="lsep" label="Once your log is uploaded you will receive an email with the link." visible="!eq(-3,false)"/>
+		<setting type="lsep" label="[CR][CR]" visible="!eq(-4,false)"/>
+
+<!-- DO NOT TOUCH THE FOLLOWING SETTINGS!!! -->
+ 		<setting id="dummy" label="[COLOR=gold]Click here to reset your add-on[/COLOR]" type="action" action="XBMC.RunScript(special://home/addons/plugin.program.tbs/resetAddon.py)" option="close"/>
+		<setting type="lsep" label="Use this option if you're encountering problems with the add-on not"/>
+		<setting type="lsep" label="loading correctly (script errors)."/>
+		<setting id="thirdparty" type="bool" label="Enable 3rd Party Community Shares" default="false" visible="false"/>
+        <setting id="reseller" type="bool" default="false" visible="false"/>
+		<setting id="debug" type="bool" label="Use backup server - DO NOT ENABLE" default="false" visible="true"/>
+		<setting id="testcheck" default="false" visible="false"/>
+		<setting id="temp" default="false" visible="false"/>
+	</category>
+
+</settings>
