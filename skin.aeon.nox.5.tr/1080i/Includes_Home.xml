@@ -328,7 +328,7 @@
 <!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_MUSIC&quot;,return)">$INFO[Skin.String(MusicHomeItem.Path)]</property>-->
 			<property name="Item">Music</property>
 			<property name="BGType" fallback="2">$INFO[Skin.String(MusicHomeItem.BGType)]</property>
-			<property name="Widget" fallback="plugin://plugin.video.myvevo/?mode=GD&amp;url=https%3a%2f%2fapiv2.vevo.com%2fnow%3fpage%3d1%26size%3d25%26token%3d%25s">$INFO[Skin.String(MusicHomeItem.Widget)]</property>
+			<property name="Widget" fallback="plugin://plugin.video.myvevo/?mode=GE&url=https%3a%2f%2fapiv2.vevo.com%2fnow%3fpage%3d1%26size%3d20%26token%3d">$INFO[Skin.String(MusicHomeItem.Widget)]</property>
 			<property name="WidgetLabel" fallback="Trending Music">$INFO[Skin.String(MusicHomeItem.WidgetLabel)]</property>
 			<property name="WidgetType" fallback="2">$INFO[Skin.String(MusicHomeItem.WidgetType)]</property>
 			<property name="InfoLine">$INFO[Skin.String(MusicHomeItem.InfoLine)]</property>

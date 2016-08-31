@@ -699,4 +699,25 @@
 			<onclick>ActivateWindow(10025,plugin://$VAR[script]?info=youtubesearch&amp;&amp;id=$INFO[ListItem.Label],return)</onclick>
 		</control>
 	</include>
+	<include name="MetalliQContext">
+		<control type="button" id="1504" description="MetalliQContext">
+			<visible>System.HasAddon(plugin.video.metalliq) + !Skin.HasSetting(NoMetalliQContext)</visible>
+			<label>Play by Label</label>
+			<left>0</left>
+			<top>0</top>
+			<width>450</width>
+			<height>60</height>
+			<font>font14</font>
+			<align>left</align>
+			<textoffsetx>15</textoffsetx>
+			<textcolor>grey2</textcolor>
+			<focusedcolor>white</focusedcolor>
+			<texturefocus border="5">button_middle_focus.png</texturefocus>ListItem.Episode
+			<texturenofocus border="5">button_middle3.png</texturenofocus>
+			<onclick condition="Container.Content(movies)">RunPlugin(plugin://plugin.video.metalliq/movies/play_by_name/$INFO[ListItem.Title]/en)</onclick>
+			<onclick condition="Container.Content(episode)">RunPlugin(plugin://plugin.video.metalliq/tv/play_by_name/$INFO[ListItem.TVShowTitle]/$INFO[ListItem.Season]/$INFO[ListItem.Episode]/en)</onclick>
+			<onclick condition="Container.Content(tvshows)">RunPlugin(plugin://plugin.video.metalliq/tv/play_by_name/$INFO[ListItem.TVShowTitle]/1/1/en)</onclick>
+			<onclick condition="!Container.Content(movies) + !Container.Content(episode) + !Container.Content(tvshows)">RunPlugin(plugin://plugin.video.metalliq/play/$INFO[ListItem.Label])</onclick>
+		</control>
+	</include>
 </includes>

@@ -25,7 +25,8 @@
 			<include condition="Window.IsActive(programs) + !IsEmpty(Window(Home).Property(Progams.Games))">AdvancedLauncherTrailerButton</include>
 			<include>ExtendedContext</include>
 			<include>ArtworkContext</include>
-			<include>YouTubeContext</include>
+			<!--<include>YouTubeContext</include>-->
+			<include>MetalliQContext</include>
 		</control>
 		<control type="image" id="999">
 			<description>background image</description>

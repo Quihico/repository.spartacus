@@ -1,45 +1,45 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <shortcuts>
-<!--	<shortcut>
-		<defaultID>Browse Movies</defaultID>
-		<label>$ADDON[script.qlickplay 32225] $ADDON[script.qlickplay 32227]</label>
-		<label2>folder</label2>
-		<icon>DefaultMovies.png</icon>
-		<thumb>image://special%3A%2F%2F.kodi%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_MOVIES%2fHOME_MOVIES_001.jpg/</thumb>
-		<action>RunScript(&quot;script.qlickplay&quot;,info=list,type=movie)</action>
-	</shortcut>-->
 	<shortcut>
-		<visible>Library.HasContent(movies)</visible>
-		<defaultID>My Movies</defaultID>
-		<label>My Movies</label>
+		<defaultID />
+		<label>$LOCALIZE[14022]</label>
 		<label2>folder</label2>
 		<icon>DefaultMovies.png</icon>
-		<thumb>image://special%3A%2F%2F.kodi%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_MOVIES%2fHOME_MOVIES_001.jpg/</thumb>
+		<thumb>image://special://home/media/branding/backgrounds/HOME_MOVIES/HOME_MOVIES_001.jpg/</thumb>
 		<action>ActivateWindow(10025,videodb://movies/,return)</action>
+		<visible>Library.HasContent(movies)</visible>
+	</shortcut>
+	<shortcut>
+		<defaultID />
+		<label>$LOCALIZE[1024]</label>
+		<label2>Program</label2>
+		<icon>DefaultAddon.png</icon>
+		<thumb>image://special://home/addons/script.qlickplay/icon.png/</thumb>
+		<action>RunScript(script.qlickplay,info=list,type=movie,query=qqqqq)</action>
 	</shortcut>
 	<shortcut>
 		<defaultID />
 		<label>+-</label>
 		<label2>Video Add-On</label2>
 		<icon>DefaultAddonProgram.png</icon>
-		<thumb>image://special%3A%2F%2F.kodi%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_MOVIES%2fHOME_MOVIES_001.jpg/</thumb>
-		<action>RunScript(&quot;special://home/addons/plugin.program.tbs/epg.py&quot;,'movies')</action>
-	</shortcut>
-<!--	<shortcut>
-		<visible>Library.HasContent(movies)</visible>
-		<defaultID>My Recent Movies</defaultID>
-		<label>My Recent Movies</label>
-		<label2>folder</label2>
-		<icon>DefaultMovies.png</icon>
-		<thumb>image://special%3A%2F%2F.kodi%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_MOVIES%2fHOME_MOVIES_001.jpg/</thumb>
-		<action>ActivateWindow(10025,videodb://recentlyaddedmovies/,return)</action>
+		<thumb>image://special://home/media/branding/backgrounds/HOME_MOVIES/HOME_MOVIES_001.jpg/</thumb>
+		<action>RunScript("special://home/addons/plugin.program.tbs/epg.py",'movies')</action>
 	</shortcut>
 	<shortcut>
-		<defaultID>Search Movies</defaultID>
-		<label>$ADDON[script.qlickplay 32226] $ADDON[script.qlickplay 32227]</label>
+		<defaultID />
+		<label>$LOCALIZE[137]</label>
+		<label2>Video Add-On</label2>
+		<icon>DefaultShortcut.png</icon>
+		<thumb>image://https://raw.githubusercontent.com/OpenELEQ/Style/master/MetalliQ/default/movies.png</thumb>
+		<action>RunPlugin(plugin://plugin.video.metalliq/movies/trakt/search)</action>
+	</shortcut>
+	<shortcut>
+		<defaultID />
+		<label>$LOCALIZE[20343]</label>
 		<label2>folder</label2>
-		<icon>DefaultMovies.png</icon>
-		<thumb>image://special%3A%2F%2F.kodi%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_MOVIES%2fHOME_MOVIES_001.jpg/</thumb>
-		<action>RunScript(&quot;script.qlickplay&quot;,info=list,type=movie,query=qqq)</action>
-	</shortcut>-->
+		<icon>DefaultTVShows.png</icon>
+		<thumb>image://special://home/media/branding/backgrounds/HOME_TV_SHOWS/HOME_TV_SHOWS_001.jpg/</thumb>
+		<action>ActivateWindow(10025,videodb://tvshows/,return)</action>
+		<visible>Library.HasContent(tvshows)</visible>
+	</shortcut>
 </shortcuts>

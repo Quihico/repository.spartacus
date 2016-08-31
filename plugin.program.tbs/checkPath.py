@@ -28,7 +28,7 @@ def check(direct):
         os.makedirs(path)
         os.removedirs(path)
         xbmc.executebuiltin('Dialog.Show(busydialog)')
-        dialog.ok('[COLOR=lime]SUCCESS[/COLOR]', 'Great news, the path you chose is writeable.', 'Some of these builds are rather big, we recommend', 'a minimum of 1GB storage space.')
+        dialog.ok('[COLOR=lime]SUCCESS[/COLOR]', 'Great news, the path you chose is writeable.', 'When performing a backup the final zip file can sometimes be rather big, we recommend a minimum of 1GB storage space.')
         
         if direct!='maintenance':
             ADDON.openSettings()

@@ -11,27 +11,17 @@ HOME             =  xbmc.translatePath('special://home/')
 USERDATA         =  xbmc.translatePath(os.path.join('special://home/userdata',''))
 ADDON_DATA       =  xbmc.translatePath(os.path.join(USERDATA,'addon_data'))
 ADDONS           =  xbmc.translatePath(os.path.join('special://home','addons',''))
-idfile           =  xbmc.translatePath(os.path.join(ADDON_DATA,AddonID,'id.xml'))
 cfgfile          =  xbmc.translatePath(os.path.join(ADDON_DATA,AddonID,'cfg'))
 sleeper          =  os.path.join(ADDONS,AddonID,'resources','tmr')
 internetcheck    =  ADDON.getSetting('internetcheck')
 cachecheck       =  ADDON.getSetting('cleancache')
 cbnotifycheck    =  ADDON.getSetting('cbnotifycheck')
 mynotifycheck    =  ADDON.getSetting('mynotifycheck')
-TBSDATA          =  xbmc.translatePath(os.path.join(ADDON_DATA,AddonID,''))
 flashsplash      = '/flash/oemsplash.png'
 newsplash        =  xbmc.translatePath('special://home/media/branding/Splash.png')
 epgdst           =  xbmc.translatePath('special://home/addons/packages/epg')
 runwizard        =  os.path.join(ADDONS,'packages','RUN_WIZARD')
 #---------------------------------------------------------------------------------------------------
-
-if not os.path.exists(TBSDATA):
-    os.makedirs(TBSDATA)
-
-if not os.path.exists(idfile):
-    localfile = open(idfile, mode='w+')
-    localfile.write('id="None"\nname="None"')
-    localfile.close()
 
 # Make sure this doesn't interfere with startup wizard
 if not os.path.exists(runwizard):
@@ -70,6 +60,9 @@ if sleep == '':
     localfile = open(sleeper, mode='w+')
     localfile.write('23:59:59')
     localfile.close()
+
+xbmc.executebuiltin('RunScript(special://home/addons/'+AddonID+'/checknews.py,shares)')
+xbmc.executebuiltin('XBMC.AlarmClock(Shareloop,XBMC.RunScript(special://home/addons/'+AddonID+'/checknews.py,shares),12:00:00,silent,loop)')
 
 if sleep != '':
     xbmc.executebuiltin('XBMC.AlarmClock(Notifyloop,XBMC.RunScript(special://home/addons/'+AddonID+'/checknews.py,silent=true),'+sleep+',silent,loop)')
