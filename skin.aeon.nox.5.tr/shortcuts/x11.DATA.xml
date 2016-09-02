@@ -15,7 +15,7 @@
 		<label2>Program</label2>
 		<icon>DefaultAddon.png</icon>
 		<thumb>image://special://home/addons/script.qlickplay/icon.png/</thumb>
-		<action>RunScript(script.qlickplay,info=list,type=tv,query=qqqqq)</action>
+		<action>RunScript(script.qlickplay,info=list,type=tv)</action>
 	</shortcut>
 	<shortcut>
 		<defaultID />
@@ -30,8 +30,8 @@
 		<label>$LOCALIZE[137]</label>
 		<label2>Video Add-On</label2>
 		<icon>DefaultShortcut.png</icon>
-		<thumb>image://https://raw.githubusercontent.com/OpenELEQ/Style/master/MetalliQ/default/tv.png</thumb>
-		<action>RunPlugin(plugin://plugin.video.metalliq/tv/trakt/search)</action>
+		<thumb>image://special://home/addons/script.qlickplay/icon.png/</thumb>
+		<action>RunScript(script.qlickplay,info=list,type=tv,query=qqqqq)</action>
 	</shortcut>
 	<shortcut>
 		<defaultID />

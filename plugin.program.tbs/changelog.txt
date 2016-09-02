@@ -1,3 +1,7 @@
+v.3.9:
+- OpenELEC/LibreELEC support
+- Fixed bug with failing to start from startup wizard
+
 v.3.8.9:
 - Service now checks every 12 hours for any social shares on local system that have changed from what’s online.
 - Fixed up lots of maintenance with new functions.

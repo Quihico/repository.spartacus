@@ -17,7 +17,7 @@ except:
 AddonID          =  'plugin.program.tbs'
 AddonName        =  'Maintenance'
 ADDON            =  xbmcaddon.Addon(id=AddonID)
-debug            =  'true'
+debug            =  ADDON.getSetting('debug')
 USB              =  ADDON.getSetting('zip')
 thirdparty       =  ADDON.getSetting('thirdparty')
 dialog           =  xbmcgui.Dialog()
@@ -2039,12 +2039,17 @@ def Open_Link(url):
 # Check if system is OE or LE
 def OpenELEC_Check():
     content = Grab_Log()
-    if 'Running on OpenELEC' in content or 'LibreELEC' in content:
+    if 'Running on OpenELEC' in content or 'Running on LibreELEC' in content:
         return True
 #---------------------------------------------------------------------------------------------------
 # Open OE Settings
 def OpenELEC_Settings():
-    xbmc.executebuiltin('RunAddon(service.openelec.settings)')
+    try:
+        xbmcaddon.Addon(id='service.openelec.settings').getAddonInfo('name')
+        xbmc.executebuiltin('RunAddon(service.openelec.settings)')
+    except:
+        xbmcaddon.Addon(id='service.libreelec.settings').getAddonInfo('name')
+        xbmc.executebuiltin('RunAddon(service.libreelec.settings)')
 #---------------------------------------------------------------------------------------------------
 # Set popup xml based on platform
 def pop(xmlfile):
@@ -2534,6 +2539,14 @@ def Text_Boxes(heading,anounce):
   TextBox()
   while xbmc.getCondVisibility('Window.IsVisible(10147)'):
       xbmc.sleep(500)
+
+# Need to optimise the above, all that's really required is this:
+
+# xbmc.executebuiltin("ActivateWindow(10147)")
+# controller = xbmcgui.Window(10147)
+# xbmc.sleep(500)
+# controller.getControl(1).setLabel('TEST HEADER')
+# controller.getControl(5).setText('TEST TEXT')
 #-----------------------------------------------------------------------------
 # Read or write to a file
 def Text_File(path, mode, text = ''):

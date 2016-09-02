@@ -15,7 +15,7 @@
 		<label2>Program</label2>
 		<icon>DefaultAddon.png</icon>
 		<thumb>image://special://home/addons/script.qlickplay/icon.png/</thumb>
-		<action>RunScript(script.qlickplay,info=list,type=movie,query=qqqqq)</action>
+		<action>RunScript(script.qlickplay,info=list,type=movie)</action>
 	</shortcut>
 	<shortcut>
 		<defaultID />
@@ -31,7 +31,7 @@
 		<label2>Video Add-On</label2>
 		<icon>DefaultShortcut.png</icon>
 		<thumb>image://https://raw.githubusercontent.com/OpenELEQ/Style/master/MetalliQ/default/movies.png</thumb>
-		<action>RunPlugin(plugin://plugin.video.metalliq/movies/trakt/search)</action>
+		<action>RunScript(script.qlickplay,info=list,type=movie,query=qqqqq)</action>
 	</shortcut>
 	<shortcut>
 		<defaultID />
