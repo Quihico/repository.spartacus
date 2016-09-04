@@ -549,7 +549,7 @@
 
 <addon
   id="resource.language.en_gb"
-  version="3.0"
+  version="3.1"
   name="English"
   provider-name="Team Kodi">
   <requires>
