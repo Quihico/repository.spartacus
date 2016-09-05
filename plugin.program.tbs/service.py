@@ -61,7 +61,8 @@ if sleep == '':
     localfile.write('23:59:59')
     localfile.close()
 
-xbmc.executebuiltin('RunScript(special://home/addons/'+AddonID+'/checknews.py,shares)')
+if not os.path.exists(runwizard):
+    xbmc.executebuiltin('RunScript(special://home/addons/'+AddonID+'/checknews.py,shares)')
 xbmc.executebuiltin('XBMC.AlarmClock(Shareloop,XBMC.RunScript(special://home/addons/'+AddonID+'/checknews.py,shares),12:00:00,silent,loop)')
 
 if sleep != '':
