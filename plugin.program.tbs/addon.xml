@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.program.tbs" name="Maintenance"  provider-name="TotalRevolution" version="3.9.3">
-  <requires>
-	<import addon="xbmc.python" version="2.1.0"/>
-    <import addon="script.trtv" version="1.0"/>
-    <import addon="plugin.program.super.favourites" version="1.0.35" optional="true"/>
-  </requires>
-	<extension point="xbmc.python.library"      library="launch.py" />
-	<extension point="xbmc.python.pluginsource" library="launch.py">
-		<provides>video audio image executable</provides>
+	<requires>
+		<import addon="xbmc.python" version="2.1.0"/>
+		<import addon="script.trtv" version="1.2.1"/>
+		<import addon="plugin.program.super.favourites" version="1.0.43" optional="true"/>
+	</requires>
+		<extension point="xbmc.python.library"      library="launch.py" />
+		<extension point="xbmc.python.pluginsource" library="launch.py">
+			<provides>video audio image executable</provides>
 	</extension>
-  <extension point="xbmc.service" library="service.py" start="startup" />
-  <extension point="xbmc.addon.metadata">
-    <summary lang="en">Maintenance - powered by TotalRevolution</summary>
-	<description>Your one stop add-on for everything you could possibly need.</description>
-    <platform>all</platform>
-    <ref>4e278b37a07126860607f9ca41e530c5</ref>
-    <ref2>c4f42f50deccd3c03978b43f4eb78744</ref2>
-  </extension>
-	<extension point="kodi.context.item" library="context.py">        
-      <item>
-        <label>Share...</label>
-        <visible>true</visible>
-<!--        <visible>StringCompare(Container.PluginName,"plugin.program.super.favourites")</visible>-->
-      </item>
+	<extension point="xbmc.service" library="service.py" start="startup" />
+	<extension point="kodi.context.item" library="context.py">
+		<item>
+			<label>Share...</label>
+			<visible>true</visible>
+			<!--<visible>StringCompare(Container.PluginName,"plugin.program.super.favourites")</visible>-->
+		</item>
 	</extension>
-
+	<extension point="xbmc.addon.metadata">
+		<summary lang="en">Maintenance - powered by TotalRevolution</summary>
+		<description>Your one stop add-on for everything you could possibly need.</description>
+		<platform>all</platform>
+		<ref>4e278b37a07126860607f9ca41e530c5</ref>
+		<ref2>c4f42f50deccd3c03978b43f4eb78744</ref2>
+	</extension>
 </addon>
