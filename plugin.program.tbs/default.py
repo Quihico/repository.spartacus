@@ -133,6 +133,7 @@ def Check_Updates(url, datefile, dst):
         localdate = 0
     Check_File_Date(url, datefile, int(localdate), dst)
 #-----------------------------------------------------------------------------------------------------------------    
+# Remove a path, whether folder or file it will be deleted
 def Remove_Files():
     xbmc.log('### Attempting to Remove Files')
     if os.path.exists(remlist):
@@ -179,11 +180,11 @@ class SPLASH(xbmcgui.WindowXMLDialog):
         time.sleep( .4 )
         self.close()
 #---------------------------------------------------------------------------------------------------
-#Main Iiectory function - xbmcplugin.addDirectoryItem()
+# Main Directory function - xbmcplugin.addDirectoryItem()
 def Add_Directory_Item(handle, url, listitem, isFolder):
     xbmcplugin.addDirectoryItem(handle, url, listitem, isFolder)
 #-----------------------------------------------------------------------------------------------------------------  
-#Add a standard directory and grab fanart and iconimage from artpath defined in global variables
+# Add a standard directory and grab fanart and iconimage from artpath defined in global variables
 def addDir(type,name,url,mode,iconimage = '',fanart = '',video = '',description = ''):
     if not 'addon' in type:
 
@@ -468,7 +469,7 @@ def ASCII_Check():
     os.remove(ascii_results1)
     os.remove(ascii_results2)
 #---------------------------------------------------------------------------------------------------
-#Create backup menu
+# Create backup menu
 def Backup_Option():
     addDir('','Backup Addons Only','addons','restore_zip','','','','Back Up Your Addons')
     addDir('','Backup Addon Data Only','addon_data','restore_zip','','','','Back Up Your Addon Userdata')
@@ -489,12 +490,12 @@ def Backup_Option():
     if os.path.exists(RSS):
         addDir('','Backup RssFeeds.xml',RSS,'restore_backup','Backup.png','','','Back Up Your RssFeeds.xml')
 #---------------------------------------------------------------------------------------------------
-#Backup/Restore root menu
+# Backup/Restore root menu
 def Backup_Restore():
     addDir('folder','Backup My Content','none','backup_option','Backup.png','','','')
     addDir('folder','Restore My Content','none','restore_option','Restore.png','','','')
 #---------------------------------------------------------------------------------------------------
-#Browse pre-installed repo's via the kodi add-on browser
+# Browse pre-installed repo's via the kodi add-on browser
 def Browse_Repos():
     xbmc.executebuiltin('ActivateWindow(10040,"addons://repos/",return)')
 #---------------------------------------------------------------------------------------------------
@@ -601,8 +602,8 @@ def Cleanup_Old_Addons(addon_ids):
     conn.commit()
     c.close()
 #---------------------------------------------------------------------------------------------------
-def Cleanup_Old_Textures():
 # Thanks to xunity maintenance tool for this code, this will remove old stale textures not used in past 14 days
+def Cleanup_Old_Textures():
     path           = xbmc.translatePath('special://home/userdata/Database')
     files          = glob.glob(os.path.join(path, 'Textures*.db'))
     ver            = 0
@@ -700,7 +701,7 @@ def DeleteAddonData():
             for d in dirs:
                 shutil.rmtree(os.path.join(root, d))        
 #---------------------------------------------------------------------------------------------------
-#Function to delete crash logs
+# Function to delete crash logs
 def Delete_Logs():  
     for infile in glob.glob(os.path.join(log_path, 'xbmc_crashlog*.*')):
          File   = infile
@@ -708,7 +709,7 @@ def Delete_Logs():
          dialog = xbmcgui.Dialog()
          dialog.ok("Crash Logs Deleted", "Your old crash logs have now been deleted.")
 #-----------------------------------------------------------------------------------------------------------------    
-#Function to delete the packages folder
+# Function to delete the packages folder
 def Delete_Packages():
     xbmc.log('############################################################       DELETING PACKAGES             ###############################################################')
     packages_cache_path = xbmc.translatePath(os.path.join('special://home/addons/packages', ''))
@@ -740,7 +741,7 @@ def Delete_Profile_Menu(url):
         if name != 'Master' and name != url.replace(' ','_').replace("'",'').replace(':','-'):
             addDir('','[COLOR=darkcyan]DELETE[/COLOR] '+name.replace('_',' '),os.path.join(CP_PROFILE,name),'delete_path','','','','')
 #---------------------------------------------------------------------------------------------------
-#Function to delete the userdata/addon_data folder
+# Function to delete the userdata/addon_data folder
 def Delete_Userdata():
     xbmc.log('############################################################       DELETING USERDATA             ###############################################################')
     addon_data_path = xbmc.translatePath(os.path.join('special://home/userdata/addon_data', ''))
@@ -757,7 +758,7 @@ def Delete_Userdata():
             for d in dirs:
                 shutil.rmtree(os.path.join(root, d))        
 #-----------------------------------------------------------------------------------------------------------------  
-#Function to do a full wipe.
+# Function to do a full wipe.
 def Destroy_Path(path):
     dp.create("Cleaning Path","Wiping...",'', 'Please Wait')
     shutil.rmtree(path, ignore_errors=True)
@@ -901,7 +902,7 @@ def Get_Keyboard( default="", heading="", hidden=False ):
         return unicode( keyboard.getText(), "utf-8" )
 #    return default
 #-----------------------------------------------------------------------------------------------------------------  
-#Get params and clean up into string or integer
+# Get params and clean up into string or integer
 def Get_Params():
         param=[]
         paramstring=sys.argv[2]
@@ -920,64 +921,98 @@ def Get_Params():
                                 
         return param
 #-----------------------------------------------------------------------------------------------------------------
-def getMacAddress(protocol):
-    cont = 0
-    if sys.platform == 'win32': 
-        mac = ''
-        for line in os.popen("ipconfig /all"):
-            if protocol == 'wifi':
-                if line.startswith('Wireless LAN adapter Wi'):
-                    cont = 1
-                if line.lstrip().startswith('Physical Address') and cont == 1:
-                    mac = line.split(':')[1].strip().replace('-',':')
-                    break
-
-            if protocol != 'wifi':
-                if line.lstrip().startswith('Physical Address'): 
-                    mac = line.split(':')[1].strip().replace('-',':')
-                    break 
-
-    if sys.platform == 'darwin': 
-        mac = ''
-        if protocol == 'wifi':
-            for line in os.popen("ifconfig en0 | grep ether"):
-                if line.lstrip().startswith('ether'):
-                    mac = line.split('ether')[1].strip().replace('-',':')
-                    break
-
-        if protocol != 'wifi':
-            for line in os.popen("ifconfig en1 | grep ether"):
-                if line.lstrip().startswith('ether'):
-                    mac = line.split('ether')[1].strip().replace('-',':')
-                    break
-
-    if xbmc.getCondVisibility('System.Platform.Android'):
-        mac = ''
-        if os.path.exists('/sys/class/net/wlan0/address') and protocol == 'wifi':
-            readfile = open('/sys/class/net/wlan0/address', mode='r')
-        if os.path.exists('/sys/class/net/eth0/address') and protocol != 'wifi':
-            readfile = open('/sys/class/net/eth0/address', mode='r')
-        mac = readfile.read()
-        try:
-            mac = mac[:17]
-        except:
+# Return mac address, not currently checked on Mac OS
+def Get_Mac(protocol):
+    cont    = 0
+    counter = 0
+    mac     = ''
+    while mac == '' and counter < 5: 
+        if sys.platform == 'win32': 
             mac = ''
-        readfile.close()
-        if mac == '':
-            xbmc.log('#### CANNOT FIND MAC DETAILS ON YOUR DEVICE. THIS UNIT CANNOT CURRENTLY BE USED WITH OUR SERVICE')
-            mac = 'Unknown'
+            for line in os.popen("ipconfig /all"):
+                if protocol == 'wifi':
+                    if line.startswith('Wireless LAN adapter Wi'):
+                        cont = 1
+                    if line.lstrip().startswith('Physical Address') and cont == 1:
+                        mac = line.split(':')[1].strip().replace('-',':').replace(' ','')
+                        if len(mac) == 17:
+                            break
+                        else:
+                            mac = ''
+                            counter += 1
 
-    else:
-        if protocol == 'wifi':
-            for line in os.popen("/sbin/ifconfig"): 
-                if line.find('wlan0') > -1: 
-                    mac = line.split()[4] 
-                    break
+                else:
+                    if line.lstrip().startswith('Physical Address'): 
+                        mac = line.split(':')[1].strip().replace('-',':').replace(' ','')
+                        if len(mac) == 17:
+                            break
+                        else:
+                            mac = ''
+                            counter += 1
+
+        elif sys.platform == 'darwin': 
+            mac = ''
+            if protocol == 'wifi':
+                for line in os.popen("ifconfig en0 | grep ether"):
+                    if line.lstrip().startswith('ether'):
+                        mac = line.split('ether')[1].strip().replace('-',':').replace(' ','')
+                        xbmc.log('(count: %s) (len: %s) wifi: %s' % (counter, len(mac), mac))
+                        if len(mac) == 17:
+                            break
+                        else:
+                            mac = ''
+                            counter += 1
+
+            else:
+                for line in os.popen("ifconfig en1 | grep ether"):
+                    if line.lstrip().startswith('ether'):
+                        mac = line.split('ether')[1].strip().replace('-',':').replace(' ','')
+                        xbmc.log('(count: %s) (len: %s) ethernet: %s' % (counter, len(mac), mac))
+                        if len(mac) == 17:
+                            break
+                        else:
+                            mac = ''
+                            counter += 1
+
+        elif xbmc.getCondVisibility('System.Platform.Android'):
+            mac = ''
+            if os.path.exists('/sys/class/net/wlan0/address') and protocol == 'wifi':
+                readfile = open('/sys/class/net/wlan0/address', mode='r')
+            if os.path.exists('/sys/class/net/eth0/address') and protocol != 'wifi':
+                readfile = open('/sys/class/net/eth0/address', mode='r')
+            mac = readfile.read()
+            readfile.close()
+            try:
+                mac = mac.replace(' ','')
+                mac = mac[:17]
+            except:
+                mac = ''
+                counter += 1
+
         else:
-           for line in os.popen("/sbin/ifconfig"): 
-                if line.find('eth0') > -1: 
-                    mac = line.split()[4] 
-                    break
+            if protocol == 'wifi':
+                for line in os.popen("/sbin/ifconfig"): 
+                    if line.find('wlan0') > -1: 
+                        mac = line.split()[4]
+                        if len(mac) == 17:
+                            break
+                        else:
+                            mac = ''
+                            counter += 1
+
+            else:
+               for line in os.popen("/sbin/ifconfig"): 
+                    if line.find('eth0') > -1: 
+                        mac = line.split()[4] 
+                        if len(mac) == 17:
+                            break
+                        else:
+                            mac = ''
+                            counter += 1
+    if mac == '':
+        xbmc.log('#### CANNOT FIND MAC DETAILS ON YOUR DEVICE. THIS UNIT CANNOT CURRENTLY BE USED WITH OUR SERVICE')
+        mac = 'Unknown'
+
     return str(mac)
 #---------------------------------------------------------------------------------------------------
 def Gotham():
@@ -1039,220 +1074,235 @@ def Grab_Updates(url, runtype = ''):
 
 # SET TO 1 FOR TEST MODE - THIS WILL OUTPUT TO LOG AND DISPLAY COMMAND DIALOGS ON SCREEN
         showdialogs = 0
+        if urlparams != 'Unknown':
+            if url == 'http://tlbb.me/comm.php?multi&z=c&x=':
+                multi = 1
+                url=url.replace('multi&','')
+            if url == 'http://tlbb.me/comm.php?update&z=c&x=':
+                Notify('Checking For Updates','Please wait...','1000',os.path.join(ADDONS,'script.openwindow','resources','images','update_software.png'))
+                url=url.replace('update&','')
+            xbmc.executebuiltin("ActivateWindow(busydialog)")
+            while mysuccess != 1 and failed != 1:
 
-        if url == 'http://tlbb.me/comm.php?multi&z=c&x=':
-            multi = 1
-            url=url.replace('multi&','')
-        if url == 'http://tlbb.me/comm.php?update&z=c&x=':
-            Notify('Checking For Updates','Please wait...','1000',os.path.join(ADDONS,'script.openwindow','resources','images','update_software.png'))
-            url=url.replace('update&','')
-        xbmc.executebuiltin("ActivateWindow(busydialog)")
-        while mysuccess != 1 and failed != 1:
-
-            try:
-                if debug == 'true':
-                    xbmc.log("### URL: "+url+encryptme('e',urlparams))
-                link = Open_URL2(url+encryptme('e',urlparams))
-                if link != '' and not 'sleep' in link:
-                    link = encryptme('d',link).replace('\n',';').replace('|_|',' ').replace('|!|','\n').replace('http://venztech.com/repo_jpegs/','http://tlbb.me/repo_jpegs/')
-                if debug == 'true':
-                    try:
-                        xbmc.log("### Return: "+link)
-                    except:
-                        pass
-
-                if link == '':
-                    xbmc.log("### Blank page returned")
-                    counter += 1
-                    if counter == 3:
-                        failed = 1
-#                    return
-
-# Check that no body tag exists, if it does then we know TLBB is offline
-                if not '<body' in link and link != '':
-                    linematch  = re.compile('com(.+?)="').findall(link)
-                    commline   = linematch[0] if (len(linematch) > 0) else ''
-                    commatch   = re.compile('="(.+?)endcom"').findall(link)
-                    command    = commatch[0] if (len(commatch) > 0) else 'End'
-                
-                    SF_match   = re.compile('<favourite[\s\S]*?</favourite>').findall(command)
-                    SF_command = SF_match[0] if (len(SF_match) > 0) else 'None'
-
-# Create array of commands so we can check if the install video needs to be played
-                    previous += command
-
+                try:
                     if debug == 'true':
-
-                        xbmc.log("### command: "+command)
-                        xbmc.log("### SF_command: "+SF_command)
-
-                    Open_URL2(binascii.unhexlify('687474703a2f2f746c62622e6d652f636f6d6d2e7068703f783d')+encryptme('e',urlparams)+'&y='+commline)
-
+                        xbmc.log("### URL: "+url+encryptme('e',urlparams))
+                    link = Open_URL2(url+encryptme('e',urlparams))
+                    if link != '' and not 'sleep' in link:
+                        link = encryptme('d',link).replace('\n',';').replace('|_|',' ').replace('|!|','\n').replace('http://venztech.com/repo_jpegs/','http://tlbb.me/repo_jpegs/')
                     if debug == 'true':
-                        xbmc.log("### COMMAND *CLEANED: "+command.replace('|#|',';'))
-                        xbmc.log("### LINK *ORIG: "+link)
-                    if SF_command!='None':
-                        localfile = open(progresstemp, mode='w+')
-                        localfile.write(SF_command)
-                        localfile.close()
+                        try:
+                            xbmc.log("### Return: "+link)
+                        except:
+                            pass
 
-                    elif command!='End' and not 'sleep' in link:
-                        if ';' in command:
-                            if debug == 'true':
-                                xbmc.log(command)
-                            newcommands = command.split(';')
-                            for item in newcommands:
-                                if 'branding/install.mp4' in item:
-                                    item = ''
+                    if link == '':
+                        xbmc.log("### Blank page returned")
+                        counter += 1
+                        if counter == 3:
+                            failed = 1
+    #                    return
 
-                                if 'extract.all' in item:
-                                    try:
-                                        exec item
-                                        if showdialogs == 1:
-                                            TXT.TXT('ITEM',item.replace('|#|',';'))
-                                        if os.path.exists(os.path.join(packages,'updates.zip')):
-                                            os.remove(os.path.join(packages,'updates.zip'))
-                                    except Exception as e:
-                                        xbmc.log(str(e))
-                                else:
-                                    try:
-                                        if 'Dialog().ok(' in item:
+    # Check that no body tag exists, if it does then we know TLBB is offline
+                    if not '<body' in link and link != '':
+                        linematch  = re.compile('com(.+?)="').findall(link)
+                        commline   = linematch[0] if (len(linematch) > 0) else ''
+                        commatch   = re.compile('="(.+?)endcom"').findall(link)
+                        command    = commatch[0] if (len(commatch) > 0) else 'End'
+                    
+                        SF_match   = re.compile('<favourite[\s\S]*?</favourite>').findall(command)
+                        SF_command = SF_match[0] if (len(SF_match) > 0) else 'None'
+
+    # Create array of commands so we can check if the install video needs to be played
+                        previous += command
+
+                        if debug == 'true':
+
+                            xbmc.log("### command: "+command)
+                            xbmc.log("### SF_command: "+SF_command)
+
+                        Open_URL2(binascii.unhexlify('687474703a2f2f746c62622e6d652f636f6d6d2e7068703f783d')+encryptme('e',urlparams)+'&y='+commline)
+
+                        if debug == 'true':
+                            xbmc.log("### COMMAND *CLEANED: "+command.replace('|#|',';'))
+                            xbmc.log("### LINK *ORIG: "+link)
+                        if SF_command!='None':
+                            localfile = open(progresstemp, mode='w+')
+                            localfile.write(SF_command)
+                            localfile.close()
+
+                        elif command!='End' and not 'sleep' in link:
+                            if ';' in command:
+                                if debug == 'true':
+                                    xbmc.log(command)
+                                newcommands = command.split(';')
+                                for item in newcommands:
+                                    if 'branding/install.mp4' in item:
+                                        item = ''
+
+                                    if 'extract.all' in item:
+                                        try:
+                                            exec item
+                                            if showdialogs == 1:
+                                                TXT.TXT('ITEM',item.replace('|#|',';'))
+                                            if os.path.exists(os.path.join(packages,'updates.zip')):
+                                                os.remove(os.path.join(packages,'updates.zip'))
+                                        except Exception as e:
+                                            xbmc.log(str(e))
+                                    else:
+                                        try:
+                                            if 'Dialog().ok(' in item:
+                                                xbmc.sleep(1000)
+                                                while xbmc.Player().isPlaying():
+                                                    xbmc.sleep(500)
+                                            exec item.replace('|#|',';') # Change to semicolon for user agent otherwise it splits into a new command
+                                            if showdialogs == 1:
+                                                TXT.TXT('ITEM',item.replace('|#|',';'))
+                                                xbmc.log("### RUNNING ITEM: "+item.replace('|#|',';'))
+                                        except Exception as e:
+                                            xbmc.log("### Failed with item: "+item.replace('|#|',';'))
+                                            xbmc.log(str(e))
+                                            if showdialogs == 1:
+                                                TXT.TXT('FAILED ITEM',item.replace('|#|',';'))
+    #                                    while xbmc.Player().isPlaying():
+    #                                        xbmc.sleep(500)
+                            else:
+                                try:
+                                    if 'Dialog().ok(' in command:
+                                        if not multi:
                                             xbmc.sleep(1000)
+                                            xbmc.log("### Dialog.ok in this command, checking if xbmc is playing....")
                                             while xbmc.Player().isPlaying():
                                                 xbmc.sleep(500)
-                                        exec item.replace('|#|',';') # Change to semicolon for user agent otherwise it splits into a new command
-                                        if showdialogs == 1:
-                                            TXT.TXT('ITEM',item.replace('|#|',';'))
-                                            xbmc.log("### RUNNING ITEM: "+item.replace('|#|',';'))
-                                    except Exception as e:
-                                        xbmc.log("### Failed with item: "+item.replace('|#|',';'))
-                                        xbmc.log(str(e))
-                                        if showdialogs == 1:
-                                            TXT.TXT('FAILED ITEM',item.replace('|#|',';'))
-#                                    while xbmc.Player().isPlaying():
-#                                        xbmc.sleep(500)
-                        else:
-                            try:
-                                if 'Dialog().ok(' in command:
-                                    if not multi:
-                                        xbmc.sleep(1000)
-                                        xbmc.log("### Dialog.ok in this command, checking if xbmc is playing....")
-                                        while xbmc.Player().isPlaying():
-                                            xbmc.sleep(500)
-                                    else: command = ''
+                                        else: command = ''
 
-                                if 'extract.all' in command:
-                                    try:
-                                        exec command
+                                    if 'extract.all' in command:
+                                        try:
+                                            exec command
+                                            if showdialogs == 1:
+                                                TXT.TXT('ITEM',command.replace('|#|',';'))
+                                            if os.path.exists(os.path.join(packages,'updates.zip')):
+                                                os.remove(os.path.join(packages,'updates.zip'))
+                                                TXT.TXT('ITEM','Successfully removed updates.zip')
+                                        except Exception as e:
+                                            xbmc.log("### Failed with command: "+command.replace('|#|',';'))
+                                            xbmc.log(str(e))
+
+                                    if 'branding/install.mp4' in command:
+                                        command = ''
+
+                                    else:
+                                        exec command.replace('|#|',';') # Change to semicolon for user agent otherwise it splits into a new command
                                         if showdialogs == 1:
-                                            TXT.TXT('ITEM',command.replace('|#|',';'))
-                                        if os.path.exists(os.path.join(packages,'updates.zip')):
-                                            os.remove(os.path.join(packages,'updates.zip'))
-                                            TXT.TXT('ITEM','Successfully removed updates.zip')
-                                    except Exception as e:
-                                        xbmc.log("### Failed with command: "+command.replace('|#|',';'))
-                                        xbmc.log(str(e))
-
-                                if 'branding/install.mp4' in command:
-                                    command = ''
-
+                                            TXT.TXT('COMMAND',item.replace('|#|',';'))
+                                            xbmc.log("### RUNNING COMMAND: "+item.replace('|#|',';'))
+                                except:
+                                    xbmc.log("### Failed with command: "+command.replace('|#|',';'))
+    #                        while xbmc.Player().isPlaying():
+    #                            xbmc.sleep(500)
+                            previous = ''
+                            if os.path.exists(progresstemp):
+                                os.remove(progresstemp)
+                            
+                        elif command=='End':
+                            if 'sleep' in link:
+                                readfile = open(sleeper, 'r')
+                                content = readfile.read()
+                                readfile.close()
+                                if content != "sleep=STOPALL":
+                                    sleep = str(link[6:])
                                 else:
-                                    exec command.replace('|#|',';') # Change to semicolon for user agent otherwise it splits into a new command
-                                    if showdialogs == 1:
-                                        TXT.TXT('COMMAND',item.replace('|#|',';'))
-                                        xbmc.log("### RUNNING COMMAND: "+item.replace('|#|',';'))
-                            except:
-                                xbmc.log("### Failed with command: "+command.replace('|#|',';'))
-#                        while xbmc.Player().isPlaying():
-#                            xbmc.sleep(500)
-                        previous = ''
-                        if os.path.exists(progresstemp):
-                            os.remove(progresstemp)
-                        
-                    elif command=='End':
-                        if 'sleep' in link:
-                            readfile = open(sleeper, 'r')
-                            content = readfile.read()
-                            readfile.close()
-                            if content != "sleep=STOPALL":
-                                sleep = str(link[6:])
-                            else:
-                                sleep = "23:59:59"
-                                xbmc.log("### SLEEP MODE - SERVER MAINTENANCE")
-                            if str(sleep) != str(content):
-                                writefile = open(sleeper, 'w+')
-                                writefile.write(sleep)
-                                writefile.close()
-                                xbmc.log("### Changed timer to "+sleep)
-                                changetimer = 1
-                            else:
-                                if debug == 'true':
-                                    xbmc.log("### Timer same, no changes required")
-                        if sleep != '23:59:59':
-                            if runtype != 'silent':
-                                Notify('Updates Complete','No more updates to show','1000',os.path.join(ADDONS,'plugin.program.tbs','resources','tick.png'))
-#                            if not multi:
-#                                xbmc.executebuiltin( 'Container.Refresh' )
-                            xbmc.executebuiltin( 'UpdateLocalAddons' )
-                            xbmc.executebuiltin( 'UpdateAddonRepos' )
-                            mysuccess = 1
-            except Exception as e:
-                xbmc.log("### Failed with update command: "+str(e))
-                failed = 1
-        try:
-            xbmc.executebuiltin("Dialog.Close(busydialog)")
-        except:
-            pass
+                                    sleep = "23:59:59"
+                                    xbmc.log("### SLEEP MODE - SERVER MAINTENANCE")
+                                if str(sleep) != str(content):
+                                    writefile = open(sleeper, 'w+')
+                                    writefile.write(sleep)
+                                    writefile.close()
+                                    xbmc.log("### Changed timer to "+sleep)
+                                    changetimer = 1
+                                else:
+                                    if debug == 'true':
+                                        xbmc.log("### Timer same, no changes required")
+                            if sleep != '23:59:59':
+                                if runtype != 'silent':
+                                    Notify('Updates Complete','No more updates to show','1000',os.path.join(ADDONS,'plugin.program.tbs','resources','tick.png'))
+    #                            if not multi:
+    #                                xbmc.executebuiltin( 'Container.Refresh' )
+                                xbmc.executebuiltin( 'UpdateLocalAddons' )
+                                xbmc.executebuiltin( 'UpdateAddonRepos' )
+                                mysuccess = 1
+                except Exception as e:
+                    xbmc.log("### Failed with update command: "+str(e))
+                    failed = 1
+            try:
+                xbmc.executebuiltin("Dialog.Close(busydialog)")
+            except:
+                pass
 
-        if changetimer == 1:
-            xbmc.executebuiltin('StopScript(special://home/addons/plugin.program.tbs/service.py)')
-            xbmc.executebuiltin('RunScript(special://home/addons/plugin.program.tbs/service.py)')
-    Remove_Files()
+            if changetimer == 1:
+                xbmc.executebuiltin('StopScript(special://home/addons/plugin.program.tbs/service.py)')
+                xbmc.executebuiltin('RunScript(special://home/addons/plugin.program.tbs/service.py)')
+        try:
+            xbmc.executebuiltin('RunScript(special://home/addons/script.openwindow/functions.py)')
+        except:
+            xbmc.executebuiltin('RunScript(special://xbmc/addons/script.openwindow/functions.py)')
+        Remove_Files()
 #---------------------------------------------------------------------------------------------------
 #function to grab system info
 def URL_Params():
-        try:
-            wifimac = getMacAddress('wifi').replace('\n','')
-        except:
-            wifimac = 'Unknown'
-        try:
-            ethmac  = getMacAddress('eth0').replace('\n','')
-        except:
-            ethmac  = 'Unknown'
-        try:
-            cpu     = CPU_Check().replace('\n','')
-        except:
-            cpu     = 'Unknown'
-        try:
-            build   = Build_Info().replace('\n','')
-        except:
-            build   = 'Unknown'
+    try:
+        wifimac = Get_Mac('wifi').rstrip().lstrip()
+    except:
+        wifimac = 'Unknown'
+    try:
+        ethmac  = Get_Mac('eth0').rstrip().lstrip()
+    except:
+        ethmac  = 'Unknown'
+    try:
+        cpu     = CPU_Check().rstrip().lstrip()
+    except:
+        cpu     = 'Unknown'
+    try:
+        build   = Build_Info().rstrip().lstrip()
+    except:
+        build   = 'Unknown'
 
+    if ethmac == 'Unknown' and wifimac != 'Unknown':
+        ethmac = wifimac
+    if ethmac != 'Unknown' and wifimac == 'Unknown':
+        wifimac = ethmac
+
+    if ethmac != 'Unknown' and wifimac != 'Unknown':
+        return (wifimac+'&'+cpu+'&'+build+'&'+ethmac).replace(' ','%20')
+        xbmc.log('### maintenance: '+(wifimac+'&'+cpu+'&'+build+'&'+ethmac).replace(' ','%20'))
+    else:
+        return 'Unknown'
         xbmc.log("### BUILD:"+build)
-        urlparams = wifimac+'&'+cpu+'&'+build+'&'+ethmac.replace(' ','%20')
-        return urlparams
 #---------------------------------------------------------------------------------------------------
 #Function to populate the search based on the initial first filter
 def Install_Menu():
     key = SEARCH('Enter Key Phrase To Search For')
     xbmc.executebuiltin("ActivateWindow(busydialog)")
     urlparams  = URL_Params()
+    if urlparams != 'Unknown':
 #    buildsURL  = 'http://tlbb.me/catmenu.php?x='+encryptme('e',urlparams)
-    buildsURL  = 'http://tlbb.me/boxer/catsearch_tlbb.php?search='+encryptme('e',urlparams)+'&k='+encryptme('e',key)
-    try:
-        link       = encryptme('d',Open_URL2(buildsURL))
-        if debug == 'true':
-            xbmc.log("### Return orig: "+link)
-#    if link !='':
-#        xbmc.log("### Return Decrypted: "+encryptme('d',link))
-# match without cloudflare enabled
-    #match      = re.compile('n="(.+?)"l="(.+?)"t="(.+?)"', re.DOTALL).findall(link)
-        match      = re.compile('n="(.+?)"l="(.+?)"', re.DOTALL).findall(link)    
-        for name, url in match:
-            addDir('folder',name,url,'install_venz','','','','')
-    except:
-        Notify('No Response from server','Sorry Please try later','1000',os.path.join(ADDONS,'plugin.program.tbs','resources','cross.png'))     
-        xbmc.executebuiltin("Dialog.Close(busydialog)")
+        buildsURL  = 'http://tlbb.me/boxer/catsearch_tlbb.php?search='+encryptme('e',urlparams)+'&k='+encryptme('e',key)
+        try:
+            link       = encryptme('d',Open_URL2(buildsURL))
+            if debug == 'true':
+                xbmc.log("### Return orig: "+link)
+    #    if link !='':
+    #        xbmc.log("### Return Decrypted: "+encryptme('d',link))
+    # match without cloudflare enabled
+        #match      = re.compile('n="(.+?)"l="(.+?)"t="(.+?)"', re.DOTALL).findall(link)
+            match      = re.compile('n="(.+?)"l="(.+?)"', re.DOTALL).findall(link)    
+            for name, url in match:
+                addDir('folder',name,url,'install_venz','','','','')
+        except:
+            Notify('No Response from server','Sorry Please try later','1000',os.path.join(ADDONS,'plugin.program.tbs','resources','cross.png'))     
+            xbmc.executebuiltin("Dialog.Close(busydialog)")
+    else:
+        dialog.ok('FAULT DETECTED', 'It was not possible to obtain your MAC address details, please check your wifi and ethernet modules are enabled.')
 #---------------------------------------------------------------------------------------------------
 #Function to populate the search based on the initial first filter
 def Install_Venz(url):
@@ -1442,98 +1492,101 @@ def multiselect(title, mylist, images, description):
 def Install_Venz_Menu(function):
     function_orig = function
     urlparams  = URL_Params()
-    try:
-        if '||' in function:
-            function,menutype,menu = function.split('||')
-        else:
-            menutype = ''
-            menu     = ''
-        menu = menu.replace('_',' ').lower()
+    if urlparams != 'Unknown':
+        try:
+            if '||' in function:
+                function,menutype,menu = function.split('||')
+            else:
+                menutype = ''
+                menu     = ''
+            menu = menu.replace('_',' ').lower()
 
-        buildsURL  = 'http://tlbb.me/boxer/catsearch_tlbb.php?search='+function+'&x='+encryptme('e',urlparams)
-        xbmc.log(buildsURL)
-        link_orig  = Open_URL2(buildsURL)
-        link       = encryptme('d',link_orig).replace('|_|',' ').replace('|!|','\n')
-        if debug == 'true':
-            xbmc.log('#### '+encryptme('d',link_orig).replace('|_|',' ').replace('|!|','\n'))
-        
-        failed       = 0
-        contentarray = []
-        contenturl   = []
-        imagearray   = []
-        descarray    = []
-#        tryagain = 0
-#        if int(len(link_orig)) < 11:
-#            failed = 1
-#            choice = dialog.yesno('No Content Found','Sorry no content could be found that matches your criteria.[CR]There may be a temporary glitch with your internet connection at this time, would you like to try again?')
-#            if choice:
-#                tryagain = 1
+            buildsURL  = 'http://tlbb.me/boxer/catsearch_tlbb.php?search='+function+'&x='+encryptme('e',urlparams)
+            xbmc.log(buildsURL)
+            link_orig  = Open_URL2(buildsURL)
+            link       = encryptme('d',link_orig).replace('|_|',' ').replace('|!|','\n')
+            if debug == 'true':
+                xbmc.log('#### '+encryptme('d',link_orig).replace('|_|',' ').replace('|!|','\n'))
+            
+            failed       = 0
+            contentarray = []
+            contenturl   = []
+            imagearray   = []
+            descarray    = []
+    #        tryagain = 0
+    #        if int(len(link_orig)) < 11:
+    #            failed = 1
+    #            choice = dialog.yesno('No Content Found','Sorry no content could be found that matches your criteria.[CR]There may be a temporary glitch with your internet connection at this time, would you like to try again?')
+    #            if choice:
+    #                tryagain = 1
 
-#        if debug == 'true':
-        xbmc.log("### Return orig: "+link)
-        xbmc.log("### FUNCTION: "+function)
-        if failed == 0:
-            match      = re.compile('name="(.+?)"t="(.+?)"d="(.+?)"l="(.+?)"', re.DOTALL).findall(link)    
-            for name, thumb, desc, url in match:
-                if function == 'main_menu':
-                    if not 'Remove' in name:
-                        addDir('',name.replace('_',' '),url,'install_venz',thumb,'','',desc)
+    #        if debug == 'true':
+            xbmc.log("### Return orig: "+link)
+            xbmc.log("### FUNCTION: "+function)
+            if failed == 0:
+                match      = re.compile('name="(.+?)"t="(.+?)"d="(.+?)"l="(.+?)"', re.DOTALL).findall(link)    
+                for name, thumb, desc, url in match:
+                    if function == 'main_menu':
+                        if not 'Remove' in name:
+                            addDir('',name.replace('_',' '),url,'install_venz',thumb,'','',desc)
 
-                if menutype == 'add_main':
+                    if menutype == 'add_main':
+                            if thirdparty == 'false':
+                                if menu+' menu' in name.lower() and not 'Remove' in name and not 'by box' in name:
+    #                                addDir('',name.replace('_',' ').replace(' to the '+menu.replace('_',' ').title()+' Menu',''),url,'install_venz',thumb,'','',desc)
+                                    contenturl.append(url)
+                                    contentarray.append(name)
+                                    imagearray.append(thumb)
+                                    descarray.append(desc)
+                            else:
+                                if menu+' menu' in name.lower() and not 'Remove' in name:
+    #                                addDir('',name.replace('_',' ').replace(' to the '+menu.replace('_',' ').title()+' Menu',''),url,'install_venz',thumb,'','',desc)
+                                    contenturl.append(url)
+                                    contentarray.append(name)
+                                    imagearray.append(thumb)
+                                    descarray.append(desc)
+
+                    elif menutype == 'add_sub':
                         if thirdparty == 'false':
-                            if menu+' menu' in name.lower() and not 'Remove' in name and not 'by box' in name:
-#                                addDir('',name.replace('_',' ').replace(' to the '+menu.replace('_',' ').title()+' Menu',''),url,'install_venz',thumb,'','',desc)
-                                contenturl.append(url)
-                                contentarray.append(name)
-                                imagearray.append(thumb)
-                                descarray.append(desc)
+                            if 'Remove' not in name and not 'by box' in name:
+                                addDir('',name.replace('_',' ').replace(' to the '+menu.title()+' SubMenu',''),url,'install_venz',thumb,'','',desc)
                         else:
-                            if menu+' menu' in name.lower() and not 'Remove' in name:
-#                                addDir('',name.replace('_',' ').replace(' to the '+menu.replace('_',' ').title()+' Menu',''),url,'install_venz',thumb,'','',desc)
-                                contenturl.append(url)
-                                contentarray.append(name)
-                                imagearray.append(thumb)
-                                descarray.append(desc)
+                            if 'Remove' not in name:
+                                addDir('',name.replace('_',' ').replace(' to the '+menu.title()+' SubMenu',''),url,'install_venz',thumb,'','',desc)
 
-                elif menutype == 'add_sub':
-                    if thirdparty == 'false':
-                        if 'Remove' not in name and not 'by box' in name:
-                            addDir('',name.replace('_',' ').replace(' to the '+menu.title()+' SubMenu',''),url,'install_venz',thumb,'','',desc)
-                    else:
+                    elif menutype == 'remove_main':
+                        if menu+' menu' in name.lower() and not 'Add ' in name:
+      #                      addDir('',name.replace('_',' ').replace(' from the '+menu.replace('_',' ').title()+' Menu',''),url,'install_venz',thumb,'','',desc)
+                            contenturl.append(url)
+                            contentarray.append(name)
+                            imagearray.append(thumb)
+                            descarray.append(desc)
+
+                    elif menutype == 'remove_sub':
+                        if 'Add ' not in name:
+                            addDir('',name.replace('_',' ').replace(' from the '+menu.title()+' SubMenu',''),url,'install_venz',thumb,'','',desc)
+
+                    elif menutype == '' and menu == '' and function != 'main_menu':
                         if 'Remove' not in name:
-                            addDir('',name.replace('_',' ').replace(' to the '+menu.title()+' SubMenu',''),url,'install_venz',thumb,'','',desc)
+                            addDir('',name.replace('_',' '),url,'install_venz',thumb,'','',desc)
+        except:
+            Notify('No Response from server','Sorry Please try later','1000',os.path.join(ADDONS,'plugin.program.tbs','resources','cross.png'))
 
-                elif menutype == 'remove_main':
-                    if menu+' menu' in name.lower() and not 'Add ' in name:
-  #                      addDir('',name.replace('_',' ').replace(' from the '+menu.replace('_',' ').title()+' Menu',''),url,'install_venz',thumb,'','',desc)
-                        contenturl.append(url)
-                        contentarray.append(name)
-                        imagearray.append(thumb)
-                        descarray.append(desc)
-
-                elif menutype == 'remove_sub':
-                    if 'Add ' not in name:
-                        addDir('',name.replace('_',' ').replace(' from the '+menu.title()+' SubMenu',''),url,'install_venz',thumb,'','',desc)
-
-                elif menutype == '' and menu == '' and function != 'main_menu':
-                    if 'Remove' not in name:
-                        addDir('',name.replace('_',' '),url,'install_venz',thumb,'','',desc)
-    except:
-        Notify('No Response from server','Sorry Please try later','1000',os.path.join(ADDONS,'plugin.program.tbs','resources','cross.png'))
-
-    if menutype == 'add_main' or menutype == 'remove_main':
-        if len(contentarray) > 0:
-            choices = multiselect('Select from the list below',contentarray,imagearray,descarray)
-            if len(choices) > 0:
-                Notify('Installing Content','Please be patient during this process','5000',os.path.join(ADDONS,'plugin.program.tbs','resources','update.png'))
-                for item in choices:
-                    Open_URL2(contenturl[item])
-                Grab_Updates('http://tlbb.me/comm.php?multi&z=c&x=')
-                xbmc.executebuiltin('ActivateWindow(HOME)')
-        else:
-            dialog.ok('NO CONTENT AVAILABLE','Oops...', 'Sorry it looks like this section is a work in progress.', 'Please come back at a later date as new content is added on a regular basis.')
-        #    if tryagain == 1:
-  #      Install_Venz_Menu(function_orig)
+        if menutype == 'add_main' or menutype == 'remove_main':
+            if len(contentarray) > 0:
+                choices = multiselect('Select from the list below',contentarray,imagearray,descarray)
+                if len(choices) > 0:
+                    Notify('Installing Content','Please be patient during this process','5000',os.path.join(ADDONS,'plugin.program.tbs','resources','update.png'))
+                    for item in choices:
+                        Open_URL2(contenturl[item])
+                    Grab_Updates('http://tlbb.me/comm.php?multi&z=c&x=')
+                    xbmc.executebuiltin('ActivateWindow(HOME)')
+            else:
+                dialog.ok('NO CONTENT AVAILABLE','Oops...', 'Sorry it looks like this section is a work in progress.', 'Please come back at a later date as new content is added on a regular basis.')
+            #    if tryagain == 1:
+      #      Install_Venz_Menu(function_orig)
+    else:
+        dialog.ok('FAULT DETECTED', 'It was not possible to obtain your MAC address details, please check your wifi and ethernet modules are enabled.')    
 #---------------------------------------------------------
 # Function to pull commands and update
 def DLE(command,repo_link,repo_id):
@@ -1553,7 +1606,7 @@ def DLE(command,repo_link,repo_id):
                 downloader.download(repo_link, downloadpath)
             except:
                 pass       
-        if (command=="addons" and not os.path.exists(os.path.join(ADDONS,repo_id))) or (command=='addons' and repo_id==''):
+        if command=="addons":
             try:
                 extract.all(downloadpath, ADDONS)
                 Update_Repo()
@@ -1619,6 +1672,7 @@ def Hide_Passwords():
 # Menu to install content via the TR add-on
 def Install_Content(url):
 #    addDir('folder','Search For Content','','search_content', 'Search_Addons.png','','','')
+    addDir('','[COLOR=dodgerblue]Check For Updates[/COLOR]','http://tlbb.me/comm.php?z=c&x=', 'grab_updates', '','','','')
     addDir('','Install A Keyword', '', 'keywords', 'Keywords.png','','','')
     addDir('','Install From Zip','','install_from_zip','','','','')
     addDir('','Browse My Repositories','','browse_repos','','','','')
@@ -1661,7 +1715,6 @@ def Keyword_Search():
         os.makedirs(packages)
     counter = 0
     success = 0
-    
     downloadurl = ''
     title       = 'Enter Keyword'
     keyword     = SEARCH(title)
@@ -1677,25 +1730,8 @@ def Keyword_Search():
             url  = Text_File(KEYWORD_FILE,'r')
         downloadurl = url+keyword
         lib         = os.path.join(packages, keyword+'.zip')
-
-        try:
-            wifimac = getMacAddress('wifi').replace('\n','')
-        except:
-            wifimac = 'Unknown'
-        try:
-            ethmac  = getMacAddress('eth0').replace('\n','')
-        except:
-            ethmac  = 'Unknown'
-        try:
-            cpu     = CPU_Check().replace('\n','')
-        except:
-            cpu     = 'Unknown'
-        try:
-            build   = Build_Info().replace('\n','')
-        except:
-            build   = 'Unknown'
-        if not 'Unknown' in wifimac and not 'Unknown' in ethmac:
-            urlparams = wifimac+'&'+cpu+'&'+build+'&'+ethmac.replace(' ','%20') 
+        urlparams   = URL_Params()
+        if urlparams != 'Unknown':
             dp.create('Contacting Server','Attempt: 1', '', 'Please wait...')
             while counter <3 and success == 0:
                 counter += 1
@@ -1759,166 +1795,167 @@ def Keyword_Search():
         if os.path.exists(lib):
             os.remove(lib)
 #-----------------------------------------------------------------------------------------------------------------
-# ANDROID ONLY WORKS WITH ROOT
+# Force close Kodi
 def Kill_XBMC(wipedb = ''):
-    dbfolder = xbmc.translatePath(os.path.join(USERDATA, 'Database'))
-    if not os.path.exists(scriptfolder):
-        os.makedirs(scriptfolder)
-    xbmc_version=xbmc.getInfoLabel("System.BuildVersion")
-    version=float(xbmc_version[:4])
-    if xbmc.getCondVisibility('system.platform.windows'):
-        if version < 14:
-            try:
-                writefile = open(os.path.join(scriptfolder,'win_xbmc.bat'), 'w+')
-                writefile.write('@ECHO off\nTASKKILL /im XBMC.exe /f\ntskill XBMC.exe\nXBMC.exe')
-                writefile.close()
-                os.system(os.path.join(scriptfolder,'win_xbmc.bat'))
-            except:
-                xbmc.log("### Failed to run win_xbmc.bat")
-        else:
-            try:
-                writefile = open(os.path.join(scriptfolder,'win_kodi.bat'), 'w+')
-                if wipedb == 'wipe':
-                    writefile.write('@ECHO off\nTASKKILL /im Kodi.exe /f\necho ----------------------------------------------------------\necho IN ORDER TO FULLY CLEANSE YOUR KODI INSTALL YOU NEED TO WIPE YOUR KODI DATABASE FILES.\necho IF YOU\'RE HAPPY TO PROCEED WITH THIS ACTION PRESS "Y" FOLLOWED BY "ENTER".\necho ----------------------------------------------------------\necho DELETE:\ndel %s\nKodi.exe\nclose' % (os.path.join(dbfolder,'*.*')))
-                else:
-                    writefile.write('@ECHO off\nTASKKILL /im Kodi.exe /f\nKodi.exe\nclose')
-                writefile.close()
-                os.system(os.path.join(scriptfolder,'win_kodi.bat'))
-            except:
-                xbmc.log("### Failed to run win_kodi.bat")
-    elif xbmc.getCondVisibility('system.platform.osx'):
-        if version < 14:
-            try:
-                writefile = open(os.path.join(scriptfolder,'osx_xbmc.sh'), 'w+')
-                writefile.write('killall -9 XBMC\nXBMC')
-                writefile.close()
-            except:
-                pass
-            try:
-                os.system('chmod 755 '+os.path.join(scriptfolder,'osx_xbmc.sh'))
-            except:
-                pass
-            try:
-                os.system(os.path.join(scriptfolder,'osx_xbmc.sh'))
-            except:
-                xbmc.log("### Failed to run osx_xbmc.sh")
-        else:
-            try:
-                writefile = open(os.path.join(scriptfolder,'osx_kodi.sh'), 'w+')
-                writefile.write('killall -9 Kodi\nKodi')
-                writefile.close()
-            except:
-                pass
-            try:
-                os.system('chmod 755 '+os.path.join(scriptfolder,'osx_kodi.sh'))
-            except:
-                pass
-            try:
-                os.system(os.path.join(scriptfolder,'osx_kodi.sh'))
-            except:
-                xbmc.log("### Failed to run osx_kodi.sh")
-#    else:
-    elif xbmc.getCondVisibility('system.platform.android'):
-        if os.path.exists('/data/data/com.rechild.advancedtaskkiller'):
-            dialog.ok('Attempting to force close','On the following screen please press the big button at the top which says "KILL selected apps". Kodi will restart, please be patient while your system updates the necessary files and your skin will automatically switch once fully updated.')
-            try:
-                xbmc.executebuiltin('StartAndroidActivity(com.rechild.advancedtaskkiller)')
-            except:
-                xbmc.log("### Failed to run Advanced Task Killer. Make sure you have it installed, you can download from https://archive.org/download/com.rechild.advancedtaskkiller/com.rechild.advancedtaskkiller.apk")
-        else:
-            dialog.ok('Advanced Task Killer Not Found',"The Advanced Task Killer app cannot be found on this system. Please make sure you actually installed it after downloading. We can't do everything for you - on Android you do have to physically click on the download to install an app.")
-        try:
-            os.system('adb shell am force-stop org.xbmc.kodi')
-        except:
-            pass
-        try:
-            os.system('adb shell am force-stop org.kodi')
-        except:
-            pass
-        try:
-            os.system('adb shell am force-stop org.xbmc.xbmc')
-        except:
-            pass
-        try:
-            os.system('adb shell am force-stop org.xbmc')
-        except:
-            pass
-        try:
-            os.system('adb shell kill org.xbmc.kodi')
-        except:
-            pass
-        try:
-            os.system('adb shell kill org.kodi')
-        except:
-            pass
-        try:
-            os.system('adb shell kill org.xbmc.xbmc')
-        except:
-            pass
-        try:
-            os.system('adb shell kill org.xbmc')
-        except:
-            pass
-        try:
-            os.system('Process.killProcess(android.os.Process.org.xbmc,kodi());')
-        except:
-            pass
-        try:
-            os.system('Process.killProcess(android.os.Process.org.kodi());')
-        except:
-            pass
-        try:
-            os.system('Process.killProcess(android.os.Process.org.xbmc.xbmc());')
-        except:
-            pass
-        try:
-            os.system('Process.killProcess(android.os.Process.org.xbmc());')
-        except:
-            pass
-    elif xbmc.getCondVisibility('system.platform.linux'):
-        if version < 14:
-            try:
-                writefile = open(os.path.join(scriptfolder,'linux_xbmc'), 'w+')
-                writefile.write('killall XBMC\nkillall -9 xbmc.bin\nXBMC')
-                writefile.close()
-            except:
-                pass
-            try:
-                os.system('chmod a+x '+os.path.join(scriptfolder,'linux_xbmc'))
-            except:
-                pass
-            try:
-                os.system(os.path.join(scriptfolder,'linux_xbmc'))
-            except:
-                print "### Failed to run: linux_xbmc"
-        else:
-            try:
-                writefile = open(os.path.join(scriptfolder,'linux_kodi'), 'w+')
-                writefile.write('killall Kodi\nkillall -9 kodi.bin\nkodi')
-                writefile.close()
-            except:
-                pass
-            try:
-                os.system('chmod a+x '+os.path.join(scriptfolder,'linux_kodi'))
-            except:
-                pass
-            try:
-                os.system(os.path.join(scriptfolder,'linux_kodi'))
-            except:
-                print "### Failed to run: linux_kodi"
-    else: #ATV and OSMC
-        try:
-            os.system('killall AppleTV')
-        except:
-            pass
-        try:
-            os.system('sudo initctl stop kodi')
-        except:
-            pass
-        try:
-            os.system('sudo initctl stop xbmc')
-        except:
-            pass
+    os._exit(1)
+#     dbfolder = xbmc.translatePath(os.path.join(USERDATA, 'Database'))
+#     if not os.path.exists(scriptfolder):
+#         os.makedirs(scriptfolder)
+#     xbmc_version=xbmc.getInfoLabel("System.BuildVersion")
+#     version=float(xbmc_version[:4])
+#     if xbmc.getCondVisibility('system.platform.windows'):
+#         if version < 14:
+#             try:
+#                 writefile = open(os.path.join(scriptfolder,'win_xbmc.bat'), 'w+')
+#                 writefile.write('@ECHO off\nTASKKILL /im XBMC.exe /f\ntskill XBMC.exe\nXBMC.exe')
+#                 writefile.close()
+#                 os.system(os.path.join(scriptfolder,'win_xbmc.bat'))
+#             except:
+#                 xbmc.log("### Failed to run win_xbmc.bat")
+#         else:
+#             try:
+#                 writefile = open(os.path.join(scriptfolder,'win_kodi.bat'), 'w+')
+#                 if wipedb == 'wipe':
+#                     writefile.write('@ECHO off\nTASKKILL /im Kodi.exe /f\necho ----------------------------------------------------------\necho IN ORDER TO FULLY CLEANSE YOUR KODI INSTALL YOU NEED TO WIPE YOUR KODI DATABASE FILES.\necho IF YOU\'RE HAPPY TO PROCEED WITH THIS ACTION PRESS "Y" FOLLOWED BY "ENTER".\necho ----------------------------------------------------------\necho DELETE:\ndel %s\nKodi.exe\nclose' % (os.path.join(dbfolder,'*.*')))
+#                 else:
+#                     writefile.write('@ECHO off\nTASKKILL /im Kodi.exe /f\nKodi.exe\nclose')
+#                 writefile.close()
+#                 os.system(os.path.join(scriptfolder,'win_kodi.bat'))
+#             except:
+#                 xbmc.log("### Failed to run win_kodi.bat")
+#     elif xbmc.getCondVisibility('system.platform.osx'):
+#         if version < 14:
+#             try:
+#                 writefile = open(os.path.join(scriptfolder,'osx_xbmc.sh'), 'w+')
+#                 writefile.write('killall -9 XBMC\nXBMC')
+#                 writefile.close()
+#             except:
+#                 pass
+#             try:
+#                 os.system('chmod 755 '+os.path.join(scriptfolder,'osx_xbmc.sh'))
+#             except:
+#                 pass
+#             try:
+#                 os.system(os.path.join(scriptfolder,'osx_xbmc.sh'))
+#             except:
+#                 xbmc.log("### Failed to run osx_xbmc.sh")
+#         else:
+#             try:
+#                 writefile = open(os.path.join(scriptfolder,'osx_kodi.sh'), 'w+')
+#                 writefile.write('killall -9 Kodi\nKodi')
+#                 writefile.close()
+#             except:
+#                 pass
+#             try:
+#                 os.system('chmod 755 '+os.path.join(scriptfolder,'osx_kodi.sh'))
+#             except:
+#                 pass
+#             try:
+#                 os.system(os.path.join(scriptfolder,'osx_kodi.sh'))
+#             except:
+#                 xbmc.log("### Failed to run osx_kodi.sh")
+# #    else:
+#     elif xbmc.getCondVisibility('system.platform.android'):
+#         if os.path.exists('/data/data/com.rechild.advancedtaskkiller'):
+#             dialog.ok('Attempting to force close','On the following screen please press the big button at the top which says "KILL selected apps". Kodi will restart, please be patient while your system updates the necessary files and your skin will automatically switch once fully updated.')
+#             try:
+#                 xbmc.executebuiltin('StartAndroidActivity(com.rechild.advancedtaskkiller)')
+#             except:
+#                 xbmc.log("### Failed to run Advanced Task Killer. Make sure you have it installed, you can download from https://archive.org/download/com.rechild.advancedtaskkiller/com.rechild.advancedtaskkiller.apk")
+#         else:
+#             dialog.ok('Advanced Task Killer Not Found',"The Advanced Task Killer app cannot be found on this system. Please make sure you actually installed it after downloading. We can't do everything for you - on Android you do have to physically click on the download to install an app.")
+#         try:
+#             os.system('adb shell am force-stop org.xbmc.kodi')
+#         except:
+#             pass
+#         try:
+#             os.system('adb shell am force-stop org.kodi')
+#         except:
+#             pass
+#         try:
+#             os.system('adb shell am force-stop org.xbmc.xbmc')
+#         except:
+#             pass
+#         try:
+#             os.system('adb shell am force-stop org.xbmc')
+#         except:
+#             pass
+#         try:
+#             os.system('adb shell kill org.xbmc.kodi')
+#         except:
+#             pass
+#         try:
+#             os.system('adb shell kill org.kodi')
+#         except:
+#             pass
+#         try:
+#             os.system('adb shell kill org.xbmc.xbmc')
+#         except:
+#             pass
+#         try:
+#             os.system('adb shell kill org.xbmc')
+#         except:
+#             pass
+#         try:
+#             os.system('Process.killProcess(android.os.Process.org.xbmc,kodi());')
+#         except:
+#             pass
+#         try:
+#             os.system('Process.killProcess(android.os.Process.org.kodi());')
+#         except:
+#             pass
+#         try:
+#             os.system('Process.killProcess(android.os.Process.org.xbmc.xbmc());')
+#         except:
+#             pass
+#         try:
+#             os.system('Process.killProcess(android.os.Process.org.xbmc());')
+#         except:
+#             pass
+#     elif xbmc.getCondVisibility('system.platform.linux'):
+#         if version < 14:
+#             try:
+#                 writefile = open(os.path.join(scriptfolder,'linux_xbmc'), 'w+')
+#                 writefile.write('killall XBMC\nkillall -9 xbmc.bin\nXBMC')
+#                 writefile.close()
+#             except:
+#                 pass
+#             try:
+#                 os.system('chmod a+x '+os.path.join(scriptfolder,'linux_xbmc'))
+#             except:
+#                 pass
+#             try:
+#                 os.system(os.path.join(scriptfolder,'linux_xbmc'))
+#             except:
+#                 print "### Failed to run: linux_xbmc"
+#         else:
+#             try:
+#                 writefile = open(os.path.join(scriptfolder,'linux_kodi'), 'w+')
+#                 writefile.write('killall Kodi\nkillall -9 kodi.bin\nkodi')
+#                 writefile.close()
+#             except:
+#                 pass
+#             try:
+#                 os.system('chmod a+x '+os.path.join(scriptfolder,'linux_kodi'))
+#             except:
+#                 pass
+#             try:
+#                 os.system(os.path.join(scriptfolder,'linux_kodi'))
+#             except:
+#                 print "### Failed to run: linux_kodi"
+#     else: #ATV and OSMC
+#         try:
+#             os.system('killall AppleTV')
+#         except:
+#             pass
+#         try:
+#             os.system('sudo initctl stop kodi')
+#         except:
+#             pass
+#         try:
+#             os.system('sudo initctl stop xbmc')
+#         except:
+#             pass
 #---------------------------------------------------------------------------------------------------
 # Open Kodi Settings
 def Kodi_Settings():
@@ -2398,11 +2435,7 @@ def Search_Content(menutype):
     Install_Venz_Menu(title+'||'+menutype)
 #---------------------------------------------------------------------------------------------------
 def SetNone():
-    wifimac = getMacAddress('wifi').replace('\n','')
-    ethmac  = getMacAddress('eho0').replace('\n','')
-    cpu     = CPU_Check().replace('\n','')
-    build   = Build_Info().replace('\n','')
-    urlparams = wifimac+'&'+cpu+'&'+build+'&'+ethmac.replace(' ','%20')
+    urlparams = URL_Params()
     link = Open_URL(encryptme('d','6773736f392e2e736b61612d6c642e7264736d6e6d642d6f676f3e773c011510030A')+encryptme('e',urlparams))
 #---------------------------------------------------------------------------------------------------
 # Function to pull commands and update
@@ -2873,49 +2906,51 @@ def Check_My_Shares(url = ''):
 # Update a social share
 def Update_Share(fullpath):
     urlparams = URL_Params()
-
+    if urlparams != 'Unknown':
 # Grab contents of the config file
-    try:
-        cfgfile=open(os.path.join(fullpath,'folder.cfg'),'r')
-        cfg = cfgfile.read()
-        cfg = cfg.replace('\r','').replace('\n','').replace('\t','')
-        cfgfile.close()
-    except:
-        cfg=''
+        try:
+            cfgfile=open(os.path.join(fullpath,'folder.cfg'),'r')
+            cfg = cfgfile.read()
+            cfg = cfg.replace('\r','').replace('\n','').replace('\t','')
+            cfgfile.close()
+        except:
+            cfg=''
 
 # Grab contents of the favourites.xml
-    if os.path.exists(os.path.join(fullpath,'favourites.xml')):
-        xmlfile  = open(os.path.join(fullpath,'favourites.xml'),'r')
-        xml = xmlfile.read()
-        xml = xml.replace(xbmc.translatePath('special://home'),'special://home/').replace(urllib.quote(xbmc.translatePath('special://home').encode("utf-8")),'special://home/').replace('\r','').replace('\n','').replace('\t','')
-        xmlfile.close()
-    else:
-        xml="not a SF"
+        if os.path.exists(os.path.join(fullpath,'favourites.xml')):
+            xmlfile  = open(os.path.join(fullpath,'favourites.xml'),'r')
+            xml = xmlfile.read()
+            xml = xml.replace(xbmc.translatePath('special://home'),'special://home/').replace(urllib.quote(xbmc.translatePath('special://home').encode("utf-8")),'special://home/').replace('\r','').replace('\n','').replace('\t','')
+            xmlfile.close()
+        else:
+            xml="not a SF"
 
 # Grab the clean part of the folder name to send
-    itemname  = fullpath.split('/')
-    last_item = len(itemname)-1
-    fullpath  = os.path.join(itemname[last_item-1], itemname[last_item])
-    if debug == 'true':
-        xbmc.log('### Clean Full Path: %s' % fullpath)
+        itemname  = fullpath.split('/')
+        last_item = len(itemname)-1
+        fullpath  = os.path.join(itemname[last_item-1], itemname[last_item])
+        if debug == 'true':
+            xbmc.log('### Clean Full Path: %s' % fullpath)
 
 # Attempt to send the share to system
-    try:
-        sendfaves = Open_URL_Share('http://tlbb.me/boxer/share_box.php?x=%s&z=gs&k=%s&c=%s&p=%s' % (encryptme('e',urlparams), encryptme('e',xml), encryptme('e',cfg), encryptme('e',fullpath)))
-        xbmc.log('http://tlbb.me/boxer/share_box.php?x=%s&z=gs&k=%s&c=%s&p=%s' % (encryptme('e',urlparams), encryptme('e',xml), encryptme('e',cfg), encryptme('e',fullpath)))
-        if 'success' in sendfaves:
-            itemname  = itemname[last_item]
-            dialog.ok('SOCIAL SHARE UPDATED', 'Thank you for sharing with the community.[COLOR=dodgerblue]',fullpath.split('/')[1], '[/COLOR]has now been updated and is publicly available.')
-            return True
-        elif 'no response' in sendfaves:
-            dialog.ok('NOT UPDATED', 'There was an error trying to contact the server, please try again later.')
+        try:
+            sendfaves = Open_URL_Share('http://tlbb.me/boxer/share_box.php?x=%s&z=gs&k=%s&c=%s&p=%s' % (encryptme('e',urlparams), encryptme('e',xml), encryptme('e',cfg), encryptme('e',fullpath)))
+            xbmc.log('http://tlbb.me/boxer/share_box.php?x=%s&z=gs&k=%s&c=%s&p=%s' % (encryptme('e',urlparams), encryptme('e',xml), encryptme('e',cfg), encryptme('e',fullpath)))
+            if 'success' in sendfaves:
+                itemname  = itemname[last_item]
+                dialog.ok('SOCIAL SHARE UPDATED', 'Thank you for sharing with the community.[COLOR=dodgerblue]',fullpath.split('/')[1], '[/COLOR]has now been updated and is publicly available.')
+                return True
+            elif 'no response' in sendfaves:
+                dialog.ok('NOT UPDATED', 'There was an error trying to contact the server, please try again later.')
+                return False
+            elif 'Too Long' in sendfaves:
+                dialog.ok('NOT UPDATED', 'Super Favourites contents are too large, please trim down in size and try again.')
+                return False
+        except:
+            dialog.ok('NOT UPDATED', 'There was an error trying to add your content, please try again.')
             return False
-        elif 'Too Long' in sendfaves:
-            dialog.ok('NOT UPDATED', 'Super Favourites contents are too large, please trim down in size and try again.')
-            return False
-    except:
-        dialog.ok('NOT UPDATED', 'There was an error trying to add your content, please try again.')
-        return False
+    else:
+        dialog.ok('FAULT DETECTED', 'It was not possible to obtain your MAC address details, please check your wifi and ethernet modules are enabled.')
 #-----------------------------------------------------------------------------------------------------------------
 # Open a database
 def DB_Open(db_path):
@@ -2932,94 +2967,97 @@ def Upload_Share():
     item           = item.replace('[COLOR ]','').replace('[/COLOR]','')
     path           = xbmc.getInfoLabel('ListItem.FolderPath')
     path           = urllib.unquote(path)
-    if debug == 'true':
-        xbmc.log('### ORIG PATH: %s' % path)
-        xbmc.log('### UNQUOTED PATH: %s' % path)
-    try:
-        scrap,fullpath = path.split('path=')
-        fullpath       = xbmc.translatePath(fullpath)
+    if urlparams != 'Unknown':
         if debug == 'true':
-            xbmc.log('### FULL PATH ORIG: %s' % fullpath)
-    except:
-        fullpath = "not a SF"
-    if debug == 'true':
-        xbmc.log('### FULL PATH FINAL: %s' % fullpath)
-    
-    if fullpath != "not a SF":
-        localcheck = hashlib.md5(open(os.path.join(fullpath,'favourites.xml'),'rb').read()).hexdigest()
-        mylistpath = urllib.quote(fullpath.split("HOME_",1)[1], safe='')
+            xbmc.log('### ORIG PATH: %s' % path)
+            xbmc.log('### UNQUOTED PATH: %s' % path)
+        try:
+            scrap,fullpath = path.split('path=')
+            fullpath       = xbmc.translatePath(fullpath)
+            if debug == 'true':
+                xbmc.log('### FULL PATH ORIG: %s' % fullpath)
+        except:
+            fullpath = "not a SF"
         if debug == 'true':
-            xbmc.log('### md5: '+localcheck)
-            xbmc.log('clean path: '+mylistpath)
-        DB_Open(db_social)
-        cur.execute("SELECT COUNT(*) from shares WHERE path = ?", [mylistpath])
-        data = cur.fetchone()[0]
-        if data:
-            xbmc.log('### Updating Share in db: %s' % mylistpath)
-            cur.execute("UPDATE shares SET stamp = ? WHERE path = ?", [localcheck, mylistpath])
-        else:
-            xbmc.log('### Adding Share to db: %s' % mylistpath)
-            cur.execute("INSERT INTO shares (path, stamp) VALUES (?, ?)", [mylistpath, localcheck])
-        con.commit()
-        cur.close()
-        con.close()
-    else:
-        dialog.ok(item.capitalize()+' Not Submitted', 'Items must be added to a valid Super Favourite folder first.')
-
-
-    try:
-        scrap,newpath  = path.split('Super Favourites'+os.sep)
-    except:
-        newpath  = "not a SF"
-        newpath = newpath.replace('\\','/')
-
-    if os.path.exists(os.path.join(fullpath,'favourites.xml')):
-        xmlfile  = open(os.path.join(fullpath,'favourites.xml'),'r')
-        xml = xmlfile.read()
-        xml = xml.replace(xbmc.translatePath('special://home'),'special://home/').replace(urllib.quote(xbmc.translatePath('special://home').encode("utf-8")),'special://home/').replace('\r','').replace('\n','').replace('\t','')
-        xmlfile.close()
-    else:
-        xml="not a SF"
+            xbmc.log('### FULL PATH FINAL: %s' % fullpath)
         
-    try:
-        cfgfile=open(os.path.join(fullpath,'folder.cfg'),'r')
-        cfg = cfgfile.read()
-        cfg = cfg.replace('\r','').replace('\n','').replace('\t','')
-        cfgfile.close()
-    except:
-        cfg=''
+        if fullpath != "not a SF":
+            localcheck = hashlib.md5(open(os.path.join(fullpath,'favourites.xml'),'rb').read()).hexdigest()
+            mylistpath = urllib.quote(fullpath.split("HOME_",1)[1], safe='')
+            if debug == 'true':
+                xbmc.log('### md5: '+localcheck)
+                xbmc.log('clean path: '+mylistpath)
+            DB_Open(db_social)
+            cur.execute("SELECT COUNT(*) from shares WHERE path = ?", [mylistpath])
+            data = cur.fetchone()[0]
+            if data:
+                xbmc.log('### Updating Share in db: %s' % mylistpath)
+                cur.execute("UPDATE shares SET stamp = ? WHERE path = ?", [localcheck, mylistpath])
+            else:
+                xbmc.log('### Adding Share to db: %s' % mylistpath)
+                cur.execute("INSERT INTO shares (path, stamp) VALUES (?, ?)", [mylistpath, localcheck])
+            con.commit()
+            cur.close()
+            con.close()
+        else:
+            dialog.ok(item.capitalize()+' Not Submitted', 'Items must be added to a valid Super Favourite folder first.')
 
-    
-    try:
-        pluginname=xbmc.getInfoLabel('Container.PluginName')
-        if debug == 'true':
-            xbmc.log("### plugin name: %s" % str(pluginname))
-    except:
-        pluginname='none'
 
-    quit = 0
-    if pluginname == 'plugin.program.super.favourites':
-# Enable once we have private share options
-    #        choice = dialog.select('Choose Share Type',['Share publicly','Add to my private share'])
-        if xml == "not a SF" or newpath  == "not a SF":
-            dialog.ok('Empty Folder','This folder doesn\'t contain any content. Please populate with content and try again.')
-            quit = 1
-#        if choice == 0 and quit != 1:
-        elif quit != 1:
-            try:
-                sendfaves = Open_URL2('http://tlbb.me/boxer/share_box.php?x=%s&z=gs&k=%s&c=%s&p=%s' % (encryptme('e',urlparams), encryptme('e',xml), encryptme('e',cfg), encryptme('e',newpath)))
-                if 'success' in sendfaves:
-                    dialog.ok('Content Submitted', 'Thank you for sharing with the community.[COLOR=dodgerblue]',item,'[/COLOR]has now been shared and is publicly available.')
-                elif 'no response' in sendfaves:
-                    dialog.ok(item.capitalize()+' Not Submitted', 'There was an error trying to contact the server, please try again later.')
-                elif 'Too Long' in sendfaves:
-                    dialog.ok(item.capitalize()+' Not Submitted', 'Super Favourites contents are too large, please trim down in size and try again.')
-            except:
-                dialog.ok(item.capitalize()+' Not Submitted', 'There was an error trying to add your content, please try again.')
-#        if choice == 1 and quit != 1:
-#            dialog.ok('Work In Progress','Sorry the private content section is currently a work in progress. Please check back soon.')
-    if pluginname != 'plugin.program.super.favourites' and quit != 1:
-        xbmc.executebuiltin('RunScript(special://home/addons/plugin.program.super.favourites/capture.py)')
+        try:
+            scrap,newpath  = path.split('Super Favourites'+os.sep)
+        except:
+            newpath  = "not a SF"
+            newpath = newpath.replace('\\','/')
+
+        if os.path.exists(os.path.join(fullpath,'favourites.xml')):
+            xmlfile  = open(os.path.join(fullpath,'favourites.xml'),'r')
+            xml = xmlfile.read()
+            xml = xml.replace(xbmc.translatePath('special://home'),'special://home/').replace(urllib.quote(xbmc.translatePath('special://home').encode("utf-8")),'special://home/').replace('\r','').replace('\n','').replace('\t','')
+            xmlfile.close()
+        else:
+            xml="not a SF"
+            
+        try:
+            cfgfile=open(os.path.join(fullpath,'folder.cfg'),'r')
+            cfg = cfgfile.read()
+            cfg = cfg.replace('\r','').replace('\n','').replace('\t','')
+            cfgfile.close()
+        except:
+            cfg=''
+
+        
+        try:
+            pluginname=xbmc.getInfoLabel('Container.PluginName')
+            if debug == 'true':
+                xbmc.log("### plugin name: %s" % str(pluginname))
+        except:
+            pluginname='none'
+
+        quit = 0
+        if pluginname == 'plugin.program.super.favourites':
+    # Enable once we have private share options
+        #        choice = dialog.select('Choose Share Type',['Share publicly','Add to my private share'])
+            if xml == "not a SF" or newpath  == "not a SF":
+                dialog.ok('Empty Folder','This folder doesn\'t contain any content. Please populate with content and try again.')
+                quit = 1
+    #        if choice == 0 and quit != 1:
+            elif quit != 1:
+                try:
+                    sendfaves = Open_URL2('http://tlbb.me/boxer/share_box.php?x=%s&z=gs&k=%s&c=%s&p=%s' % (encryptme('e',urlparams), encryptme('e',xml), encryptme('e',cfg), encryptme('e',newpath)))
+                    if 'success' in sendfaves:
+                        dialog.ok('Content Submitted', 'Thank you for sharing with the community.[COLOR=dodgerblue]',item,'[/COLOR]has now been shared and is publicly available.')
+                    elif 'no response' in sendfaves:
+                        dialog.ok(item.capitalize()+' Not Submitted', 'There was an error trying to contact the server, please try again later.')
+                    elif 'Too Long' in sendfaves:
+                        dialog.ok(item.capitalize()+' Not Submitted', 'Super Favourites contents are too large, please trim down in size and try again.')
+                except:
+                    dialog.ok(item.capitalize()+' Not Submitted', 'There was an error trying to add your content, please try again.')
+    #        if choice == 1 and quit != 1:
+    #            dialog.ok('Work In Progress','Sorry the private content section is currently a work in progress. Please check back soon.')
+        if pluginname != 'plugin.program.super.favourites' and quit != 1:
+            xbmc.executebuiltin('RunScript(special://home/addons/plugin.program.super.favourites/capture.py)')
+    else:
+        dialog.ok('FAULT DETECTED', 'It was not possible to obtain your MAC address details, please check your wifi and ethernet modules are enabled.')
 #-----------------------------------------------------------------------------------------------------------------
 # Main function for launching maintenance add-on
 def Launch():
