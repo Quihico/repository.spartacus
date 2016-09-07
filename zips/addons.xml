@@ -2093,7 +2093,7 @@
   </extension>
 </addon>
 
-<addon id="script.openwindow" name="Startup Wizard" version="2.3.3" provider-name="TotalRevolution">
+<addon id="script.openwindow" name="Startup Wizard" version="2.3.4" provider-name="TotalRevolution">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0"/>
 	</requires>

@@ -1,0 +1,21 @@
+v2.1:
+
+- Added extra menu to enable/disable social sharing
+
+
+
+v2.0:
+
+- Added support for weather.openweathermap.extended
+
+- Switched Region and Country positions
+
+- Clean dialog messages if no results are populated (esp. useful for region section)
+
+- Fixed autorun of social update
+
+- Added back tar option
+
+
+
+v1.0.5.1: Fixed keywords and added social tv update after wizard.
