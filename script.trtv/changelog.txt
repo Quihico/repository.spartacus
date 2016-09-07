@@ -1,4 +1,4 @@
-v.2.0:
+v1.2.2:
 
 - Auto grabbing of channel data now available to NaN members (US & UK currently very good and well organised)
 - Added back the option for ini file downloads as we have a great idea for that coming up :)
