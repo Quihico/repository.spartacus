@@ -63,21 +63,21 @@
 				</focusedlayout>
 				<content>
 					<!--<include>CustomMainMenuItem1</include>-->
+					<include>TVMainMenu</include>
+					<include>MoviesMainMenu</include>
+					<include>TVShowsMainMenu</include>
+					<include>MusicMainMenu</include>
+					<include>ShutdownMainMenu</include>
 					<include>CustomMainMenuItem6</include>
 					<include>CustomMainMenuItem3</include>
 					<include>CustomMainMenuItem4</include>
 					<include>CustomMainMenuItem5</include>
 					<include>FavoritesMainMenu</include>
-					<include>TVMainMenu</include>
-					<include>MoviesMainMenu</include>
-					<include>MusicMainMenu</include>
 					<include>ProgramsMainMenu</include>
 					<include>VideosMainMenu</include>
 					<include>CustomMainMenuItem2</include>
 					<include>WeatherMainMenu</include>
-					<include>TVShowsMainMenu</include>
 					<include>PicturesMainMenu</include>
-					<include>ShutdownMainMenu</include>
 					<include condition="StringCompare(Skin.String(MusicVideoHomeItem.Disable),)">MusicVideosMainMenu</include>
 					<!--<include>SettingsMainMenu</include>-->
 				</content>

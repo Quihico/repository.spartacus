@@ -80,8 +80,9 @@
 					<onup condition="!Control.IsVisible(9003)">9020</onup>
 					<ondown>9000</ondown>
 					<!--<include condition="System.HasAddon(plugin.program.tbs) + !Skin.HasSetting(NoEditMenuButton)">TheAwesomeButton</include>-->
-					<include condition="!Skin.HasSetting(NoMediaButton)">MediaButton</include>
 					<include condition="!Skin.HasSetting(NoAddonsButton)">AddonsButton</include>
+					<include condition="!Skin.HasSetting(NoMediaButton)">MediaButton</include>
+					<include condition="!Skin.HasSetting(NoBrowserButton) + System.Platform.Android">BrowserButton</include>
 					<include condition="System.HasAddon(script.globalsearch) + !Skin.HasSetting(NoSearchButton)">HomeSearchButton</include>
 					<control type="button" id="9021">
 						<label></label>

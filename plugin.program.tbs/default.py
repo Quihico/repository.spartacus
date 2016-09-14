@@ -20,6 +20,7 @@ ADDON            =  xbmcaddon.Addon(id=AddonID)
 debug            =  ADDON.getSetting('debug')
 USB              =  ADDON.getSetting('zip')
 thirdparty       =  ADDON.getSetting('thirdparty')
+enable_adult     =  ADDON.getSetting('adult')
 dialog           =  xbmcgui.Dialog()
 dp               =  xbmcgui.DialogProgress()
 HOME             =  xbmc.translatePath('special://home/')
@@ -97,6 +98,10 @@ if os.path.exists(BRANDART):
 else:
     FANART = os.path.join(ADDONS,AddonID,'fanart.jpg')
 
+if thirdparty == 'true':
+    social_shares = 1
+else:
+    social_shares = 0
 #-----------------------------------------------------------------------------------------------------------------    
 def Check_File_Date(url, datefile, localdate, dst):
     try:
@@ -763,6 +768,16 @@ def Destroy_Path(path):
     dp.create("Cleaning Path","Wiping...",'', 'Please Wait')
     shutil.rmtree(path, ignore_errors=True)
 #---------------------------------------------------------------------------------------------------
+# Enables/disables the social sharing
+def Enable_Shares(mode):
+    choice = 1
+    if mode == 'true':
+        if not dialog.yesno('SOCIAL TV SHARES', 'Due to the nature of social shares there is no way to guarantee the reliability or legality of any content provided. If you enable this option it\'s your responsibility to check the content provided is legal in your country prior to installing.'):
+            choice = 0
+    if choice:
+        ADDON.setSetting('thirdparty', mode)
+        xbmc.executebuiltin('Container.Refresh')
+#---------------------------------------------------------------------------------------------------
 def encryptme(mode, message):
     if mode == 'e':
         import random
@@ -1042,24 +1057,6 @@ def Gotham_Confirm():
     
     if confirm == 1:
         Gotham()
-#---------------------------------------------------------------------------------------------------
-# Function to move a directory to another location, use 1 for clean paramater if you want to remove original source.
-def Move_Tree(src,dst,clean):
-    for src_dir, dirs, files in os.walk(src):
-        dst_dir = src_dir.replace(src, dst, 1)
-        if not os.path.exists(dst_dir):
-            os.makedirs(dst_dir)
-        for file_ in files:
-            src_file = os.path.join(src_dir, file_)
-            dst_file = os.path.join(dst_dir, file_)
-            if os.path.exists(dst_file):
-                os.remove(dst_file)
-            shutil.move(src_file, dst_dir)
-    if clean == 1:
-        try:
-            shutil.rmtree(src)
-        except:
-            pass
 #---------------------------------------------------------------------------------------------------
 def Grab_Updates(url, runtype = ''):
     isplaying = xbmc.Player().isPlaying()
@@ -1403,6 +1400,24 @@ def Main_Menu_Install(menumode):
         if not xbmc.getCondVisibility('Skin.String(MusicVideoHomeItem.Disable)'):
             addDir('','Disable XXX','Skin.SetString(MusicVideoHomeItem.Disable,True)','exec_xbmc','http://celebmafia.com/wp-content/uploads/2015/11/bella-thorne-photoshoot-for-glamour-magazine-mexico-december-2015-_1.jpg','','','')
 #---------------------------------------------------------------------------------------------------
+# Function to move a directory to another location, use 1 for clean paramater if you want to remove original source.
+def Move_Tree(src,dst,clean):
+    for src_dir, dirs, files in os.walk(src):
+        dst_dir = src_dir.replace(src, dst, 1)
+        if not os.path.exists(dst_dir):
+            os.makedirs(dst_dir)
+        for file_ in files:
+            src_file = os.path.join(src_dir, file_)
+            dst_file = os.path.join(dst_dir, file_)
+            if os.path.exists(dst_file):
+                os.remove(dst_file)
+            shutil.move(src_file, dst_dir)
+    if clean == 1:
+        try:
+            shutil.rmtree(src)
+        except:
+            pass
+#---------------------------------------------------------------------------------------------------
 # Multiselect Dialog - try the built-in multiselect or fallback to pre-jarvis workaround
 def multidialog(title, mylist, images, description):
     try:
@@ -1429,7 +1444,10 @@ def multiselect(title, mylist, images, description):
             self.connect(ACTION_MOVE_DOWN, self.update_list)
             
         def set_controls(self):
+            Background  = pyxbmct.Image(dialog_bg, aspectRatio=0) # set aspect ratio to stretch
+            Background.setImage(dialog_bg)
             self.listing = pyxbmct.List(_imageWidth=15)
+            self.placeControl(Background, 0, 0, rowspan=20, columnspan=20)
             self.placeControl(self.listing, 0, 0, rowspan=9, columnspan=5, pad_y=10) # grid reference, start top left and span 9 boxes down and 5 across
             Icon=pyxbmct.Image(images[0], aspectRatio=2) # set aspect ratio to keep original
             Icon.setImage(images[0])
@@ -1488,106 +1506,163 @@ def multiselect(title, mylist, images, description):
     return dialog.selected
     del dialog
 #---------------------------------------------------------------------------------------------------
-# Function to show add to menu items from online
+# Function to grab the main sub-categories 
 def Install_Venz_Menu(function):
-    function_orig = function
+    menutype    = ''
+    menu        = ''
+    if '||' in function:
+        function,menutype,menu = function.split('||')
+    menu = menu.replace('_',' ').lower()
+
     urlparams  = URL_Params()
     if urlparams != 'Unknown':
         try:
-            if '||' in function:
-                function,menutype,menu = function.split('||')
-            else:
-                menutype = ''
-                menu     = ''
-            menu = menu.replace('_',' ').lower()
 
-            buildsURL  = 'http://tlbb.me/boxer/catsearch_tlbb.php?search='+function+'&x='+encryptme('e',urlparams)
-            xbmc.log(buildsURL)
-            link_orig  = Open_URL2(buildsURL)
-            link       = encryptme('d',link_orig).replace('|_|',' ').replace('|!|','\n')
-            if debug == 'true':
-                xbmc.log('#### '+encryptme('d',link_orig).replace('|_|',' ').replace('|!|','\n'))
-            
-            failed       = 0
+# Inititalise the arrays for sending to multi-select window
             contentarray = []
-            contenturl   = []
             imagearray   = []
             descarray    = []
-    #        tryagain = 0
-    #        if int(len(link_orig)) < 11:
-    #            failed = 1
-    #            choice = dialog.yesno('No Content Found','Sorry no content could be found that matches your criteria.[CR]There may be a temporary glitch with your internet connection at this time, would you like to try again?')
-    #            if choice:
-    #                tryagain = 1
+            contenturl   = []
 
-    #        if debug == 'true':
-            xbmc.log("### Return orig: "+link)
-            xbmc.log("### FUNCTION: "+function)
-            if failed == 0:
-                match      = re.compile('name="(.+?)"t="(.+?)"d="(.+?)"l="(.+?)"', re.DOTALL).findall(link)    
-                for name, thumb, desc, url in match:
-                    if function == 'main_menu':
-                        if not 'Remove' in name:
-                            addDir('',name.replace('_',' '),url,'install_venz',thumb,'','',desc)
+# Add an item to one of the main menu categories or add a sub-menu item
+            if menutype == 'add_main' or menutype == 'add_sub' or function.startswith('manualsearch'):
+                categoryURL  = 'http://tlbb.me/boxer/category_search.php?&x=%s' % (encryptme('e','%s&%s&0&%s' % (urlparams, function, social_shares)))
+                if debug == 'true':
+                    xbmc.log(categoryURL)
+                link_orig  = Open_URL2(categoryURL)
+                link       = encryptme('d',link_orig)
+                if debug == 'true':
+                    xbmc.log('#### '+encryptme('d',link_orig))
+            
+                match  = re.compile('n="(.+?)"t="(.+?)"d="(.+?)"', re.DOTALL).findall(link)
+                for name, thumb, desc in match:
+                    contentarray.append(name)
+                    imagearray.append(thumb)
+                    descarray.append(desc)
 
-                    if menutype == 'add_main':
-                            if thirdparty == 'false':
-                                if menu+' menu' in name.lower() and not 'Remove' in name and not 'by box' in name:
-    #                                addDir('',name.replace('_',' ').replace(' to the '+menu.replace('_',' ').title()+' Menu',''),url,'install_venz',thumb,'','',desc)
-                                    contenturl.append(url)
-                                    contentarray.append(name)
-                                    imagearray.append(thumb)
-                                    descarray.append(desc)
-                            else:
-                                if menu+' menu' in name.lower() and not 'Remove' in name:
-    #                                addDir('',name.replace('_',' ').replace(' to the '+menu.replace('_',' ').title()+' Menu',''),url,'install_venz',thumb,'','',desc)
-                                    contenturl.append(url)
-                                    contentarray.append(name)
-                                    imagearray.append(thumb)
-                                    descarray.append(desc)
+                if len(contentarray)>0:
+                    choices = multiselect('Please select the categories you would like to install', contentarray, imagearray, descarray)
+                    xbmc.log('Choices: %s' % choices)
+                    if len(choices) > 0:
+                        Install_Shares(function, menutype, menu, choices, contentarray, imagearray, descarray)
+                else:
+                    if thirdparty == 'true':
+                        dialog.ok('NO CONTENT AVAILABLE','Sorry there\'s currently no new content available for this category.')
+                    else:
+                        dialog.ok('NO CONTENT AVAILABLE','Sorry there\'s currently no new content available for this category. If you\'re looking for community social shares you need to enable that feature first via Maintenance>Setup Wizard>Social Shares.')
 
-                    elif menutype == 'add_sub':
-                        if thirdparty == 'false':
-                            if 'Remove' not in name and not 'by box' in name:
-                                addDir('',name.replace('_',' ').replace(' to the '+menu.title()+' SubMenu',''),url,'install_venz',thumb,'','',desc)
-                        else:
-                            if 'Remove' not in name:
-                                addDir('',name.replace('_',' ').replace(' to the '+menu.title()+' SubMenu',''),url,'install_venz',thumb,'','',desc)
 
-                    elif menutype == 'remove_main':
-                        if menu+' menu' in name.lower() and not 'Add ' in name:
-      #                      addDir('',name.replace('_',' ').replace(' from the '+menu.replace('_',' ').title()+' Menu',''),url,'install_venz',thumb,'','',desc)
-                            contenturl.append(url)
-                            contentarray.append(name)
-                            imagearray.append(thumb)
-                            descarray.append(desc)
-
-                    elif menutype == 'remove_sub':
-                        if 'Add ' not in name:
-                            addDir('',name.replace('_',' ').replace(' from the '+menu.title()+' SubMenu',''),url,'install_venz',thumb,'','',desc)
-
-                    elif menutype == '' and menu == '' and function != 'main_menu':
-                        if 'Remove' not in name:
-                            addDir('',name.replace('_',' '),url,'install_venz',thumb,'','',desc)
+# If this is a remove item
+            else:
+                Remove_Menu(function)
         except:
             Notify('No Response from server','Sorry Please try later','1000',os.path.join(ADDONS,'plugin.program.tbs','resources','cross.png'))
-
-        if menutype == 'add_main' or menutype == 'remove_main':
-            if len(contentarray) > 0:
-                choices = multiselect('Select from the list below',contentarray,imagearray,descarray)
-                if len(choices) > 0:
-                    Notify('Installing Content','Please be patient during this process','5000',os.path.join(ADDONS,'plugin.program.tbs','resources','update.png'))
-                    for item in choices:
-                        Open_URL2(contenturl[item])
-                    Grab_Updates('http://tlbb.me/comm.php?multi&z=c&x=')
-                    xbmc.executebuiltin('ActivateWindow(HOME)')
-            else:
-                dialog.ok('NO CONTENT AVAILABLE','Oops...', 'Sorry it looks like this section is a work in progress.', 'Please come back at a later date as new content is added on a regular basis.')
-            #    if tryagain == 1:
-      #      Install_Venz_Menu(function_orig)
     else:
         dialog.ok('FAULT DETECTED', 'It was not possible to obtain your MAC address details, please check your wifi and ethernet modules are enabled.')    
-#---------------------------------------------------------
+#---------------------------------------------------------------------------------------------------
+# Remove an item from the system
+def Remove_Menu(function, menutype = ''):
+    contentarray = []
+    imagearray   = []
+    descarray    = []
+    contenturl   = []
+    urlparams = URL_Params()
+    if debug == 'true':
+        xbmc.log('http://tlbb.me/boxer/category_search.php?&x=%s' % (encryptme('e','%s&%s&0&%s&%s' % (urlparams, function, social_shares, menutype))))
+    sharelist_URL  = 'http://tlbb.me/boxer/category_search.php?&x=%s' % (encryptme('e','%s&%s&0&%s&%s' % (urlparams, function, social_shares, menutype)))
+    content_list   = Open_URL2(sharelist_URL)
+    clean_link     = encryptme('d',content_list)
+    if debug == 'true':
+        xbmc.log('#### RETURN: %s' % clean_link)
+# Grab all the shares which match the master sub-category
+    match = re.compile('n="(.+?)"t="(.+?)"d="(.+?)"l="(.+?)"', re.DOTALL).findall(clean_link)
+    for name, thumb, desc, link in match:
+        contentarray.append(name)
+        imagearray.append(thumb)
+        descarray.append(desc)
+        contenturl.append(link)
+
+# Return the results and update
+    if len(contentarray) > 0:
+        if menutype == '':
+            choices = multiselect('Select from the list below',contentarray,imagearray,descarray)
+            if len(choices) > 0:
+                Notify('Removing Content','Please be patient during this process','5000',os.path.join(ADDONS,'plugin.program.tbs','resources','update.png'))
+                xbmc.executebuiltin('ActivateWindow(HOME)')
+                for item in choices:
+                    Open_URL2(contenturl[item])
+        else:
+            for item in contenturl:
+                xbmc.log('### URL TO REMOVE: %s' % item)
+                Open_URL2(item)
+
+        Grab_Updates('http://tlbb.me/comm.php?multi&z=c&x=')
+    elif menutype == '':
+        dialog.ok('NOTHING TO REMOVE','You currently have no items installed on the system, please try adding shares.')
+#---------------------------------------------------------------------------------------------------
+# Show final results for installing (if multiple shares of same name order by popularity)
+def Install_Shares(function, menutype, menu, choices, contentarray = '', imagearray = '', descarray = ''):
+        shares_contentarray = []
+        shares_imagearray   = []
+        shares_descarray    = []
+        shares_contenturl   = []
+        urlparams           = URL_Params()
+
+#    try:
+        for item in choices:
+            xbmc.log('CHOICE: %s' % item)
+            if debug == 'true':
+                xbmc.log('http://tlbb.me/boxer/category_search.php?&x=%s' % (encryptme('e','%s&%s&1&%s&%s' % (urlparams, function, social_shares, contentarray[item]))))
+            sharelist_URL  = 'http://tlbb.me/boxer/category_search.php?&x=%s' % (encryptme('e','%s&%s&1&%s&%s' % (urlparams, function, social_shares, contentarray[item])))
+            content_list   = Open_URL2(sharelist_URL)
+            clean_link     = encryptme('d',content_list)
+            if debug == 'true':
+                xbmc.log('#### %s' % clean_link)
+
+# Grab all the shares which match the master sub-category
+            match = re.compile('n="(.+?)"t="(.+?)"d="(.+?)"l="(.+?)"', re.DOTALL).findall(clean_link)
+            for name, thumb, desc, link in match:
+                shares_contentarray.append(name)
+                shares_imagearray.append(thumb)
+                shares_descarray.append(desc)
+                shares_contenturl.append(link)
+
+# If we have more than one item in the list we present them so the user can select which one they want installed
+            if len(shares_contentarray) > 1:
+                choice = dialog.select('Select share for [COLOR=dodgerblue]%s[/COLOR]' % contentarray[item].replace('ADD ',''), shares_contentarray)
+                install_share = shares_contenturl[choice]
+
+            else:
+                install_share = shares_contenturl[0]
+
+# Remove any matching menu items previously installed from different boxes
+            if len(shares_contentarray)>0:
+                for item in shares_contentarray:
+                    xbmc.log('### Removing any old instances of %s' % item)
+                    if item.startswith('Add'):
+                        item         = 'Remove'+item[3:]
+                        change_text  = re.compile(' to the (.+?)Menu').findall(item)[0]
+                        if change_text.endswith(' '):
+                            change_text = change_text[:-1]
+                        item         = item.replace(' to the %s' % change_text, '%'+' from the %s' % change_text)
+                        if 'by box' in item:
+                            change_text2 = re.compile('by box (.+?)from').findall(item)[0]
+                            xbmc.log('by box: %s' % change_text2)
+                            item         = item.replace(change_text2, '%')
+                        Remove_Menu('from_the_%s_menu' % change_text.lower().replace(' ', '_'), item)
+#            content_list   = Open_URL2(sharelist_URL)
+
+                Open_URL2(install_share)
+
+# Clean the arrays so they don't show old data
+            del shares_contentarray[:]
+            del shares_imagearray[:]
+            del shares_descarray[:]
+            del shares_contenturl[:]
+            del match[:]
+        xbmc.executebuiltin('ActivateWindow(HOME)')
+        Grab_Updates('http://tlbb.me/comm.php?multi&z=c&x=')
+#---------------------------------------------------------------------------------------------------
 # Function to pull commands and update
 def DLE(command,repo_link,repo_id):
     check1='DLE'
@@ -1750,8 +1825,8 @@ def Keyword_Search():
             if 'Success' in link:
                 success = 1
                 dp.close()
-                dialog.ok('Keyword Code Success','Congratulations, your Keyword has successfully been installed.')
-                xbmc.executebuiltin('RunScript(special://home/addons/plugin.program.tbs/checknews.py')
+                xbmc.executebuiltin('RunScript(special://home/addons/script.openwindow/functions.py)')
+                dialog.ok('Keyword Code Success','Congratulations, your Keyword has been accepted.','Please wait for the "working" notification to finish and then click ok to continue. Any changes will have made with immediate effect.')
         if success == 0:
             try:
                 xbmc.log("Attempting download "+downloadurl+" to "+lib)
@@ -2079,14 +2154,16 @@ def OpenELEC_Check():
     if 'Running on OpenELEC' in content or 'Running on LibreELEC' in content:
         return True
 #---------------------------------------------------------------------------------------------------
-# Open OE Settings
 def OpenELEC_Settings():
-    try:
-        xbmcaddon.Addon(id='service.openelec.settings').getAddonInfo('name')
-        xbmc.executebuiltin('RunAddon(service.openelec.settings)')
-    except:
-        xbmcaddon.Addon(id='service.libreelec.settings').getAddonInfo('name')
-        xbmc.executebuiltin('RunAddon(service.libreelec.settings)')
+    if xbmc.getCondVisibility("System.HasAddon(service.openelec.settings)") or xbmc.getCondVisibility("System.HasAddon(service.libreelec.settings)"):
+        if xbmc.getCondVisibility("System.HasAddon(service.openelec.settings)"): 
+            xbmc.executebuiltin('RunAddon(service.openelec.settings)')
+        elif xbmc.getCondVisibility("System.HasAddon(service.libreelec.settings)"): 
+            xbmc.executebuiltin('RunAddon(service.libreelec.settings)')
+        xbmc.sleep(1500)
+        xbmc.executebuiltin('Control.SetFocus(1000,2)')
+        xbmc.sleep(500)
+        xbmc.executebuiltin('Control.SetFocus(1200,0)')
 #---------------------------------------------------------------------------------------------------
 # Set popup xml based on platform
 def pop(xmlfile):
@@ -2409,20 +2486,17 @@ def SEARCH(title):
 #-----------------------------------------------------------------------------------------------------------------
 # Main search menu for Venz content
 def Search_Content_Main(type):
+    xbmc.log(type)
     if 'from_the' in type and '_menu' in type:
         Install_Venz_Menu(type+'||remove_main||'+type.replace('from_the_','').replace('_menu',''))
     elif type == 'main_menu':
         Install_Venz_Menu(type)
-    elif type == 'live_tv' and not os.path.exists(tvguide) and tvgskip == 0:
-        xbmc.log("### PATH: %s" % tvguide)
-        addDir('folder','Add Channels - [COLOR=dodgerblue]Manual Search[/COLOR]','add_main||'+type,'search_content','Manual_Search.png','','','')
-        addDir('folder','Add Channels - [COLOR=dodgerblue]Browse All Channels[/COLOR]','to_the_live_tv_menu||add_main||'+type,'install_venz_menu','','','','')
     elif not 'from_the' in type and type != 'main_menu' and not "submenu" in type:
-        addDir('folder','Add To '+type.replace('_',' ')+' - [COLOR=dodgerblue]Manual Search[/COLOR]','add_main||'+type,'search_content','Manual_Search.png','','','')
-        addDir('folder','Add To '+type.replace('_',' ')+' - [COLOR=dodgerblue]Browse All[/COLOR]','to_the_'+type+'_menu||add_main||'+type,'install_venz_menu','','','','')
+        addDir('folder','Add to '+type.replace('_',' ')+' - [COLOR=dodgerblue]Browse All[/COLOR]','to_the_'+type+'_menu||add_main||'+type,'install_venz_menu','','','','')
+        addDir('folder','Add to '+type.replace('_',' ')+' - [COLOR=dodgerblue]Search For Specific Shares[/COLOR]','to_the_'+type+'_menu||add_main||'+type,'search_content','Manual_Search.png','','','')
     elif "submenu" in type:
-        addDir('folder','Add To '+type.replace('_submenu','').replace('_',' ').title()+' Sub-menu','to_the_'+type+'||add_sub||'+type.replace('_submenu',''),'install_venz_menu','','','','')
-        addDir('folder','Remove From '+type.replace('_submenu','').replace('_',' ').title()+' Sub-menu','from_the_'+type+'||remove_sub||'+type.replace('_submenu',''),'install_venz_menu','','','','')   
+        addDir('folder','Add to '+type.replace('_submenu','').replace('_',' ').title()+' Sub-menu','to_the_'+type+'||add_sub||'+type.replace('_submenu',''),'install_venz_menu','','','','')
+        addDir('folder','Remove from '+type.replace('_submenu','').replace('_',' ').title()+' Sub-menu','from_the_'+type+'||remove_sub||'+type.replace('_submenu',''),'install_venz_menu','','','','')   
 #-----------------------------------------------------------------------------------------------------------------
 # Search for Venz content
 def Search_Content(menutype):
@@ -2432,7 +2506,7 @@ def Search_Content(menutype):
 
 # we need to set the title to our query
     title = urllib.quote_plus(vq)
-    Install_Venz_Menu(title+'||'+menutype)
+    Install_Venz_Menu('manualsearch'+title+'>>#'+menutype)
 #---------------------------------------------------------------------------------------------------
 def SetNone():
     urlparams = URL_Params()
@@ -2510,6 +2584,10 @@ def SF(command,SF_folder,SF_link):
 #---------------------------------------------------------------------------------------------------
 # Social TV Menu
 def Social_Menu():
+    if thirdparty == 'true':
+        addDir('','Social Shares Status: [COLOR=lime]ENABLED[/COLOR]','false', 'enable_shares', '','','','')
+    else:
+        addDir('','Social Shares Status: [COLOR=red]DISABLED[/COLOR]','true', 'enable_shares', '','','','')
     addDir('','[COLOR=dodgerblue]Check For Updates[/COLOR]','http://tlbb.me/comm.php?z=c&x=', 'grab_updates', '','','','')
     addDir('','My Share Folders (Create/Share Menus)','', 'open_sf', '','','','')
     addDir('','Update My Online Shares','manual', 'check_shares', '','','','')
@@ -3125,6 +3203,7 @@ def Launch():
     elif mode == 'clear_cache'        : Clear_Cache()
     elif mode == 'delete_path'        : Delete_Path(url)
     elif mode == 'fix_special'        : Fix_Special(url)
+    elif mode == 'enable_shares'      : Enable_Shares(url)
     elif mode == 'exec_xbmc'          : Exec_XBMC(url)
     elif mode == 'full_clean'         : Full_Clean()
     elif mode == 'grab_updates'       : Grab_Updates(url)
@@ -3167,6 +3246,7 @@ def Launch():
     elif mode == 'social_menu'        : Social_Menu()
     elif mode == 'speed_instructions' : Speed_Instructions()
     elif mode == 'speedtest_menu'     : Speed_Test_Menu()
+    elif mode == 'start'              : Categories()
     elif mode == 'startup_wizard'     : xbmc.executebuiltin('RunAddon(script.openwindow)')
     elif mode == 'text_guide'         : Text_Guide(url)
     elif mode == 'tools'              : Tools()

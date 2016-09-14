@@ -1,3 +1,10 @@
+v.3.9.4:
+- Added black background to multi-select dialog
+- Added new mode for opening direct into the root menu (from maintenance)
+- Added new item in Social Shares, ability to enable/disable
+- Grouped social shares together by name so easier to find content
+- When installing a share any old ones are now fully uninstalled so they are available to install again.
+
 v.3.9:
 - OpenELEC/LibreELEC support
 - Fixed bug with failing to start from startup wizard

@@ -175,111 +175,21 @@
 		<focusposition>2</focusposition>
 	</include>
 	<!--Main Menu-->
-	<include name="CustomMainMenuItem1">
-		<item id="101">
-			<label fallback="+-">$INFO[Skin.String(Custom1HomeItem.Label)]</label>
+	<include name="SettingsMainMenu">
+		<item id="5">
+			<label fallback="39980">$INFO[Skin.String(SettingsHomeItem.Label)]</label>
 			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
-			<icon fallback="views/list/DefaultEdit.png">$INFO[Skin.String(Custom1HomeItem.Icon)]</icon>
-			<thumb fallback="special://home/media/branding/backgrounds/HOME_EDIT">$INFO[Skin.String(Custom1HomeItem.MultiFanart)]</thumb>
-			<property name="Path" fallback="RunScript(&quot;special://home/addons/plugin.program.tbs/epg.py&quot;,'mainmenu')">$INFO[Skin.String(Custom1HomeItem.Path)]</property>
-			<property name="Item">Custom1</property>
-			<property name="BGType" fallback="2">$INFO[Skin.String(Custom1HomeItem.BGType)]</property>
-			<property name="Widget">$INFO[Skin.String(Custom1HomeItem.Widget)]</property>
-			<property name="WidgetLabel">$INFO[Skin.String(Custom1HomeItem.WidgetLabel)]</property>
-			<property name="WidgetType">$INFO[Skin.String(Custom1HomeItem.WidgetType)]</property>
-			<property name="InfoLine">$INFO[Skin.String(Custom1HomeItem.InfoLine)]</property>
-			<property name="submenuVisibility" fallback="x101">$INFO[Skin.String(Custom1HomeItem.SubMenu)]</property>
-			<property name="Disable">$INFO[Skin.String(Custom1HomeItem.Disable)]</property>
-		</item>
-	</include>
-	<include name="CustomMainMenuItem6">
-		<item id="606">
-			<label fallback="39964">$INFO[Skin.String(Custom6HomeItem.Label)]</label>
-			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
-			<icon fallback="views/list/DefaultComedy.png">$INFO[Skin.String(Custom6HomeItem.Icon)]</icon>
-			<thumb fallback="special://home/media/branding/backgrounds/HOME_COMEDY">$INFO[Skin.String(Custom6HomeItem.MultiFanart)]</thumb>
-			<property name="Path" fallback="RunScript(&quot;special://home/addons/plugin.program.tbs/home.py&quot;,'HOME_COMEDY')">$INFO[Skin.String(Custom6HomeItem.Path)]</property>
-<!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_COMEDY&quot;,return)">$INFO[Skin.String(Custom6HomeItem.Path)]</property>-->
-			<property name="Item">Custom6</property>
-			<property name="BGType" fallback="2">$INFO[Skin.String(Custom6HomeItem.BGType)]</property>
-			<property name="Widget">$INFO[Skin.String(Custom6HomeItem.Widget)]</property>
-			<property name="WidgetLabel">$INFO[Skin.String(Custom6HomeItem.WidgetLabel)]</property>
-			<property name="WidgetType">$INFO[Skin.String(Custom6HomeItem.WidgetType)]</property>
-			<property name="InfoLine">$INFO[Skin.String(Custom6HomeItem.InfoLine)]</property>
-			<property name="submenuVisibility" fallback="x606">$INFO[Skin.String(Custom6HomeItem.SubMenu)]</property>
-			<property name="Disable">$INFO[Skin.String(Custom6HomeItem.Disable)]</property>
-		</item>
-	</include>
-	<include name="CustomMainMenuItem3">
-		<item id="303">
-			<label fallback="39965">$INFO[Skin.String(Custom3HomeItem.Label)]</label>
-			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
-			<icon fallback="views/list/DefaultCooking.png">$INFO[Skin.String(Custom3HomeItem.Icon)]</icon>
-			<thumb fallback="special://home/media/branding/backgrounds/HOME_COOKING">$INFO[Skin.String(Custom3HomeItem.MultiFanart)]</thumb>
-			<property name="Path" fallback="RunScript(&quot;special://home/addons/plugin.program.tbs/home.py&quot;,'HOME_COOKING')">$INFO[Skin.String(Custom3HomeItem.Path)]</property>
-<!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_COOKING&quot;,return)">$INFO[Skin.String(Custom3HomeItem.Path)]</property>-->
-			<property name="Item">Custom3</property>
-			<property name="BGType" fallback="2">$INFO[Skin.String(Custom3HomeItem.BGType)]</property>
-			<property name="Widget">$INFO[Skin.String(Custom3HomeItem.Widget)]</property>
-			<property name="WidgetLabel">$INFO[Skin.String(Custom3HomeItem.WidgetLabel)]</property>
-			<property name="WidgetType">$INFO[Skin.String(Custom3HomeItem.WidgetType)]</property>
-			<property name="InfoLine">$INFO[Skin.String(Custom3HomeItem.InfoLine)]</property>
-			<property name="submenuVisibility" fallback="x303">$INFO[Skin.String(Custom3HomeItem.SubMenu)]</property>
-			<property name="Disable">$INFO[Skin.String(Custom3HomeItem.Disable)]</property>
-		</item>
-	</include>
-	<include name="CustomMainMenuItem4">
-		<item id="404">
-			<label fallback="39966">$INFO[Skin.String(Custom4HomeItem.Label)]</label>
-			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
-			<icon fallback="views/list/DefaultFitness.png">$INFO[Skin.String(Custom4HomeItem.Icon)]</icon>
-			<thumb fallback="special://home/media/branding/backgrounds/HOME_FITNESS">$INFO[Skin.String(Custom4HomeItem.MultiFanart)]</thumb>
-			<property name="Path" fallback="RunScript(&quot;special://home/addons/plugin.program.tbs/home.py&quot;,'HOME_FITNESS')">$INFO[Skin.String(Custom4HomeItem.Path)]</property>
-<!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_FITNESS&quot;,return)">$INFO[Skin.String(Custom4HomeItem.Path)]</property>-->
-			<property name="Item">Custom4</property>
-			<property name="BGType" fallback="2">$INFO[Skin.String(Custom4HomeItem.BGType)]</property>
-			<property name="Widget">$INFO[Skin.String(Custom4HomeItem.Widget)]</property>
-			<property name="WidgetLabel">$INFO[Skin.String(Custom4HomeItem.WidgetLabel)]</property>
-			<property name="WidgetType">$INFO[Skin.String(Custom4HomeItem.WidgetType)]</property>
-			<property name="InfoLine">$INFO[Skin.String(Custom4HomeItem.InfoLine)]</property>
-			<property name="submenuVisibility" fallback="x404">$INFO[Skin.String(Custom4HomeItem.SubMenu)]</property>
-			<property name="Disable">$INFO[Skin.String(Custom4HomeItem.Disable)]</property>
-		</item>
-	</include>
-	<include name="CustomMainMenuItem5">
-		<item id="505">
-			<label fallback="39967">$INFO[Skin.String(Custom5HomeItem.Label)]</label>
-			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
-			<icon fallback="views/list/DefaultGaming.png">$INFO[Skin.String(Custom5HomeItem.Icon)]</icon>
-			<thumb fallback="special://home/media/branding/backgrounds/HOME_GAMING">$INFO[Skin.String(Custom5HomeItem.MultiFanart)]</thumb>
-			<property name="Path" fallback="RunScript(&quot;special://home/addons/plugin.program.tbs/home.py&quot;,'HOME_GAMING')">$INFO[Skin.String(Custom5HomeItem.Path)]</property>
-<!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_GAMING&quot;,return)">$INFO[Skin.String(Custom5HomeItem.Path)]</property>-->
-			<property name="Item">Custom5</property>
-			<property name="BGType" fallback="2">$INFO[Skin.String(Custom5HomeItem.BGType)]</property>
-			<property name="Widget">$INFO[Skin.String(Custom5HomeItem.Widget)]</property>
-			<property name="WidgetLabel">$INFO[Skin.String(Custom5HomeItem.WidgetLabel)]</property>
-			<property name="WidgetType">$INFO[Skin.String(Custom5HomeItem.WidgetType)]</property>
-			<property name="InfoLine">$INFO[Skin.String(Custom5HomeItem.InfoLine)]</property>
-			<property name="submenuVisibility" fallback="x505">$INFO[Skin.String(Custom5HomeItem.SubMenu)]</property>
-			<property name="Disable">$INFO[Skin.String(Custom5HomeItem.Disable)]</property>
-		</item>
-	</include>
-	<include name="FavoritesMainMenu">
-		<item id="8">
-			<label fallback="39968">$INFO[Skin.String(FavoritesHomeItem.Label)]</label>
-			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
-			<icon fallback="views/list/DefaultKids.png">$INFO[Skin.String(FavoritesHomeItem.Icon)]</icon>
-			<thumb fallback="special://home/media/branding/backgrounds/HOME_KIDS">$INFO[Skin.String(FavoritesHomeItem.MultiFanart)]</thumb>
-			<property name="Path" fallback="RunScript(&quot;special://home/addons/plugin.program.tbs/home.py&quot;,'HOME_KIDS')">$INFO[Skin.String(FavoritesHomeItem.Path)]</property>
-<!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_KIDS&quot;,return)">$INFO[Skin.String(FavoritesHomeItem.Path)]</property>-->
-			<property name="Item">Favorites</property>
-			<property name="BGType" fallback="2">$INFO[Skin.String(FavoritesHomeItem.BGType)]</property>
-			<property name="Widget">$INFO[Skin.String(FavoritesHomeItem.Widget)]</property>
-			<property name="WidgetLabel">$INFO[Skin.String(FavoritesHomeItem.WidgetLabel)]</property>
-			<property name="WidgetType">$INFO[Skin.String(FavoritesHomeItem.WidgetType)]</property>
-			<property name="InfoLine">$INFO[Skin.String(FavoritesHomeItem.InfoLine)]</property>
-			<property name="submenuVisibility" fallback="x8">$INFO[Skin.String(FavoritesHomeItem.SubMenu)]</property>
-			<property name="Disable">$INFO[Skin.String(FavoritesHomeItem.Disable)]</property>
+			<icon fallback="views/list/DefaultSystem.png">$INFO[Skin.String(SettingsHomeItem.Icon)]</icon>
+			<thumb fallback="special://home/media/branding/backgrounds/HOME_SYSTEM">$INFO[Skin.String(SettingsHomeItem.MultiFanart)]</thumb>
+			<property name="Path" fallback="ActivateWindow(10025,plugin://plugin.program.tbs/?mode=start,return)">$INFO[Skin.String(SettingsHomeItem.Path)]</property>
+			<property name="Item">Settings</property>
+			<property name="BGType" fallback="2">$INFO[Skin.String(SettingsHomeItem.BGType)]</property>
+			<property name="Widget">$INFO[Skin.String(SettingsHomeItem.Widget)]</property>
+			<property name="WidgetLabel">$INFO[Skin.String(SettingsHomeItem.WidgetLabel)]</property>
+			<property name="WidgetType">$INFO[Skin.String(SettingsHomeItem.WidgetType)]</property>
+			<property name="InfoLine">$INFO[Skin.String(SettingsHomeItem.InfoLine)]</property>
+			<property name="submenuVisibility" fallback="x5">$INFO[Skin.String(SettingsHomeItem.SubMenu)]</property>
+			<property name="Disable">$INFO[Skin.String(SettingsHomeItem.Disable)]</property>
 		</item>
 	</include>
 	<include name="TVMainMenu">
@@ -288,7 +198,7 @@
 			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
 			<icon fallback="views/list/DefaultLiveTV.png">$INFO[Skin.String(LiveTVHomeItem.Icon)]</icon>
 			<thumb fallback="special://home/media/branding/backgrounds/HOME_LIVE_TV">$INFO[Skin.String(LiveTVHomeItem.MultiFanart)]</thumb>
-			<property name="Path" fallback="RunScript(&quot;special://home/addons/plugin.program.tbs/home.py&quot;,'HOME_LIVE_TV')">$INFO[Skin.String(LiveTVHomeItem.Path)]</property>
+			<property name="Path" fallback="RunScript(special://home/addons/plugin.program.tbs/home.py,HOME_LIVE_TV)">$INFO[Skin.String(LiveTVHomeItem.Path)]</property>
 <!--			<property name="Path" fallback="RunScript(script.mcmc.tv)">$INFO[Skin.String(LiveTVHomeItem.Path)]</property>
 			<property name="Item">LiveTV</property>-->
 			<property name="BGType" fallback="2">$INFO[Skin.String(LiveTVHomeItem.BGType)]</property>
@@ -306,7 +216,7 @@
 			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
 			<icon fallback="views/list/DefaultMovies.png">$INFO[Skin.String(MovieHomeItem.Icon)]</icon>
 			<thumb fallback="special://home/media/branding/backgrounds/HOME_MOVIES">$INFO[Skin.String(MovieHomeItem.MultiFanart)]</thumb>
-			<property name="Path" fallback="RunScript(&quot;special://home/addons/plugin.program.tbs/home.py&quot;,'HOME_MOVIES')">$INFO[Skin.String(MovieHomeItem.Path)]</property>
+			<property name="Path" fallback="RunScript(special://home/addons/plugin.program.tbs/home.py,HOME_MOVIES)">$INFO[Skin.String(MovieHomeItem.Path)]</property>
 <!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_MOVIES&quot;,return)">$INFO[Skin.String(MovieHomeItem.Path)]</property>-->
 			<property name="Item">Movie</property>
 			<property name="BGType" fallback="2">$INFO[Skin.String(MovieHomeItem.BGType)]</property>
@@ -318,13 +228,31 @@
 			<property name="Disable">$INFO[Skin.String(MovieHomeItem.Disable)]</property>
 		</item>
 	</include>
+	<include name="TVShowsMainMenu">
+		<item id="11">
+			<label fallback="39977">$INFO[Skin.String(TVShowHomeItem.Label)]</label>
+			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
+			<icon fallback="views/list/DefaultTVShows.png">$INFO[Skin.String(TVShowHomeItem.Icon)]</icon>
+			<thumb fallback="special://home/media/branding/backgrounds/HOME_TV_SHOWS">$INFO[Skin.String(TVShowHomeItem.MultiFanart)]</thumb>
+			<property name="Path" fallback="RunScript(special://home/addons/plugin.program.tbs/home.py,HOME_TV_SHOWS)">$INFO[Skin.String(TVShowHomeItem.Path)]</property>
+<!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_TV_SHOWS&quot;,return)">$INFO[Skin.String(TVShowHomeItem.Path)]</property>-->
+			<property name="Item">TVShow</property>
+			<property name="BGType" fallback="2">$INFO[Skin.String(TVShowHomeItem.BGType)]</property>
+			<property name="Widget" fallback="plugin://script.qlickplay/?info=trendingshows">$INFO[Skin.String(TVShowHomeItem.Widget)]</property>
+			<property name="WidgetLabel" fallback="Trending Shows">$INFO[Skin.String(TVShowHomeItem.WidgetLabel)]</property>
+			<property name="WidgetType" fallback="1">$INFO[Skin.String(TVShowHomeItem.WidgetType)]</property>
+			<property name="InfoLine">$INFO[Skin.String(TVShowHomeItem.InfoLine)]</property>
+			<property name="submenuVisibility" fallback="x11">$INFO[Skin.String(TVShowHomeItem.SubMenu)]</property>
+			<property name="Disable">$INFO[Skin.String(TVShowHomeItem.Disable)]</property>
+		</item>
+	</include>
 	<include name="MusicMainMenu">
 		<item id="3">
 			<label fallback="39971">$INFO[Skin.String(MusicHomeItem.Label)]</label>
 			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
 			<icon fallback="views/list/DefaultMusic.png">$INFO[Skin.String(MusicHomeItem.Icon)]</icon>
 			<thumb fallback="special://home/media/branding/backgrounds/HOME_MUSIC">$INFO[Skin.String(MusicHomeItem.MultiFanart)]</thumb>
-			<property name="Path" fallback="RunScript(&quot;special://home/addons/plugin.program.tbs/home.py&quot;,'HOME_MUSIC')">$INFO[Skin.String(MusicHomeItem.Path)]</property>
+			<property name="Path" fallback="RunScript(special://home/addons/plugin.program.tbs/home.py,HOME_MUSIC)">$INFO[Skin.String(MusicHomeItem.Path)]</property>
 <!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_MUSIC&quot;,return)">$INFO[Skin.String(MusicHomeItem.Path)]</property>-->
 			<property name="Item">Music</property>
 			<property name="BGType" fallback="2">$INFO[Skin.String(MusicHomeItem.BGType)]</property>
@@ -336,13 +264,120 @@
 			<property name="Disable">$INFO[Skin.String(MusicHomeItem.Disable)]</property>
 		</item>
 	</include>
+	<include name="ShutdownMainMenu">
+		<item id="6">
+			<label fallback="39979">$INFO[Skin.String(ShutdownHomeItem.Label)]</label>
+			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
+			<icon fallback="views/list/DefaultYouTube.png">$INFO[Skin.String(ShutdownHomeItem.Icon)]</icon>
+			<thumb fallback="special://home/media/branding/backgrounds/HOME_YOUTUBE">$INFO[Skin.String(ShutdownHomeItem.MultiFanart)]</thumb>
+			<property name="Path" fallback="RunScript(special://home/addons/plugin.program.tbs/home.py,HOME_YOUTUBE)">$INFO[Skin.String(ShutdownHomeItem.Path)]</property>
+			<property name="Item">Shutdown</property>
+			<property name="BGType" fallback="2">$INFO[Skin.String(ShutdownHomeItem.BGType)]</property>
+			<property name="Widget" fallback="plugin://script.qlickplay/?info=youtubesearch&&id=Best%20of%20Youtube">$INFO[Skin.String(ShutdownHomeItem.Widget)]</property>
+			<property name="WidgetLabel" fallback="Best of Youtube">$INFO[Skin.String(ShutdownHomeItem.WidgetLabel)]</property>
+			<property name="WidgetType" fallback="1">$INFO[Skin.String(ShutdownHomeItem.WidgetType)]</property>
+			<property name="InfoLine">$INFO[Skin.String(ShutdownHomeItem.InfoLine)]</property>
+			<property name="submenuVisibility" fallback="x6">$INFO[Skin.String(ShutdownHomeItem.SubMenu)]</property>
+			<property name="Disable">$INFO[Skin.String(ShutdownHomeItem.Disable)]</property>
+		</item>
+	</include>
+	<include name="CustomMainMenuItem6">
+		<item id="606">
+			<label fallback="39964">$INFO[Skin.String(Custom6HomeItem.Label)]</label>
+			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
+			<icon fallback="views/list/DefaultComedy.png">$INFO[Skin.String(Custom6HomeItem.Icon)]</icon>
+			<thumb fallback="special://home/media/branding/backgrounds/HOME_COMEDY">$INFO[Skin.String(Custom6HomeItem.MultiFanart)]</thumb>
+			<property name="Path" fallback="RunScript(special://home/addons/plugin.program.tbs/home.py,HOME_COMEDY)">$INFO[Skin.String(Custom6HomeItem.Path)]</property>
+<!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_COMEDY&quot;,return)">$INFO[Skin.String(Custom6HomeItem.Path)]</property>-->
+			<property name="Item">Custom6</property>
+			<property name="BGType" fallback="2">$INFO[Skin.String(Custom6HomeItem.BGType)]</property>
+			<property name="Widget">$INFO[Skin.String(Custom6HomeItem.Widget)]</property>
+			<property name="WidgetLabel">$INFO[Skin.String(Custom6HomeItem.WidgetLabel)]</property>
+			<property name="WidgetType">$INFO[Skin.String(Custom6HomeItem.WidgetType)]</property>
+			<property name="InfoLine">$INFO[Skin.String(Custom6HomeItem.InfoLine)]</property>
+			<property name="submenuVisibility" fallback="x606">$INFO[Skin.String(Custom6HomeItem.SubMenu)]</property>
+			<property name="Disable">$INFO[Skin.String(Custom6HomeItem.Disable)]</property>
+		</item>
+	</include>
+	<include name="CustomMainMenuItem3">
+		<item id="303">
+			<label fallback="39965">$INFO[Skin.String(Custom3HomeItem.Label)]</label>
+			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
+			<icon fallback="views/list/DefaultCooking.png">$INFO[Skin.String(Custom3HomeItem.Icon)]</icon>
+			<thumb fallback="special://home/media/branding/backgrounds/HOME_COOKING">$INFO[Skin.String(Custom3HomeItem.MultiFanart)]</thumb>
+			<property name="Path" fallback="RunScript(special://home/addons/plugin.program.tbs/home.py,HOME_COOKING)">$INFO[Skin.String(Custom3HomeItem.Path)]</property>
+<!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_COOKING&quot;,return)">$INFO[Skin.String(Custom3HomeItem.Path)]</property>-->
+			<property name="Item">Custom3</property>
+			<property name="BGType" fallback="2">$INFO[Skin.String(Custom3HomeItem.BGType)]</property>
+			<property name="Widget">$INFO[Skin.String(Custom3HomeItem.Widget)]</property>
+			<property name="WidgetLabel">$INFO[Skin.String(Custom3HomeItem.WidgetLabel)]</property>
+			<property name="WidgetType">$INFO[Skin.String(Custom3HomeItem.WidgetType)]</property>
+			<property name="InfoLine">$INFO[Skin.String(Custom3HomeItem.InfoLine)]</property>
+			<property name="submenuVisibility" fallback="x303">$INFO[Skin.String(Custom3HomeItem.SubMenu)]</property>
+			<property name="Disable">$INFO[Skin.String(Custom3HomeItem.Disable)]</property>
+		</item>
+	</include>
+	<include name="CustomMainMenuItem4">
+		<item id="404">
+			<label fallback="39966">$INFO[Skin.String(Custom4HomeItem.Label)]</label>
+			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
+			<icon fallback="views/list/DefaultFitness.png">$INFO[Skin.String(Custom4HomeItem.Icon)]</icon>
+			<thumb fallback="special://home/media/branding/backgrounds/HOME_FITNESS">$INFO[Skin.String(Custom4HomeItem.MultiFanart)]</thumb>
+			<property name="Path" fallback="RunScript(special://home/addons/plugin.program.tbs/home.py,HOME_FITNESS)">$INFO[Skin.String(Custom4HomeItem.Path)]</property>
+<!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_FITNESS&quot;,return)">$INFO[Skin.String(Custom4HomeItem.Path)]</property>-->
+			<property name="Item">Custom4</property>
+			<property name="BGType" fallback="2">$INFO[Skin.String(Custom4HomeItem.BGType)]</property>
+			<property name="Widget">$INFO[Skin.String(Custom4HomeItem.Widget)]</property>
+			<property name="WidgetLabel">$INFO[Skin.String(Custom4HomeItem.WidgetLabel)]</property>
+			<property name="WidgetType">$INFO[Skin.String(Custom4HomeItem.WidgetType)]</property>
+			<property name="InfoLine">$INFO[Skin.String(Custom4HomeItem.InfoLine)]</property>
+			<property name="submenuVisibility" fallback="x404">$INFO[Skin.String(Custom4HomeItem.SubMenu)]</property>
+			<property name="Disable">$INFO[Skin.String(Custom4HomeItem.Disable)]</property>
+		</item>
+	</include>
+	<include name="CustomMainMenuItem5">
+		<item id="505">
+			<label fallback="39967">$INFO[Skin.String(Custom5HomeItem.Label)]</label>
+			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
+			<icon fallback="views/list/DefaultGaming.png">$INFO[Skin.String(Custom5HomeItem.Icon)]</icon>
+			<thumb fallback="special://home/media/branding/backgrounds/HOME_GAMING">$INFO[Skin.String(Custom5HomeItem.MultiFanart)]</thumb>
+			<property name="Path" fallback="RunScript(special://home/addons/plugin.program.tbs/home.py,HOME_GAMING)">$INFO[Skin.String(Custom5HomeItem.Path)]</property>
+<!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_GAMING&quot;,return)">$INFO[Skin.String(Custom5HomeItem.Path)]</property>-->
+			<property name="Item">Custom5</property>
+			<property name="BGType" fallback="2">$INFO[Skin.String(Custom5HomeItem.BGType)]</property>
+			<property name="Widget">$INFO[Skin.String(Custom5HomeItem.Widget)]</property>
+			<property name="WidgetLabel">$INFO[Skin.String(Custom5HomeItem.WidgetLabel)]</property>
+			<property name="WidgetType">$INFO[Skin.String(Custom5HomeItem.WidgetType)]</property>
+			<property name="InfoLine">$INFO[Skin.String(Custom5HomeItem.InfoLine)]</property>
+			<property name="submenuVisibility" fallback="x505">$INFO[Skin.String(Custom5HomeItem.SubMenu)]</property>
+			<property name="Disable">$INFO[Skin.String(Custom5HomeItem.Disable)]</property>
+		</item>
+	</include>
+	<include name="FavoritesMainMenu">
+		<item id="8">
+			<label fallback="39968">$INFO[Skin.String(FavoritesHomeItem.Label)]</label>
+			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
+			<icon fallback="views/list/DefaultKids.png">$INFO[Skin.String(FavoritesHomeItem.Icon)]</icon>
+			<thumb fallback="special://home/media/branding/backgrounds/HOME_KIDS">$INFO[Skin.String(FavoritesHomeItem.MultiFanart)]</thumb>
+			<property name="Path" fallback="RunScript(special://home/addons/plugin.program.tbs/home.py,HOME_KIDS)">$INFO[Skin.String(FavoritesHomeItem.Path)]</property>
+<!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_KIDS&quot;,return)">$INFO[Skin.String(FavoritesHomeItem.Path)]</property>-->
+			<property name="Item">Favorites</property>
+			<property name="BGType" fallback="2">$INFO[Skin.String(FavoritesHomeItem.BGType)]</property>
+			<property name="Widget">$INFO[Skin.String(FavoritesHomeItem.Widget)]</property>
+			<property name="WidgetLabel">$INFO[Skin.String(FavoritesHomeItem.WidgetLabel)]</property>
+			<property name="WidgetType">$INFO[Skin.String(FavoritesHomeItem.WidgetType)]</property>
+			<property name="InfoLine">$INFO[Skin.String(FavoritesHomeItem.InfoLine)]</property>
+			<property name="submenuVisibility" fallback="x8">$INFO[Skin.String(FavoritesHomeItem.SubMenu)]</property>
+			<property name="Disable">$INFO[Skin.String(FavoritesHomeItem.Disable)]</property>
+		</item>
+	</include>
 	<include name="ProgramsMainMenu">
 		<item id="1">
 			<label fallback="39973">$INFO[Skin.String(ProgramsHomeItem.Label)]</label>
 			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
 			<icon fallback="views/list/DefaultNews.png">$INFO[Skin.String(ProgramsHomeItem.Icon)]</icon>
 			<thumb fallback="special://home/media/branding/backgrounds/HOME_NEWS">$INFO[Skin.String(ProgramsHomeItem.MultiFanart)]</thumb>
-			<property name="Path" fallback="RunScript(&quot;special://home/addons/plugin.program.tbs/home.py&quot;,'HOME_NEWS')">$INFO[Skin.String(ProgramsHomeItem.Path)]</property>
+			<property name="Path" fallback="RunScript(special://home/addons/plugin.program.tbs/home.py,HOME_NEWS)">$INFO[Skin.String(ProgramsHomeItem.Path)]</property>
 <!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_NEWS&quot;,return)">$INFO[Skin.String(ProgramsHomeItem.Path)]</property>-->
 			<property name="Item">Programs</property>
 			<property name="BGType" fallback="2">$INFO[Skin.String(ProgramsHomeItem.BGType)]</property>
@@ -360,7 +395,7 @@
 			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
 			<icon fallback="views/list/DefaultSports.png">$INFO[Skin.String(VideosHomeItem.Icon)]</icon>
 			<thumb fallback="special://home/media/branding/backgrounds/HOME_SPORTS">$INFO[Skin.String(VideosHomeItem.MultiFanart)]</thumb>
-			<property name="Path" fallback="RunScript(&quot;special://home/addons/plugin.program.tbs/home.py&quot;,'HOME_SPORTS')">$INFO[Skin.String(VideosHomeItem.Path)]</property>
+			<property name="Path" fallback="RunScript(special://home/addons/plugin.program.tbs/home.py,HOME_SPORTS)">$INFO[Skin.String(VideosHomeItem.Path)]</property>
 <!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_SPORTS&quot;,return)">$INFO[Skin.String(VideosHomeItem.Path)]</property>-->
 			<property name="Item">Videos</property>
 			<property name="BGType" fallback="2">$INFO[Skin.String(VideosHomeItem.BGType)]</property>
@@ -378,7 +413,7 @@
 			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
 			<icon fallback="views/list/DefaultTechnology.png">$INFO[Skin.String(Custom2HomeItem.Icon)]</icon>
 			<thumb fallback="special://home/media/branding/backgrounds/HOME_TECHNOLOGY">$INFO[Skin.String(Custom2HomeItem.MultiFanart)]</thumb>
-			<property name="Path" fallback="RunScript(&quot;special://home/addons/plugin.program.tbs/home.py&quot;,'HOME_TECHNOLOGY')">$INFO[Skin.String(Custom2HomeItem.Path)]</property>
+			<property name="Path" fallback="RunScript(special://home/addons/plugin.program.tbs/home.py,HOME_TECHNOLOGY)">$INFO[Skin.String(Custom2HomeItem.Path)]</property>
 <!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_TECHNOLOGY&quot;,return)">$INFO[Skin.String(Custom2HomeItem.Path)]</property>-->
 			<property name="Item">Custom2</property>
 			<property name="BGType" fallback="2">$INFO[Skin.String(Custom2HomeItem.BGType)]</property>
@@ -396,7 +431,7 @@
 			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
 			<icon fallback="views/list/DefaultTravel.png">$INFO[Skin.String(WeatherHomeItem.Icon)]</icon>
 			<thumb fallback="special://home/media/branding/backgrounds/HOME_TRAVEL">$INFO[Skin.String(WeatherHomeItem.MultiFanart)]</thumb>
-			<property name="Path" fallback="RunScript(&quot;special://home/addons/plugin.program.tbs/home.py&quot;,'HOME_TRAVEL')">$INFO[Skin.String(WeatherHomeItem.Path)]</property>
+			<property name="Path" fallback="RunScript(special://home/addons/plugin.program.tbs/home.py,HOME_TRAVEL)">$INFO[Skin.String(WeatherHomeItem.Path)]</property>
 <!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_TRAVEL&quot;,return)">$INFO[Skin.String(WeatherHomeItem.Path)]</property>-->
 			<property name="Item">Weather</property>
 			<property name="BGType" fallback="2">$INFO[Skin.String(WeatherHomeItem.BGType)]</property>
@@ -408,31 +443,13 @@
 			<property name="Disable">$INFO[Skin.String(WeatherHomeItem.Disable)]</property>
 		</item>
 	</include>
-	<include name="TVShowsMainMenu">
-		<item id="11">
-			<label fallback="39977">$INFO[Skin.String(TVShowHomeItem.Label)]</label>
-			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
-			<icon fallback="views/list/DefaultTVShows.png">$INFO[Skin.String(TVShowHomeItem.Icon)]</icon>
-			<thumb fallback="special://home/media/branding/backgrounds/HOME_TV_SHOWS">$INFO[Skin.String(TVShowHomeItem.MultiFanart)]</thumb>
-			<property name="Path" fallback="RunScript(&quot;special://home/addons/plugin.program.tbs/home.py&quot;,'HOME_TV_SHOWS')">$INFO[Skin.String(TVShowHomeItem.Path)]</property>
-<!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_TV_SHOWS&quot;,return)">$INFO[Skin.String(TVShowHomeItem.Path)]</property>-->
-			<property name="Item">TVShow</property>
-			<property name="BGType" fallback="2">$INFO[Skin.String(TVShowHomeItem.BGType)]</property>
-			<property name="Widget" fallback="plugin://script.qlickplay/?info=trendingshows">$INFO[Skin.String(TVShowHomeItem.Widget)]</property>
-			<property name="WidgetLabel" fallback="Trending Shows">$INFO[Skin.String(TVShowHomeItem.WidgetLabel)]</property>
-			<property name="WidgetType" fallback="1">$INFO[Skin.String(TVShowHomeItem.WidgetType)]</property>
-			<property name="InfoLine">$INFO[Skin.String(TVShowHomeItem.InfoLine)]</property>
-			<property name="submenuVisibility" fallback="x11">$INFO[Skin.String(TVShowHomeItem.SubMenu)]</property>
-			<property name="Disable">$INFO[Skin.String(TVShowHomeItem.Disable)]</property>
-		</item>
-	</include>
 	<include name="PicturesMainMenu">
 		<item id="4">
 			<label fallback="39978">$INFO[Skin.String(PicturesHomeItem.Label)]</label>
 			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
 			<icon fallback="views/list/DefaultWorld.png">$INFO[Skin.String(PicturesHomeItem.Icon)]</icon>
 			<thumb fallback="special://home/media/branding/backgrounds/HOME_WORLD">$INFO[Skin.String(PicturesHomeItem.MultiFanart)]</thumb>
-			<property name="Path" fallback="RunScript(&quot;special://home/addons/plugin.program.tbs/home.py&quot;,'HOME_WORLD')">$INFO[Skin.String(PicturesHomeItem.Path)]</property>
+			<property name="Path" fallback="RunScript(special://home/addons/plugin.program.tbs/home.py,HOME_WORLD)">$INFO[Skin.String(PicturesHomeItem.Path)]</property>
 <!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_WORLD&quot;,return)">$INFO[Skin.String(PicturesHomeItem.Path)]</property>-->
 			<property name="Item">Pictures</property>
 			<property name="BGType" fallback="2">$INFO[Skin.String(PicturesHomeItem.BGType)]</property>
@@ -444,47 +461,13 @@
 			<property name="Disable">$INFO[Skin.String(PicturesHomeItem.Disable)]</property>
 		</item>
 	</include>
-	<include name="ShutdownMainMenu">
-		<item id="6">
-			<label fallback="39979">$INFO[Skin.String(ShutdownHomeItem.Label)]</label>
-			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
-			<icon fallback="views/list/DefaultYouTube.png">$INFO[Skin.String(ShutdownHomeItem.Icon)]</icon>
-			<thumb fallback="special://home/media/branding/backgrounds/HOME_YOUTUBE">$INFO[Skin.String(ShutdownHomeItem.MultiFanart)]</thumb>
-			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_YOUTUBE&quot;,return)">$INFO[Skin.String(ShutdownHomeItem.Path)]</property>
-			<property name="Item">Shutdown</property>
-			<property name="BGType" fallback="2">$INFO[Skin.String(ShutdownHomeItem.BGType)]</property>
-			<property name="Widget" fallback="plugin://script.qlickplay/?info=youtubesearch&&id=Best%20of%20Youtube">$INFO[Skin.String(ShutdownHomeItem.Widget)]</property>
-			<property name="WidgetLabel" fallback="Best of Youtube">$INFO[Skin.String(ShutdownHomeItem.WidgetLabel)]</property>
-			<property name="WidgetType" fallback="1">$INFO[Skin.String(ShutdownHomeItem.WidgetType)]</property>
-			<property name="InfoLine">$INFO[Skin.String(ShutdownHomeItem.InfoLine)]</property>
-			<property name="submenuVisibility" fallback="x6">$INFO[Skin.String(ShutdownHomeItem.SubMenu)]</property>
-			<property name="Disable">$INFO[Skin.String(ShutdownHomeItem.Disable)]</property>
-		</item>
-	</include>
-	<include name="SettingsMainMenu">
-		<item id="5">
-			<label fallback="39980">$INFO[Skin.String(SettingsHomeItem.Label)]</label>
-			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
-			<icon fallback="views/list/DefaultSystem.png">$INFO[Skin.String(SettingsHomeItem.Icon)]</icon>
-			<thumb fallback="special://home/media/branding/backgrounds/HOME_SYSTEM">$INFO[Skin.String(SettingsHomeItem.MultiFanart)]</thumb>
-			<property name="Path" fallback="ActivateWindow(10001,plugin://plugin.program.tbs,return)">$INFO[Skin.String(SettingsHomeItem.Path)]</property>
-			<property name="Item">Settings</property>
-			<property name="BGType" fallback="2">$INFO[Skin.String(SettingsHomeItem.BGType)]</property>
-			<property name="Widget">$INFO[Skin.String(SettingsHomeItem.Widget)]</property>
-			<property name="WidgetLabel">$INFO[Skin.String(SettingsHomeItem.WidgetLabel)]</property>
-			<property name="WidgetType">$INFO[Skin.String(SettingsHomeItem.WidgetType)]</property>
-			<property name="InfoLine">$INFO[Skin.String(SettingsHomeItem.InfoLine)]</property>
-			<property name="submenuVisibility" fallback="x5">$INFO[Skin.String(SettingsHomeItem.SubMenu)]</property>
-			<property name="Disable">$INFO[Skin.String(SettingsHomeItem.Disable)]</property>
-		</item>
-	</include>
 	<include name="MusicVideosMainMenu">
 		<item id="13">
 			<label fallback="39981">$INFO[Skin.String(MusicVideoHomeItem.Label)]</label>
 			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
 			<icon fallback="views/list/DefaultXXX.png">$INFO[Skin.String(MusicVideoHomeItem.Icon)]</icon>
 			<thumb fallback="special://home/media/branding/backgrounds/HOME_XXX">$INFO[Skin.String(MusicVideoHomeItem.MultiFanart)]</thumb>
-			<property name="Path" fallback="RunScript(&quot;special://home/addons/plugin.program.tbs/home.py&quot;,'HOME_XXX')">$INFO[Skin.String(MusicVideoHomeItem.Path)]</property>
+			<property name="Path" fallback="RunScript(special://home/addons/plugin.program.tbs/home.py,HOME_XXX)">$INFO[Skin.String(MusicVideoHomeItem.Path)]</property>
 <!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_XXX&quot;,return)">$INFO[Skin.String(MusicVideoHomeItem.Path)]</property>-->
 			<property name="Item">MusicVideo</property>
 			<property name="BGType" fallback="2">$INFO[Skin.String(MusicVideoHomeItem.BGType)]</property>
@@ -496,26 +479,43 @@
 			<property name="Disable">$INFO[Skin.String(MusicVideoHomeItem.Disable)]</property>
 		</item>
 	</include>
+	<include name="CustomMainMenuItem1">
+		<item id="101">
+			<label fallback="+-">$INFO[Skin.String(Custom1HomeItem.Label)]</label>
+			<onclick>$INFO[Container(9000).ListItem.Property(Path)]</onclick>
+			<icon fallback="views/list/DefaultEdit.png">$INFO[Skin.String(Custom1HomeItem.Icon)]</icon>
+			<thumb fallback="special://home/media/branding/backgrounds/HOME_EDIT">$INFO[Skin.String(Custom1HomeItem.MultiFanart)]</thumb>
+			<property name="Path" fallback="RunScript(special://home/addons/plugin.program.tbs/epg.py,mainmenu)">$INFO[Skin.String(Custom1HomeItem.Path)]</property>
+			<property name="Item">Custom1</property>
+			<property name="BGType" fallback="2">$INFO[Skin.String(Custom1HomeItem.BGType)]</property>
+			<property name="Widget">$INFO[Skin.String(Custom1HomeItem.Widget)]</property>
+			<property name="WidgetLabel">$INFO[Skin.String(Custom1HomeItem.WidgetLabel)]</property>
+			<property name="WidgetType">$INFO[Skin.String(Custom1HomeItem.WidgetType)]</property>
+			<property name="InfoLine">$INFO[Skin.String(Custom1HomeItem.InfoLine)]</property>
+			<property name="submenuVisibility" fallback="x101">$INFO[Skin.String(Custom1HomeItem.SubMenu)]</property>
+			<property name="Disable">$INFO[Skin.String(Custom1HomeItem.Disable)]</property>
+		</item>
+	</include>
 	<include name="FallbackMenu">
 		<content>
-			<include condition="IsEmpty(Skin.String(Custom1HomeItem.Disable))">CustomMainMenuItem1</include>
+			<include condition="IsEmpty(Skin.String(SettingsHomeItem.Disable))">SettingsMainMenu</include>
+			<include condition="IsEmpty(Skin.String(LiveTVHomeItem.Disable))">TVMainMenu</include>
+			<include condition="IsEmpty(Skin.String(MovieHomeItem.Disable))">MoviesMainMenu</include>
+			<include condition="IsEmpty(Skin.String(TVShowHomeItem.Disable))">TVShowsMainMenu</include>
+			<include condition="IsEmpty(Skin.String(MusicHomeItem.Disable))">MusicMainMenu</include>
+			<include condition="IsEmpty(Skin.String(ShutdownHomeItem.Disable))">ShutdownMainMenu</include>
 			<include condition="IsEmpty(Skin.String(Custom6HomeItem.Disable))">CustomMainMenuItem6</include>
 			<include condition="IsEmpty(Skin.String(Custom3HomeItem.Disable))">CustomMainMenuItem3</include>
 			<include condition="IsEmpty(Skin.String(Custom4HomeItem.Disable))">CustomMainMenuItem4</include>
 			<include condition="IsEmpty(Skin.String(Custom5HomeItem.Disable))">CustomMainMenuItem5</include>
 			<include condition="IsEmpty(Skin.String(FavoritesHomeItem.Disable))">FavoritesMainMenu</include>
-			<include condition="IsEmpty(Skin.String(LiveTVHomeItem.Disable))">TVMainMenu</include>
-			<include condition="IsEmpty(Skin.String(MovieHomeItem.Disable))">MoviesMainMenu</include>
-			<include condition="IsEmpty(Skin.String(MusicHomeItem.Disable))">MusicMainMenu</include>
 			<include condition="IsEmpty(Skin.String(ProgramsHomeItem.Disable))">ProgramsMainMenu</include>
 			<include condition="IsEmpty(Skin.String(VideosHomeItem.Disable))">VideosMainMenu</include>
 			<include condition="IsEmpty(Skin.String(Custom2HomeItem.Disable))">CustomMainMenuItem2</include>
 			<include condition="IsEmpty(Skin.String(WeatherHomeItem.Disable))">WeatherMainMenu</include>
-			<include condition="IsEmpty(Skin.String(TVShowHomeItem.Disable))">TVShowsMainMenu</include>
 			<include condition="IsEmpty(Skin.String(PicturesHomeItem.Disable))">PicturesMainMenu</include>
-			<include condition="IsEmpty(Skin.String(ShutdownHomeItem.Disable))">ShutdownMainMenu</include>
-			<include condition="IsEmpty(Skin.String(SettingsHomeItem.Disable))">SettingsMainMenu</include>
 			<include condition="IsEmpty(Skin.String(MusicVideoHomeItem.Disable))">MusicVideosMainMenu</include>
+			<include condition="IsEmpty(Skin.String(Custom1HomeItem.Disable))">CustomMainMenuItem1</include>
 		</content>
 	</include>
 	<!-- SubMenu -->

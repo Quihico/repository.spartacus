@@ -26,9 +26,9 @@ folders = foldercheck()
 if sys.argv[1] == "live_tv" and folders == 0 and not tvgskip:
     choice = dialog.select(sys.argv[1].replace('_',' ').upper()+' Menu',['[COLOR=gold]Add[/COLOR] to Live TV','[COLOR=gold]Add / Remove[/COLOR] Sub-menus','','[COLOR=lightsteelblue][TUTORIAL][/COLOR] Add/Remove Live TV Content'])
     if choice == 0:
-        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url=live_tv&name=Search%20For%20Content&sf_options=fanart%3Dspecial%3A%2F%2Fhome%2Faddons%2Fplugin.program.tbs%2Ffanart.jpg%26_options_sf",return)')
+        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url=live_tv",return)')
     if choice == 1:
-        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url=live_tv_submenu&name=Search%20For%20Content&sf_options=fanart%3Dspecial%3A%2F%2Fhome%2Faddons%2Fplugin.program.tbs%2Ffanart.jpg%26_options_sf",return)')
+        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url=live_tv_submenu",return)')
     if choice == 2:
         xbmc.executebuiltin('RunScript(special://home/addons/plugin.program.tbs/epg.py,'+sys.argv[1]+')')
     if choice == 3:
@@ -37,11 +37,11 @@ if sys.argv[1] == "live_tv" and folders == 0 and not tvgskip:
 elif sys.argv[1] == "live_tv" and folders > 0 and not tvgskip:
     choice = dialog.select(sys.argv[1].replace('_',' ').upper()+' Menu',['[COLOR=gold]Add[/COLOR] to Live TV','[COLOR=gold]Remove[/COLOR] from Live TV','[COLOR=gold]Add / Remove[/COLOR] Sub-menus','[COLOR=gold]Share[/COLOR] Live TV Item','','[COLOR=lightsteelblue][TUTORIAL][/COLOR] Add/Remove Live TV Content'])
     if choice == 0:
-        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url=live_tv&name=Search%20For%20Content&sf_options=fanart%3Dspecial%3A%2F%2Fhome%2Faddons%2Fplugin.program.tbs%2Ffanart.jpg%26_options_sf",return)')
+        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url=live_tv",return)')
     if choice == 1:
-        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url=from_the_live_tv_menu&name=Search%20For%20Content&sf_options=fanart%3Dspecial%3A%2F%2Fhome%2Faddons%2Fplugin.program.tbs%2Ffanart.jpg%26_options_sf",return)')
+        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url=from_the_live_tv_menu",return)')
     if choice == 2:
-        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url=live_tv_submenu&name=Search%20For%20Content&sf_options=fanart%3Dspecial%3A%2F%2Fhome%2Faddons%2Fplugin.program.tbs%2Ffanart.jpg%26_options_sf",return)')
+        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url=live_tv_submenu",return)')
     if choice == 3:
         xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.super.favourites/?folder=HOME_LIVE_TV",return)')
     if choice == 4:
@@ -52,11 +52,11 @@ elif sys.argv[1] == "live_tv" and folders > 0 and not tvgskip:
 elif sys.argv[1] == "mainmenu":
     choice = dialog.select('Main Menu Items',['Add Menus','Remove Menus'])
     if choice == 0:
-        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=main_menu_install&url=add&name=Search%20For%20Content&sf_options=fanart%3Dspecial%3A%2F%2Fhome%2Faddons%2Fplugin.program.tbs%2Ffanart.jpg%26_options_sf",return)')
+        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=main_menu_install&url=add",return)')
         xbmc.executebuiltin('Container.Refresh')
 
     if choice == 1:
-        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=main_menu_install&url=remove&name=Search%20For%20Content&sf_options=fanart%3Dspecial%3A%2F%2Fhome%2Faddons%2Fplugin.program.tbs%2Ffanart.jpg%26_options_sf",return)')
+        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=main_menu_install&url=remove",return)')
         xbmc.executebuiltin('Container.Refresh')
 
 elif sys.argv[1] != "mainmenu" and folders > 0:
@@ -64,11 +64,11 @@ elif sys.argv[1] != "mainmenu" and folders > 0:
     cleanname = sys.argv[1].replace('_',' ')        
     choice = dialog.select('[COLOR=dodgerblue]------ SOCIAL SHARING ------[/COLOR]',['[COLOR=gold]Add[/COLOR] to main '+sys.argv[1].replace('_',' ')+' menu','[COLOR=gold]Remove[/COLOR] from main '+sys.argv[1].replace('_',' ')+' menu','[COLOR=gold]Add / Remove[/COLOR] Sub-menus','[COLOR=gold]Share[/COLOR] a '+cleanname+' menu','','[COLOR=lightsteelblue][TUTORIAL][/COLOR] Add/Remove Main Menu Items','[COLOR=lightsteelblue][TUTORIAL][/COLOR] Add/Remove Content','[COLOR=lightsteelblue][TUTORIAL][/COLOR] Sharing Content'])
     if choice == 0:
-        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url='+sys.argv[1]+'&name=Search%20For%20Content&sf_options=fanart%3Dspecial%3A%2F%2Fhome%2Faddons%2Fplugin.program.tbs%2Ffanart.jpg%26_options_sf",return)')
+        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url='+sys.argv[1]+'",return)')
     if choice == 1:
-        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url=from_the_'+sys.argv[1]+'_menu&name=Search%20For%20Content&sf_options=fanart%3Dspecial%3A%2F%2Fhome%2Faddons%2Fplugin.program.tbs%2Ffanart.jpg%26_options_sf",return)')
+        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url=from_the_'+sys.argv[1]+'_menu",return)')
     if choice == 2:
-        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url='+sys.argv[1]+'_submenu&name=Search%20For%20Content&sf_options=fanart%3Dspecial%3A%2F%2Fhome%2Faddons%2Fplugin.program.tbs%2Ffanart.jpg%26_options_sf",return)')
+        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url='+sys.argv[1]+'_submenu",return)')
     if choice == 3:
         xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.super.favourites/?folder=HOME_'+sys.argv[1].replace(' ','_').upper()+'",return)')
     if choice == 4:
@@ -84,9 +84,9 @@ elif sys.argv[1] != "mainmenu" and folders == 0:
     cleanname = sys.argv[1].replace('_',' ')        
     choice = dialog.select('[COLOR=dodgerblue]------ SOCIAL SHARING ------[/COLOR]',['[COLOR=gold]Add[/COLOR] to main '+sys.argv[1].replace('_',' ')+' menu','[COLOR=gold]Add / Remove[/COLOR] Sub-menus','','[COLOR=lightsteelblue][TUTORIAL][/COLOR] Add/Remove Main Menu Items','[COLOR=lightsteelblue][TUTORIAL][/COLOR] Add/Remove Content','[COLOR=lightsteelblue][TUTORIAL][/COLOR] Sharing Content'])
     if choice == 0:
-        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url='+sys.argv[1]+'&name=Search%20For%20Content&sf_options=fanart%3Dspecial%3A%2F%2Fhome%2Faddons%2Fplugin.program.tbs%2Ffanart.jpg%26_options_sf",return)')
+        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url='+sys.argv[1]+'",return)')
     if choice == 1:
-        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url='+sys.argv[1]+'_submenu&name=Search%20For%20Content&sf_options=fanart%3Dspecial%3A%2F%2Fhome%2Faddons%2Fplugin.program.tbs%2Ffanart.jpg%26_options_sf",return)')
+        xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url='+sys.argv[1]+'_submenu",return)')
     if choice == 2:
         xbmc.executebuiltin('RunScript(special://home/addons/plugin.program.tbs/epg.py,'+sys.argv[1]+')')
     if choice == 3:

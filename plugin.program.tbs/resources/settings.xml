@@ -6,7 +6,7 @@
  		<setting id="dummy" label="[COLOR=yellow]Click here to check download path[/COLOR]" type="action" action="XBMC.RunScript(special://home/addons/plugin.program.tbs/checkPath.py)" option="close"/>
 		<setting type="lsep" label="[COLOR=gold]---------------------------------------------------------------[/COLOR]"/>
 		<setting type="lsep" label="IP Lookup"/>
-		<setting id="ip_site" label="Site to use for IP lookups" type="labelenum" default="iplocation.net" values="iplocation.net|whatismyipaddress.com" visible="true"/>
+		<setting id="ip_site" label="Site to use for IP lookups" type="labelenum" default="whatismyipaddress.com" values="iplocation.net|whatismyipaddress.com" visible="true"/>
 		<setting type="lsep" label="[COLOR=gold]---------------------------------------------------------------[/COLOR]"/>
 		<setting type="lsep" label="Automatically Clean Cache"/>
 		<setting id="cleancache" type="bool" label="Enable service to periodically wipe unused cache" default="true"/>
@@ -15,6 +15,7 @@
     	<setting id="email" type="text" label="E-Mail Address (used for log uploader)"/>
  		<setting id="dummy" label="[COLOR=yellow]Click here to upload a log[/COLOR]" type="action" action="XBMC.RunScript(special://home/addons/plugin.program.tbs/uploadLog.py)" option="close"/>
 		<setting id="thirdparty" type="bool" default="false" visible="false"/>
+		<setting id="adult" type="bool" default="false" visible="false"/>
 		<setting id="debug" type="bool" default="false" visible="false"/>
     </category>
 </settings>

@@ -1,3 +1,9 @@
+[B]5.7.6[/B]
+- Added browser button
+- Changed menu order so startup focus is on movies by default
+- Cleaned up formatting
+- Fixed minor miscellanious errors
+
 [B]5.7.5[/B]
 - Added compatible with TRMC
 - Added compatibility with [COLOR ff0084ff]Q[/COLOR]lick[COLOR ff0084ff]P[/COLOR]lay

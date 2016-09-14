@@ -117,7 +117,7 @@
   </extension>
 </addon>
 
-<addon id="plugin.program.tbs" name="Maintenance"  provider-name="TotalRevolution" version="3.9.3">
+<addon id="plugin.program.tbs" name="Maintenance"  provider-name="TotalRevolution" version="3.9.5">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0"/>
 		<import addon="script.trtv" version="1.2.1"/>
@@ -2093,12 +2093,11 @@
   </extension>
 </addon>
 
-<addon id="script.openwindow" name="Startup Wizard" version="2.3.4" provider-name="TotalRevolution">
+<addon id="script.openwindow" name="Startup Wizard" version="2.3.6" provider-name="TotalRevolution">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0"/>
 	</requires>
 	<extension point="xbmc.python.script" library="default.py" >
-		<provides>executable</provides>
 	</extension>
 	<extension point="xbmc.service" library="service.py" start="startup" />
 	<extension point="xbmc.addon.metadata">
@@ -2144,7 +2143,7 @@
 
 <addon
 	id="skin.aeon.nox.5.tr"
-	version="5.7.5"
+	version="5.7.6"
 	name="Aeon Nox - [COLOR=dodgerblue]TR[/COLOR]ev Mod"
 	provider-name="[COLOR=dodgerblue]TR[/COLOR]ev Mod, original work by BigNoid">
 	<requires>
