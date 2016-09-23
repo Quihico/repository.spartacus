@@ -24,7 +24,7 @@ ADDONID = 'script.trtv'
 
 def add(params):
     if xbmc.getCondVisibility('System.HasAddon(%s)' % ADDONID) == 1:
-        return 'TotalRevolution TV Mini-Guide'
+        return 'TRTV Mini-Guide'
     
     return None
 

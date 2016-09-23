@@ -20,11 +20,12 @@
 import xbmc
 import xbmcaddon
 import os
-
+import shutil
 import sfile
 import dixie
 
 epgdata  = dixie.PROFILE
+extras   = os.path.join(epgdata,'extras')
 settings = xbmc.translatePath('special://profile/settings.bak')
 hotkey   = xbmc.translatePath('special://profile/keymaps/ottv_hot.xml')
 
@@ -32,23 +33,41 @@ hotkey   = xbmc.translatePath('special://profile/keymaps/ottv_hot.xml')
 def resetAddon():
     deleteFiles()
     dixie.SetSetting('epg.date', '2000-01-01')
-    dixie.SetSetting('logo.type', '0')
-    dixie.SetSetting('dixie.logo.folder', 'None')    
     dixie.CloseBusy()
 
 
 def deleteFiles():
     try:
-        sfile.rmtree(epgdata)
         sfile.remove(settings)
         sfile.remove(hotkey)
-                
-        dixie.DialogOK('TotalRevolution TV successfully reset.', 'It will be recreated next time', 'you start the guide.')
+        for item in os.listdir(epgdata):
+            if item != 'extras':
+                item = os.path.join(epgdata, item)
+                try:
+                    shutil.rmtree(item)
+                    xbmc.log('### Successfully removed directory: %s' % item)
+                except:
+                    try:
+                        os.remove(item)
+                        xbmc.log('### Successfully removed file: %s' % item)
+                    except:
+                        xbmc.log('### Failed to remove %s' % item)
+
+        if os.path.exists(extras):
+            for item in os.listdir(extras):
+                item = os.path.join(extras,item)
+                try:
+                    os.remove(item)
+                    xbmc.log('### Successfully removed: %s' % item)
+                except:
+                    xbmc.log('### Failed to remove: %s' % item)
+
+        dixie.DialogOK('TRTV successfully reset.', 'It will be recreated next time', 'you start the guide.')
         
     except Exception, e:
         error = str(e)
-        dixie.log('%s :: Error resetting TotalRevolution TV' % error)
-        dixie.DialogOK('TotalRevolution TV failed to reset.', error, 'Please restart Kodi and try again.')
+        dixie.log('%s :: Error resetting TRTV' % error)
+        dixie.DialogOK('TRTV failed to reset.', error, 'Please restart Kodi and try again.')
 
 
 if __name__ == '__main__':

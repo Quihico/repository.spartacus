@@ -27,7 +27,7 @@ import sfile
 import zipfile
 
 ROOT          = dixie.PROFILE 
-FILENAME      = 'TRTV-backup.zip'
+FILENAME      = 'trtv-backup.zip'
 LINE1         = 'Backup file now being created.'
 LINE2         = 'Please wait, this may take a while.'
 temp_settings = os.path.join(ROOT, 'temp_settings.xml')
@@ -46,7 +46,7 @@ def doBackup():
     dixie.log('Backup: Logo setting is %s' % logoType)
 
     if (chanType == CUSTOM) or (logoType == CUSTOM):
-        dixie.DialogOK('It appears you are using a custom location', 'for your channels or logos (Home Networking).', 'Please back-up TotalRevolution TV manually.')
+        dixie.DialogOK('It appears you are using a custom location', 'for your channels or logos (Home Networking).', 'Please back-up TRTV manually.')
         return
 
     try:

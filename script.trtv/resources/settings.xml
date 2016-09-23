@@ -1,96 +1,59 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <settings>
-	<category label="30972">
 
 <!-- Login details -->
-	    <setting id="validator"         	label="validator"   type="text"   		default="0" 														visible="false" />
-        <setting id="streamURL"         	label="streamURL"   type="text"   		default="" 															visible="false" />
-<!-- Login XML 1 Listings details -->
-		<setting id="country11"	        	label="Country 1"	type="labelenum"	default="United Kingdom"																						values="None|Austria|Canada|Denmark|Finland|Germany|Netherlands|Norway|Poland|Sweden|Switzerland|United Kingdom|United States"			visible="true"/>
- 		<setting id="offset11"           	label="30934" 		type="labelenum"	default="0" 																								values="-12|-11|-10|-9|-8|-7|-6|-5|-4|-3|-2|-1|0|+1|+2|+3|+4|+5|+6|+7|+8|+9|+10|+11|+12" 													visible="true"/>
-<!-- Login XML 2 Listings details -->
- 		<setting type="lsep"				label="30897" 																								visible="true"/>
-		<setting id="country12"	        	label="Country 2"	type="labelenum"	default="United States"																						values="None|Austria|Canada|Denmark|Finland|Germany|Netherlands|Norway|Poland|Sweden|Switzerland|United Kingdom|United States"				visible="true"/>
- 		<setting id="offset12"           	label="30934" 		type="labelenum"	default="0" 																								values="-12|-11|-10|-9|-8|-7|-6|-5|-4|-3|-2|-1|0|+1|+2|+3|+4|+5|+6|+7|+8|+9|+10|+11|+12" 													visible="true"/>
-<!-- Login XML 3 Listings details -->
- 		<setting type="lsep"				label="30897" 																								visible="true"/>
-		<setting id="country13"	        	label="Country 3"	type="labelenum"	default="None"																								values="None|Austria|Canada|Denmark|Finland|Germany|Netherlands|Norway|Poland|Sweden|Switzerland|United Kingdom|United States"				visible="true"/>
- 		<setting id="offset13"           	label="30934" 		type="labelenum"	default="0" 																								values="-12|-11|-10|-9|-8|-7|-6|-5|-4|-3|-2|-1|0|+1|+2|+3|+4|+5|+6|+7|+8|+9|+10|+11|+12" 													visible="true"/>
-<!-- Login XML 4 Listings details -->
- 		<setting type="lsep"				label="30897" 																								visible="true"/>
-		<setting id="country14"	        	label="Country 4"	type="labelenum"	default="None"																								values="None|Austria|Canada|Denmark|Finland|Germany|Netherlands|Norway|Poland|Sweden|Switzerland|United Kingdom|United States"				visible="true"/>
- 		<setting id="offset14"           	label="30934" 		type="labelenum"	default="0" 																								values="-12|-11|-10|-9|-8|-7|-6|-5|-4|-3|-2|-1|0|+1|+2|+3|+4|+5|+6|+7|+8|+9|+10|+11|+12" 													visible="true"/>
-<!-- Login XML 5 Listings details -->
- 		<setting type="lsep"				label="30897" 																								visible="true"/>
-		<setting id="country15"	        	label="Country 5"	type="labelenum"	default="None"																								values="None|Austria|Canada|Denmark|Finland|Germany|Netherlands|Norway|Poland|Sweden|Switzerland|United Kingdom|United States"				visible="true"/>
- 		<setting id="offset15"           	label="30934" 		type="labelenum"	default="0" 																								values="-12|-11|-10|-9|-8|-7|-6|-5|-4|-3|-2|-1|0|+1|+2|+3|+4|+5|+6|+7|+8|+9|+10|+11|+12" 													visible="true"/>
-<!-- Login XML 6 Listings details -->
- 		<setting type="lsep"				label="30897" 																								visible="true"/>
-		<setting id="country16"	        	label="Country 6"	type="labelenum"	default="None"																								values="None|Austria|Canada|Denmark|Finland|Germany|Netherlands|Norway|Poland|Sweden|Switzerland|United Kingdom|United States"				visible="true"/>
- 		<setting id="offset16"           	label="30934" 		type="labelenum"	default="0" 																								values="-12|-11|-10|-9|-8|-7|-6|-5|-4|-3|-2|-1|0|+1|+2|+3|+4|+5|+6|+7|+8|+9|+10|+11|+12" 													visible="true"/>
-<!-- Login XML 7 Listings details -->
- 		<setting type="lsep"				label="30897" 																								visible="true"/>
-		<setting id="country17"	        	label="Country 7"	type="labelenum"	default="None"																								values="None|Austria|Canada|Denmark|Finland|Germany|Netherlands|Norway|Poland|Sweden|Switzerland|United Kingdom|United States"				visible="true"/>
- 		<setting id="offset17"           	label="30934" 		type="labelenum"	default="0" 																								values="-12|-11|-10|-9|-8|-7|-6|-5|-4|-3|-2|-1|0|+1|+2|+3|+4|+5|+6|+7|+8|+9|+10|+11|+12" 													visible="true"/>
-<!-- Login XML 8 Listings details -->
- 		<setting type="lsep"				label="30897" 																								visible="true"/>
-		<setting id="country18"	        	label="Country 8"	type="labelenum"	default="None"																								values="None|Austria|Canada|Denmark|Finland|Germany|Netherlands|Norway|Poland|Sweden|Switzerland|United Kingdom|United States"				visible="true"/>
- 		<setting id="offset18"           	label="30934" 		type="labelenum"	default="0" 																								values="-12|-11|-10|-9|-8|-7|-6|-5|-4|-3|-2|-1|0|+1|+2|+3|+4|+5|+6|+7|+8|+9|+10|+11|+12" 													visible="true"/>
-<!-- Login XML 9 Listings details -->
- 		<setting type="lsep"				label="30897" 																								visible="true"/>
-		<setting id="country19"	        	label="Country 9"	type="labelenum"	default="None"																								values="None|Austria|Canada|Denmark|Finland|Germany|Netherlands|Norway|Poland|Sweden|Switzerland|United Kingdom|United States"				visible="true"/>
- 		<setting id="offset19"           	label="30934" 		type="labelenum"	default="0" 																								values="-12|-11|-10|-9|-8|-7|-6|-5|-4|-3|-2|-1|0|+1|+2|+3|+4|+5|+6|+7|+8|+9|+10|+11|+12" 													visible="true"/>
-<!-- Login XML 10 Listings details -->
- 		<setting type="lsep"				label="30897" 																								visible="true"/>
-		<setting id="country20"	        	label="Country 10"	type="labelenum"	default="None"																								values="None|Austria|Canada|Denmark|Finland|Germany|Netherlands|Norway|Poland|Sweden|Switzerland|United Kingdom|United States"				visible="true"/>
- 		<setting id="offset20"           	label="30934" 		type="labelenum"	default="0" 																								values="-12|-11|-10|-9|-8|-7|-6|-5|-4|-3|-2|-1|0|+1|+2|+3|+4|+5|+6|+7|+8|+9|+10|+11|+12" 													visible="true"/>
-<!-- scan in XML files -->
-        <setting id="dixie.url"         	label="30117" 		type="labelenum" 	default="All Channels"		values="All Channels|Other"	 			visible="false" />
+    <setting id="validator"         	label="validator"   type="text"   		default="0" 														visible="false" />
+    <setting id="streamURL"         	label="streamURL"   type="text"   		default="" 															visible="false" />
+    <setting id="dixie.url"         	label="30117" 		type="labelenum" 	default="All Channels"		values="All Channels|Other"	 			visible="false" />
 
-		
+<!-- Setup the mini guide key mapping -->
+		<setting type="lsep"				label="30897" 																								visible="true"/>
+		<setting type="lsep"            	label="30852"/>
+    <setting id="HOTKEY"            	label="30853" 		type="action"  	action="XBMC.RunScript(special://home/addons/script.trtv/keyProgrammer.py)"/>
+    <setting id="dummy"             	label="30878"		type="action"  	action="XBMC.RunScript(special://home/addons/script.trtv/resetHotkey.py)" />
+	
 <!-- Hidden settings in use when browsing through the EPG  -->
-        <setting id="epgskinchk"         	default="true"  																								visible="false" />
-        <setting id="CURRLOGO"         		label="30879"  		type="text"   	default=""  																visible="false" />
-        <setting id="PREVLOGO"         		label="30880"		type="text"   	default="None"  															visible="false" />
-		<setting id="FIRSTRUN"         		label="30881"		type="bool"   	default="false" 															visible="false" />
-		<setting id="MINIGUIDE"        		label="30882"    	type="bool"   	default="false" 															visible="false" />
-		<setting id="gmtprev"           	label="30883"		type="text" 	default="0" 																visible="false"/>
-		<setting id="categories"			label="30884"      	type="text" 	default="" 																	visible="false"/>
-	    <setting id="VERSION"				label="30885" 		type="text" 	default="0.0.0" 															visible="false"/>
-		<setting id="SKINVERSION"			label="30886"    	type="text" 	default="7" 																visible="false"/>
-		<setting id="LOGOVERSION"			label="30887"    	type="text" 	default="0" 																visible="false"/>
-		<setting id="INIVERSION"			label="30888"     	type="text" 	default="0" 																visible="false"/>
-		<setting id="SF_FOLDER_LEN"			label="30889" 		type="text"		default="1" 																visible="false"/>
-		<setting id="DIXIEURL"    								type="labelenum"	default="All Channels"	values="All Channels"							visible="false"/>
+    <setting id="epgskinchk"         	default="true"  																								visible="false" />
+    <setting id="CURRLOGO"         		label="30879"  		type="text"   	default=""  																visible="false" />
+    <setting id="PREVLOGO"         		label="30880"		type="text"   	default="None"  															visible="false" />
+	<setting id="FIRSTRUN"         		label="30881"		type="bool"   	default="false" 															visible="false" />
+	<setting id="MINIGUIDE"        		label="30882"    	type="bool"   	default="false" 															visible="false" />
+	<setting id="gmtprev"           	label="30883"		type="text" 	default="0" 																visible="false"/>
+	<setting id="categories"			label="30884"      	type="text" 	default="" 																	visible="false"/>
+    <setting id="VERSION"				label="30885" 		type="text" 	default="0.0.0" 															visible="false"/>
+	<setting id="SKINVERSION"			label="30886"    	type="text" 	default="7" 																visible="false"/>
+	<setting id="LOGOVERSION"			label="30887"    	type="text" 	default="0" 																visible="false"/>
+	<setting id="INIVERSION"			label="30888"     	type="text" 	default="0" 																visible="false"/>
+	<setting id="SF_FOLDER_LEN"			label="30889" 		type="text"		default="1" 																visible="false"/>
+	<setting id="DIXIEURL"    								type="labelenum"	default="All Channels"	values="All Channels"							visible="false"/>
 
 <!-- Fairly sure none of these are actually being used but going to keep them here for now until I have time to go through and check -->
- 	    <setting id="epg.date"         		label="30890"		type="text"   	default="01-01-01" 															visible="false" />
-	    <setting id="current.channels" 		label="30881"		type="number" 	default="0"        															visible="false" />
-	    <setting id="updated.channels" 		label="30892"		type="number" 	default="0"        															visible="false" />
-		<setting id="messageID"        		label="30893"		type="text"   	default="0"        															visible="false" />
-	    <setting id="LOGIN_TIME"       		label="30894"		type="text" 	default=""         															visible="false"/>
-	    <setting id="LOGIN_IPTV"       		label="30894"		type="text"   	default=""         															visible="false"/>
-	    <setting id="LOGIN_UKTV"       		label="30894"		type="text"   	default=""         															visible="false"/>
-		<setting id="notifications.enabled"	label="30106"		type="bool"   	default="false" 															visible="false"/>
-	</category>
+	    <setting id="epg.date"         		label="30890"		type="text"   	default="01-01-01" 															visible="false" />
+    <setting id="current.channels" 		label="30881"		type="number" 	default="0"        															visible="false" />
+    <setting id="updated.channels" 		label="30892"		type="number" 	default="0"        															visible="false" />
+	<setting id="messageID"        		label="30893"		type="text"   	default="0"        															visible="false" />
+    <setting id="LOGIN_TIME"       		label="30894"		type="text" 	default=""         															visible="false"/>
+    <setting id="LOGIN_IPTV"       		label="30894"		type="text"   	default=""         															visible="false"/>
+    <setting id="LOGIN_UKTV"       		label="30894"		type="text"   	default=""         															visible="false"/>
+	<setting id="notifications.enabled"	label="30106"		type="bool"   	default="false" 															visible="false"/>
 
     <category label="30114">
 
 <!-- Super Favourite Settings -->
  		<setting type="lsep"				label="30854"/>
-	    <setting id="SF_CHANNELS"			label="30857" 		type="folder"	default="special://profile/addon_data/plugin.program.super.favourites/Super Favourites"      																																									visible="false"/>
-		<setting id="add_sf_items"			label="30895" 		type="bool"   	default="true" 																visible="true" />
-		<setting id="showSFchannels"		label="30855" 		type="bool" 	default="false" 															visible="true" />
-		<setting id="openfolder"			label="30896"   	type="bool"   	default="false"  															visible="true" />
-	    <setting id="SF_METALLIQ"			label="30967" 		type="bool"		default="true"      														visible="false"/>
-		<setting id="dummy"					label="30858" 		type="action" 	action="XBMC.RunScript(special://home/addons/script.trtv/createFolders.py)" option="close" 																																	   									visible="false" />
+	    <setting id="SF_CHANNELS"			label="30857" 		type="folder"	default=""      															visible="true"/>
+		<setting id="add_sf_items"			label="30895" 		type="bool"   	default="true" 															visible="true" />
+		<setting id="show_social"			label="30974" 		type="bool" 	default="true" 															visible="true" />
+		<setting id="showSFchannels"		label="30855" 		type="bool" 	default="true" 															visible="true" />
+	    <setting id="SF_METALLIQ"			label="30967" 		type="bool"		default="false"      														visible="true"/>
+	    <setting id="enable_players"		label="30973" 		type="bool"		default="false"      														visible="true"/>
 		<setting id="autoplay" 		        label="30856"   	type="bool"   	default="false"  															visible="false" />
  		<setting type="lsep"                label="30897" 																									visible="true"/>
  		<setting type="lsep"                label="30859"																									visible="true"/>
         <setting id="ignore.stream"         label="30860"       type="bool"   	default="true" 																visible="true"/>
  		<setting type="lsep"                label="30897" 																									visible="true"/>
  		<setting type="lsep"                label="30898" 																									visible="true"/>
-		<setting id="usecatchup"            label="30899"		type="bool"   	default="true" 																visible="true" />
+		<setting id="usecatchup"            label="30899"		type="bool"   	default="false" 																visible="true" />
  		<setting type="lsep"                label="30897" 																									visible="true"/>
  		<setting type="lsep"                label="30861" 																									visible="true"/>
 		<setting id="showcats"              label="30862"       type="bool"   	default="true" 																visible="true" />
@@ -104,7 +67,7 @@
 <!-- Enable touch screen -->
         <setting id="enable.touch"          label="30123"       type="bool"   	default="false"			 													visible="true"/>
  		<setting type="lsep"                label="30897" 																									visible="true"/>
-<!-- autostart TRTV on kodi boot -->
+<!-- autostart trtv on kodi boot -->
  		<setting type="lsep"                label="30867"                                 																 	visible="true"/>
         <setting id="autoStart"             label="30868" 		type="bool"   	default="false" 						 									visible="true"/>
  		<setting type="lsep"                label="30897" 																									visible="true"/>
@@ -112,19 +75,13 @@
  		<setting type="lsep"                label="30869"                                 																 	visible="true"/>
 		<setting id="idle"                  label="30870"       type="enum" 	values="Never|1 Hour|2 Hours|3 Hours|4 Hours" default="4"				 	visible="true"/>
  		<setting type="lsep"                label="30897" 																									visible="true"/>
-<!-- confifm exit from TRTV when escaping out out EPG -->
+<!-- confifm exit from trtv when escaping out out EPG -->
  		<setting type="lsep"                label="30871"                                 																 	visible="true"/>
  		<setting id="confirm.exit"          label="30872"       type="bool" 	default="false" 															visible="true" />
  		<setting type="lsep"                label="30897" 																									visible="true"/>
 <!-- set an offset for the global time, use when listings are out -->
  		<setting type="lsep"                label="30124" 																									visible="true"/>
  		<setting id="gmtfrom"               label="30873" 		type="labelenum" default="0" 																								values="-12|-11|-10|-9|-8|-7|-6|-5|-4|-3|-2|-1|0|+1|+2|+3|+4|+5|+6|+7|+8|+9|+10|+11|+12" 															visible="true" />
-
-<!-- Setup the mini guide key mapping -->
- 		<setting type="lsep"				label="30897" 																								visible="true"/>
- 		<setting type="lsep"            	label="30852"/>
-        <setting id="HOTKEY"            	label="30853" 		type="action"  	action="XBMC.RunScript(special://home/addons/script.trtv/keyProgrammer.py)"/>
-        <setting id="dummy"             	label="30878"		type="action"  	action="XBMC.RunScript(special://home/addons/script.trtv/resetHotkey.py)" />
 
 <!-- not currently being used -->
         <setting id="dummy"                 label="30108"       type="action" 	 action="XBMC.RunScript(special://home/addons/script.trtv/notification.py)" visible="false"/>
@@ -134,15 +91,16 @@
 
     <category label="30125">
 <!-- Logging details -->
- 		<setting type="lsep" 				label="30903"                  																				 	visible="false"/>
- 		<setting id="DEBUG" 				label="30904" 		type="bool" 	default="true"															 	visible="false"/>
-	    <setting id="skip_oldlog" 			label="30905"		type="bool"  	default="true" 																visible="false"/>
- 		<setting id="email" 				label="30906"		type="text"  																				visible="false"/>
- 		<setting id="dummy" 				label="30907" 		type="action" 	action="XBMC.RunScript(special://home/addons/script.trtv/uploadLog.py)" option="close"	visible="false"/>
- 		<setting type="lsep"                label="30897" 																									visible="false"/>
+ 		<setting type="lsep" 				label="30903"                  																				 	visible="true"/>
+ 		<setting id="DEBUG" 				label="30904" 		type="bool" 	default="false"															 	visible="true"/>
+	    <setting id="skip_oldlog" 			label="30905"		type="bool"  	default="true" 																visible="true"/>
+ 		<setting id="email" 				label="30906"		type="text"  																				visible="true"/>
+ 		<setting id="dummy" 				label="30907" 		type="action" 	action="XBMC.RunScript(special://home/addons/script.trtv/uploadLog.py)" option="close"	visible="true"/>
+ 		<setting type="lsep"                label="30897" 																									visible="true"/>
 <!-- backup/restore options -->
  		<setting type="lsep" 				label="30908"																													visible="true"/>
         <setting id="dummy" 				label="30909" 		type="action" option="close" action="XBMC.RunScript(special://home/addons/script.trtv/backup.py)"  		visible="true"/>
+        <setting id="dummy" 				label="30910" 		type="action" option="close" action="XBMC.RunScript(special://home/addons/script.trtv/backup.py,sync)"  visible="true"/>
         <setting id="dummy" 				label="30130" 		type="action" option="close" action="XBMC.RunScript(special://home/addons/script.trtv/restore.py)" 		visible="true"/>
  		<setting type="lsep"                label="30897" 																									visible="true"/>
 <!-- maintenance tasks -->
@@ -160,12 +118,7 @@
 <!-- choose skin -->
  		<setting type="lsep"            	label="30916"																									visible="true"/>
         <setting id="dixie.skin"        	label="30917"       type="select" source="../../userdata/addon_data/script.trtv/extras/skins/" 	mask="/" 	default="TR-BLUE"/>
-<!-- channels folder -->
-		<setting id="chan.type"         	label="30918"       type="enum"   default="0" values="Built-in|Custom"  										visible="false" />
-<!-- logo folder -->
-		<setting id="logo.type"        		label="30920"       type="enum"   default="0" values="Built-in|Custom"   										visible="false"/>
-		<setting id="user.logo.folder"  	label="30921"   	type="folder" source="special://" 															visible="false" />
-		<setting id="dixie.logo.folder" 	label="30922"  		type="select" source="../../userdata/addon_data/script.trtv/extras/logos/" mask="/" default="Colour Logo Pack" visible="false"  />
+		<setting id="syncartwork" 			label="Sync with TRMC icons"  		type="bool" 	 default="true" 	 visible="true"  />
  		<setting type="lsep"            	label="30897" 																									visible="true"/>
 <!-- playlist details -->
  		<setting type="lsep"            	label="30923"																									visible="true"/>

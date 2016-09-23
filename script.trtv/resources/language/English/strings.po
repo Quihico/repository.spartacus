@@ -187,7 +187,7 @@ msgid "Rollback to previous channel list - may bring back old customisations"
 msgstr ""
 
 msgctxt "#30132"
-msgid "Click to - Fully Reset TotalRevolution TV. ALL settings will be lost inc. user/pass."
+msgid "Click to - Fully Reset TRTV. ALL settings will be lost inc. user/pass."
 msgstr ""
 
 #empty strings from id 30133 to 30149
@@ -329,7 +329,7 @@ msgid "My Recordings"
 msgstr ""
 
 msgctxt "#30320"
-msgid "TotalRevolution TV Tools"
+msgid "TRTV Tools"
 msgstr ""
 
 #empty strings from id 30321 to 30499
@@ -413,7 +413,7 @@ msgstr ""
 
 
 msgctxt "#30622"
-msgid "Click Browse... below and navigate to your Super Favourite. When you have chosen it you can preview the stream to test if it works in TotalRevolution TV."
+msgid "Click Browse... below and navigate to your Super Favourite. When you have chosen it you can preview the stream to test if it works in TRTV."
 msgstr ""
 
 #empty strings from id 30623 to 30699
@@ -502,7 +502,7 @@ msgid "Listings found "
 msgstr ""
 
 msgctxt "#30819"
-msgid "TotalRevolution TV Import Complete"
+msgid "TRTV Import Complete"
 msgstr ""
 
 msgctxt "#30820"
@@ -522,7 +522,7 @@ msgid "No Listings Found"
 msgstr ""
 
 msgctxt "#30824"
-msgid "To use this add-on you need to either import your channel listings or create your own dummy channels using the TotalRevolution TV Tools."
+msgid "To use this add-on you need to either import your channel listings or create your own dummy channels using the TRTV Tools."
 msgstr ""
 
 msgctxt "#30825"
@@ -574,7 +574,7 @@ msgid "You have enabled the login feature but not entered any details. Please ad
 msgstr ""
 
 msgctxt "#30837"
-msgid "Updating TRTV database"
+msgid "Updating trtv database"
 msgstr ""
 
 msgctxt "#30838"
@@ -582,7 +582,7 @@ msgid "DO NOT close Kodi at this point"
 msgstr ""
 
 msgctxt "#30839"
-msgid "TRTV Updates Complete"
+msgid "trtv Updates Complete"
 msgstr ""
 
 msgctxt "#30840"
@@ -642,11 +642,11 @@ msgid "[B]Click to program Mini-Guide Hot Key[/B]"
 msgstr ""
 
 msgctxt "#30854"
-msgid "Only show listings you have channels set for"
+msgid "Super Favourite / MetalliQ Integration"
 msgstr ""
 
 msgctxt "#30855"
-msgid "Only show my Super Favourite Channels"
+msgid "Only show my installed Social Shares"
 msgstr ""
 
 msgctxt "#30856"
@@ -714,7 +714,7 @@ msgid "Stop accidental backing out of the EPG - this gives a yes/no dialog"
 msgstr ""
 
 msgctxt "#30872"
-msgid "Confirm Exit From TotalRevolution TV"
+msgid "Confirm Exit From TRTV"
 msgstr ""
 
 msgctxt "#30873"
@@ -810,7 +810,7 @@ msgid "Add SF folders channels even if I have no EPG data scanned"
 msgstr ""
 
 msgctxt "#30896"
-msgid "Ignore ini files and open SF folder - Disables channel surfing ability"
+msgid "Open Direct into social share folder - Disables channel surfing ability"
 msgstr ""
 
 msgctxt "#30897"
@@ -1094,7 +1094,7 @@ msgid "Sorry there was an error trying to retrieve the latest test version, the 
 msgstr ""
 
 msgctxt "#30967"
-msgid "Use SF MetalliQ links (recommended)"
+msgid "Use SF MetalliQ links"
 msgstr ""
 
 msgctxt "#30968"
@@ -1106,7 +1106,7 @@ msgid "[COLOR=gold]Scan in XML File - this can take a long time![/COLOR]"
 msgstr ""
 
 msgctxt "#30970"
-msgid "Both your standard SF folders and Metalliq SF folders have been created.  Super Favourites will only show as options in the EPG if you actually add a favourite to one or more of the folders."
+msgid "Your Metalliq SF folders have been created."
 msgstr ""
 
 msgctxt "#30971"
@@ -1114,5 +1114,13 @@ msgid "Clear Cookies - use if having problems with login."
 msgstr ""
 
 msgctxt "#30972"
-msgid "Channel Listings"
+msgid "Update SF folders on every start"
+msgstr ""
+
+msgctxt "#30973"
+msgid "Enable All MetalliQ Players"
+msgstr ""
+
+msgctxt "#30974"
+msgid "Enable Social Share Add/Remove Channel"
 msgstr ""

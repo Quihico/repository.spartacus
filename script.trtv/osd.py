@@ -78,8 +78,7 @@ SF_CHANNELS    = ADDON.getSetting('SF_CHANNELS')
 OTT_CHANNELS   = os.path.join(dixie.GetChannelFolder(), 'channels')
 IGNORESTRM     = dixie.GetSetting('ignore.stream') == 'true'
 datapath       = dixie.PROFILE
-logos          = ADDON.getSetting('dixie.logo.folder')
-logofolder     = os.path.join(datapath,'extras','logos',logos)
+logofolder     = os.path.join(datapath,'extras','logos','Colour Logo Pack')
 
 MAIN          = 5000
 EPG_CHANNEL   = 6000

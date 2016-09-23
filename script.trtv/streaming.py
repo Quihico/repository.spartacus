@@ -234,7 +234,7 @@ class StreamsService(object):
             
             if superFaves:
                 if len(superFaves) == 1 and not '-metalliq' in superFaves[0][0]:
-                    matches.append((superFaves[0][0], 'Super Folder', superFaves[0][1]))
+                    matches.append((superFaves[0][0], 'Social Share', superFaves[0][1]))
                 elif len(superFaves) == 1 and '-metalliq' in superFaves[0][0] and SF_METALLIQ == 'true':
                     matches.append((superFaves[0][0], 'MetalliQ', superFaves[0][1]))
                 else:
@@ -245,10 +245,10 @@ class StreamsService(object):
                             matches.append((superFave[0], label, superFave[1]))        
                         elif not '-metalliq' in superFave[0]:
                             if len(superFaves) == 2 and ('-metalliq' in superFaves[0][0] or '-metalliq' in superFaves[1][0]):
-                                label = 'Super Folder'
+                                label = 'Social Share'
                             else:
                                 index += 1
-                                label = 'Super Folder (%d)' % index
+                                label = 'Social Share (%d)' % index
                             matches.append((superFave[0], label, superFave[1]))        
 
 # Get any Add-ons with channel name

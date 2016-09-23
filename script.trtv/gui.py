@@ -53,7 +53,6 @@ TRAILERS   = ADDON.getSetting('trailers.addon')
 USTV       = ADDON.getSetting('ustv.addon')
 IGNORESTRM = ADDON.getSetting('ignore.stream') == 'true'
 SHOW_SF    = ADDON.getSetting('showSFchannels')
-OPEN_SF    = ADDON.getSetting('openfolder')
 
 confirmExit = ADDON.getSetting('confirm.exit').lower() == 'true'
 datapath    = dixie.PROFILE
@@ -62,8 +61,7 @@ skinfolder  = os.path.join(datapath, extras, 'skins')
 skinpath    = os.path.join(skinfolder, SKIN)
 showcats    = ADDON.getSetting('showcats')
 usecatchup  = ADDON.getSetting('usecatchup')
-logos       = ADDON.getSetting('dixie.logo.folder')
-logofolder  = os.path.join(datapath,'extras','logos',logos)
+logofolder  = os.path.join(datapath,'extras','logos','Colour Logo Pack')
 plusonepath = xbmc.translatePath('special://home/addons/script.trtv/resources/flags/plus1.png')
 flagpath    = xbmc.translatePath('special://home/addons/script.trtv/resources/flags')
 dialog      = xbmcgui.Dialog()
@@ -448,7 +446,7 @@ class TVGuide(xbmcgui.WindowXML):
             return
 
         if actionId in [ACTION_PARENT_DIR, KEY_NAV_BACK, ACTION_PREVIOUS_MENU]:
-            if not confirmExit or dixie.DialogYesNo('Are you sure you wish to quit TotalRevolution TV?'):
+            if not confirmExit or dixie.DialogYesNo('Are you sure you wish to quit TRTV?'):
                 self.close()
                 return
 
@@ -655,7 +653,7 @@ class TVGuide(xbmcgui.WindowXML):
     def tryProgram(self, program):
 # Work out if it's catchup or live
         catchup = ''
-        if usecatchup == 'true':
+        if usecatchup == 'true' and program.channel.title != '- ADD OR REMOVE CHANNELS' and program.title != ADDON.getLocalizedString(30009):
             choice = dialog.yesno('Catch-up or Live?','[COLOR=dodgerblue]Catchup:[/COLOR] Search for "%s" in one of your add-ons and view with no adverts.'%program.title,'','[COLOR=dodgerblue]Live:[/COLOR] Watch %s?' % program.channel.title, yeslabel='CATCHUP', nolabel='LIVE')
             if choice:
                 choice = dialog.yesno('Movie or TV?','[COLOR=yellow]%s[/COLOR]' % program.title,'Is this a Movie or a TV show?',yeslabel='MOVIE', nolabel='TV SHOW')
@@ -664,51 +662,36 @@ class TVGuide(xbmcgui.WindowXML):
                 else:
                     catchup = 'tv/play_by_name_only/'+program.title+'/en'
 
-        if SHOW_SF == 'true' and OPEN_SF == 'true':
-            chanid = CleanFilename(program.channel.id)
-            dixie.log("Attempting to open SF folder: "+chanid)
-
-# Grab path for live tv section in SF
-            try:
-                SF_FOLDER = ADDON.getSetting('SF_CHANNELS')
-                SF_ARRAY  = SF_FOLDER.split(os.sep)
-                SF_LEN    = len(SF_ARRAY)
-                if SF_LEN > 0:
-                    SF_PATH = SF_ARRAY[SF_LEN-1]
-            except:
-                SF_PATH = 'HOME_LIVE_TV'
-            xbmc.executebuiltin('ActivateWindow(10025,"plugin://plugin.program.super.favourites/?folder=%s/%s",return)' % (SF_PATH, chanid))
-        else:
-            if self.playChannel(program.channel):
-                if IGNORESTRM:
-                    self.database.deleteCustomStreamUrl(program.channel)
+        if self.playChannel(program.channel):
+            if IGNORESTRM:
+                self.database.deleteCustomStreamUrl(program.channel)
+            return
+        result = self.streamingService.detectStream(program.channel,catchup)
+        if not result:
+            if self.touch:
                 return
-            result = self.streamingService.detectStream(program.channel,catchup)
-            if not result:
-                if self.touch:
-                    return
 
 # could not detect stream, show context menu
-                self._showContextMenu(program)
-            elif type(result) == str:
+            self._showContextMenu(program)
+        elif type(result) == str:
 
 # one single stream detected, save it and start streaming
-                self.database.setCustomStreamUrl(program.channel, result)
+            self.database.setCustomStreamUrl(program.channel, result)
+            self.playChannel(program.channel)
+            if IGNORESTRM:
+                self.database.deleteCustomStreamUrl(program.channel)
+
+# multiple matches, let user decide
+        else:
+            import detect
+            d = detect.StreamAddonDialog(result)
+            d.doModal()
+            
+            if d.stream is not None:
+                self.database.setCustomStreamUrl(program.channel, d.stream)
                 self.playChannel(program.channel)
                 if IGNORESTRM:
                     self.database.deleteCustomStreamUrl(program.channel)
-
-# multiple matches, let user decide
-            else:
-                import detect
-                d = detect.StreamAddonDialog(result)
-                d.doModal()
-                
-                if d.stream is not None:
-                    self.database.setCustomStreamUrl(program.channel, d.stream)
-                    self.playChannel(program.channel)
-                    if IGNORESTRM:
-                        self.database.deleteCustomStreamUrl(program.channel)
 
     def _showContextMenu(self, program):
         self._hideControl(self.C_MAIN_MOUSE_CONTROLS)
@@ -1367,12 +1350,12 @@ class TVGuide(xbmcgui.WindowXML):
         del self.controlAndProgramList[:]
 
     def onEPGLoadError(self):
-        dixie.log('Delete DB TotalRevolution TV - onEPGLoadError')
+        dixie.log('Delete DB TRTV - onEPGLoadError')
         deleteDB.deleteDB()
         self.redrawingEPG = False
         self._hideControl(self.C_MAIN_LOADING)
         xbmcgui.Dialog().ok(strings(LOAD_ERROR_TITLE), strings(LOAD_ERROR_LINE1), strings(LOAD_ERROR_LINE2), strings(LOAD_ERROR_LINE3))
-        dixie.log('****** TotalRevolution TV. Possible unicode text error. *******')
+        dixie.log('****** TRTV. Possible unicode text error. *******')
         self.close()
 
 

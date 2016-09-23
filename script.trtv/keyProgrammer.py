@@ -82,7 +82,7 @@ def main():
     end   = 'key'
 
     if dixie.WriteKeymap(start, end):
-        dixie.log('TotalRevolution TV HotKey assigned: %s' % key)
+        dixie.log('TRTV HotKey assigned: %s' % key)
         xbmc.sleep(1000)
         xbmc.executebuiltin('Action(reloadkeymaps)')  
 

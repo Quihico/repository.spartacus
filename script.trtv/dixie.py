@@ -73,11 +73,10 @@ MAJOR, MINOR = GetXBMCVersion()
 FRODO        = (MAJOR == 12) and (MINOR < 9)
 
 
-DIXIELOGOS  =  GetSetting('dixie.logo.folder')
 SKIN        =  GetSetting('dixie.skin')
 FILMON      =  GetSetting('FILMON')
 VERSION     =  ADDON.getAddonInfo('version')
-TITLE       = 'TotalRevolution TV'
+TITLE       = 'TRTV'
 LOGOPACK    = 'Colour Logo Pack'
 DEBUG       =  GetSetting('DEBUG') == 'true'
 KEYMAP_HOT  = 'ottv_hot.xml'

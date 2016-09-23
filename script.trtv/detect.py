@@ -79,7 +79,7 @@ class StreamAddonDialog(xbmcgui.WindowXMLDialog):
                 elif id.startswith('SF_'):
                     dir  = id.split('SF_', 1)[-1]
                     cfg  = os.path.join(dir, 'folder.cfg')
-                    icon = settings.get('ICON', cfg)
+                    icon = os.path.join(dixie.RESOURCES, 'social-share.png')
 
                     if not icon:
                         icon = SF_ICON

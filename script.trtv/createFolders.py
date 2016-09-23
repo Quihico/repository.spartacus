@@ -1,4 +1,4 @@
-# TotalRevolution TV Folder Generator
+# TRTV Folder Generator
 # Copyright (C) 2016 Lee Randall (whufclee)
 #
 
@@ -26,7 +26,7 @@
 
 import xbmcgui
 import xbmcaddon
-import os, re
+import os, re, sys
 import dixie
 import sfile
 
@@ -42,16 +42,8 @@ dialog         =  xbmcgui.Dialog()
 # Create favourites.xml file for the various providers
 def Create_XML(name):
     favpath   = os.path.join(name,'favourites.xml')
-    if os.path.exists(favpath):
-        readfile  = open(favpath,'r')
-        content   = readfile.read().replace('</favourites>','')
-        readfile.close()
-
-    else:
-        content   = '<favourites>\n'
-
     writefile = open(favpath,'w+')
-    writefile.write(content)
+    writefile.write('<favourites>\n')
 
     channels    = name.split(os.sep)
     channelorig = channels[len(channels)-1]
@@ -68,8 +60,7 @@ def Create_XML(name):
         thumb           = xbmc.translatePath('special://home/addons/%s/icon.png') % provider_array[counter][2]
         args            = channel+'|'+provider_array[counter][1]+'|'+provider_array[counter][2]+'|'+provider_array[counter][3]+'|'+channelorig+'|'+provider_array[counter][0]
         command         = 'RunScript(special://home/addons/script.trtv/player.py, %s)' % args
-        if provider_array[counter][0] not in content:
-            writefile.write('\t<favourite name="%s" thumb="%s">%s</favourite>\n' % (provider_array[counter][0], thumb, command))
+        writefile.write('\t<favourite name="%s" thumb="%s">%s</favourite>\n' % (provider_array[counter][0], thumb, command))
         counter += 1
 
     writefile.write('</favourites>')
@@ -113,6 +104,16 @@ def Find_In_Lines(content, keyword, splitchar):
                 fail       = 1
     return name
 #--------------------------------------------------------------------------------------------------
+silent = 0
+try:
+    if sys.argv[1] == 'silent':
+        silent = 1
+except:
+    silent = 0
+
+xbmc.log('##### SILENT = %s' % sys.argv[1])
+
+
 if SF_CHANNELS == '':
     dialog.ok('SF Folder Not Set', 'No Super Favourite location has been set, please set the folder location in your settings then run again.')
 else:
@@ -123,27 +124,25 @@ else:
             
         try:
             current, dirs, files = sfile.walk(OTT_CHANNELS)
-        except:
-            dixie.log('Failed to walk the channel path')
+        except Exception, e:
+            dixie.log('Failed to run script: %s' % str(e))
             
-        if len(files) > 0:
-            for file in files:
-                if not os.path.exists(os.path.join(SF_CHANNELS,file)):
-                    try:
-                        dixie.log(os.path.join(SF_CHANNELS,file))
-                        os.makedirs(os.path.join(SF_CHANNELS,file))
-                    except:
-                        dixie.log('### Failed to create folder for: %s' % str(file))
+        if SF_METALLIQ == 'true':
+            try:
+                for file in files:
+                    if not os.path.exists(os.path.join(SF_CHANNELS, '-metalliq', file)):
+                        try:
+                            os.makedirs(os.path.join(SF_CHANNELS, '-metalliq', file))
+                        except:
+                            dixie.log('### Failed to create folder for: %s' % str(file))
+                    dixie.log('## Creating xml for: %s' % file)
+                    Create_XML(os.path.join(SF_CHANNELS, '-metalliq', file))
+            except:
+                pass
+            if not silent:
+                dialog.ok(ADDON.getLocalizedString(30809),ADDON.getLocalizedString(30970))
 
-            for file in files:
-                if not os.path.exists(os.path.join(SF_CHANNELS, '-metalliq', file)):
-                    try:
-                        os.makedirs(os.path.join(SF_CHANNELS, '-metalliq', file))
-                    except:
-                        dixie.log('### Failed to create folder for: %s' % str(file))
-                Create_XML(os.path.join(SF_CHANNELS, '-metalliq', file))
-
-            ADDON.setSetting('FIRSTRUN', 'true')
-
+        elif not silent:
+            dialog.ok(ADDON.getLocalizedString(30809),ADDON.getLocalizedString(30810))
     else:
         dialog.ok('No Providers Found', 'No MetalliQ providers could be found.', 'Please open up your MetalliQ add-on settings and check you have the Live TV providers setup and enabled.')

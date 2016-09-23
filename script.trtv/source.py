@@ -65,32 +65,18 @@ showSFchannels   =  ADDON.getSetting('showSFchannels')
 SF_CHANNELS      =  ADDON.getSetting('SF_CHANNELS')
 adult            =  ADDON.getSetting('adult')
 add_sf_items     =  ADDON.getSetting('add_sf_items')
+show_social      =  ADDON.getSetting('show_social')
 USERDATA         =  xbmc.translatePath('special://profile/')
 ADDON_DATA       =  os.path.join(USERDATA,'addon_data')
 dbpath           =  os.path.join(ADDON_DATA,AddonID,'program.db')
+datapath         =  dixie.PROFILE
+logoFolder       =  os.path.join(datapath,'extras','logos','Colour Logo Pack')
 
 if SF_CHANNELS.startswith('special://'):
     SF_CHANNELS  = xbmc.translatePath(SF_CHANNELS)
     
 try:    sfile.makedirs(channelPath)
 except: pass
-#########################################################################################
-# Find out whether the user has custom logos or built-in logos selected
-def GetLogoType():
-    return dixie.GetSetting('logo.type')
-#########################################################################################
-# Set the global logo folder to use
-def GetLogoFolder():
-    CUSTOM = '1'
-
-    logoType = GetLogoType()
-
-    if logoType == CUSTOM:
-        logoFolder = dixie.GetSetting('user.logo.folder')
-    else:
-        logoFolder = dixie.GetSetting('dixie.logo.folder')
-
-    return logoFolder
 #########################################################################################
 # Clean up the filename and remove chars that don't play nicely in python
 def CleanFilename(text):
@@ -242,21 +228,7 @@ class Database(object):
             dixie.SetSetting('PREVLOGO', '')
             return
 
-        BUILTIN = '0'
-        CUSTOM  = '1'
-
-        logoFolder = GetLogoFolder()
-        logoType   = GetLogoType()
-
-        if logoType == CUSTOM:
-            logoPath = ''
-        else:
-            logoPath = 'special://profile/addon_data/script.trtv/extras/logos/'
-
-        dixie.log('Logo Path Setting:   %s' % logoPath)
-        dixie.log('Logo Folder Setting: %s' % logoFolder)
-        dixie.log('Logo Type:           %s' % logoType)
-
+        logoPath = 'special://profile/addon_data/script.trtv/extras/logos/'
         prevLogoFolder = dixie.GetSetting('PREVLOGO')
         currLogoFolder = logoFolder
 
@@ -608,12 +580,13 @@ class Database(object):
 
     # Grab a list of SF folders not in the channels folder and add as dummy channels
             for dir in dirs:
-                try:
-                    if os.path.exists(os.path.join(SF_CHANNELS,dir,'favourites.xml')):
-                        channels.append(dir)
+                if (dir == '-_ADD_OR_REMOVE_CHANNELS' and show_social == 'true') or (dir != '-_ADD_OR_REMOVE_CHANNELS'):
+                    try:
+                        if os.path.exists(os.path.join(SF_CHANNELS,dir,'favourites.xml')):
+                            channels.append(dir)
 
-                except:
-                    dixie.log("Special characters in directory, skipping: "+dir)
+                    except:
+                        dixie.log("Special characters in directory, skipping: "+dir)
 
         else:
             try:
@@ -623,10 +596,11 @@ class Database(object):
                 return channels
 
             for file in files:
-                try:
-                    channels.append(file)
-                except:
-                    dixie.log("failed to add to array: "+file)
+                if (file == '-_ADD_OR_REMOVE_CHANNELS' and show_social == 'true') or (file != '-_ADD_OR_REMOVE_CHANNELS'):
+                    try:
+                        channels.append(file)
+                    except:
+                        dixie.log("failed to add to array: "+file)
 
         return channels
 

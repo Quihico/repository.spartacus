@@ -35,12 +35,12 @@ def deleteFiles():
     try:
         sfile.remove(hotkey)
                 
-        dixie.DialogOK('TotalRevolution TV Hot Key successfully reset.', 'Please restart Kodi for this to take affect.', 'Thank you.')
+        dixie.DialogOK('TRTV Hot Key successfully reset.', 'Please restart Kodi for this to take affect.', 'Thank you.')
         
     except Exception, e:
         error = str(e)
-        dixie.log('%s :: Error resetting TotalRevolution TV' % error)
-        dixie.DialogOK('TotalRevolution TV Hot Key failed to reset.', error, 'Please restart Kodi and try again.')
+        dixie.log('%s :: Error resetting TRTV' % error)
+        dixie.DialogOK('TRTV Hot Key failed to reset.', error, 'Please restart Kodi and try again.')
 
 
 if __name__ == '__main__':

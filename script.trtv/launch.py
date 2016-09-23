@@ -35,39 +35,39 @@ import filmon
 import sfile
 import source
 import gui
-import threading
 
 import settings
 
 
-ADDON        = dixie.ADDON
-HOME         = dixie.HOME
-TITLE        = dixie.TITLE
-VERSION      = dixie.VERSION
-skin         = dixie.SKIN
-addonpath    = dixie.RESOURCES
-datapath     = dixie.PROFILE
-chanpath     = os.path.join(datapath,   'channels')
-extras       = os.path.join(datapath,   'extras')
-skinfolder   = os.path.join(extras,     'skins')
-dest         = os.path.join(skinfolder, 'skins.zip')
-default_ini  = os.path.join(addonpath,  'addons.ini')
-local_ini    = os.path.join(addonpath,  'local.ini')
-current_ini  = os.path.join(datapath,   'addons.ini')
-database     = os.path.join(datapath,   'program.db')
-channel_xml  = os.path.join(addonpath,  'chan.xml')
-xmlmaster    = os.path.join(addonpath,  'chan.xml')
-catsmaster   = os.path.join(addonpath,  'cats.xml')
-chanxml      = os.path.join(datapath,   'chan.xml')
-catsxml      = os.path.join(datapath,   'cats.xml')
-SF_CHANNELS  = ADDON.getSetting('SF_CHANNELS')
-add_sf_items = ADDON.getSetting('add_sf_items')
-logos        = ADDON.getSetting('dixie.logo.folder')
-usenanchan   = ADDON.getSetting('usenanchan')
-usenancats   = ADDON.getSetting('usenancats')
-logofolder   = os.path.join('special://profile/addon_data/script.trtv/extras/logos',logos)
-image        = xbmcgui.ControlImage
+ADDON           = dixie.ADDON
+HOME            = dixie.HOME
+TITLE           = dixie.TITLE
+VERSION         = dixie.VERSION
+skin            = dixie.SKIN
+addonpath       = dixie.RESOURCES
+datapath        = dixie.PROFILE
 
+SF_CHANNELS     = ADDON.getSetting('SF_CHANNELS')
+showSFchannels  = ADDON.getSetting('showSFchannels')
+add_sf_items    = ADDON.getSetting('add_sf_items')
+usenanchan      = ADDON.getSetting('usenanchan')
+usenancats      = ADDON.getSetting('usenancats')
+image           = xbmcgui.ControlImage
+
+chanpath        = os.path.join(datapath,   'channels')
+extras          = os.path.join(datapath,   'extras')
+skinfolder      = os.path.join(extras,     'skins')
+dest            = os.path.join(skinfolder, 'skins.zip')
+default_ini     = os.path.join(addonpath,  'addons.ini')
+local_ini       = os.path.join(addonpath,  'local.ini')
+current_ini     = os.path.join(datapath,   'addons.ini')
+database        = os.path.join(datapath,   'program.db')
+channel_xml     = os.path.join(addonpath,  'chan.xml')
+xmlmaster       = os.path.join(addonpath,  'chan.xml')
+catsmaster      = os.path.join(addonpath,  'cats.xml')
+chanxml         = os.path.join(datapath,   'chan.xml')
+catsxml         = os.path.join(datapath,   'cats.xml')
+logofolder      = os.path.join(datapath,'extras','logos','Colour Logo Pack')
 #########################################################################################
 def showChangelog(addonID=None):
     try:
@@ -165,8 +165,13 @@ def main():
     except:
         content = ''
     channels   = re.compile('<channel id="(.+?)"').findall(content)
+    xbmc.log('Channels: %s' % channels)
+#    if showSFchannels == 'false':
+#        channels.remove('- ADD OR REMOVE CHANNELS')
+
     totalchans = len(channels)
     weight     = len(os.listdir(chanpath))
+
 
     for channel in channels:
         channel = channel.replace(' ','_').replace('+', '_PLUS').replace('*','STAR').replace('&amp;','&').replace('\/','&')
@@ -218,6 +223,7 @@ def sf_check(channels,weight):
     for dir in dirs:
 # create an array of new folders not found in masterlist
         clean = CleanFilename(dir)
+        dixie.log('CLEAN NAME: %s' % clean)
         if os.path.exists(os.path.join(SF_CHANNELS,dir,'favourites.xml')):
             sfchans.append(clean)
             if not clean in channels:
@@ -324,7 +330,6 @@ def create_channels(sfchannels):
     writefile2.close()
 #########################################################################################
 xbmc.executebuiltin("ActivateWindow(busydialog)")
-
 kodi = True
 if xbmcgui.Window(10000).getProperty('OTT_KODI').lower() == 'false':
     kodi = False
@@ -340,6 +345,18 @@ xbmcgui.Window(10000).setProperty('OTT_NEXT_TIME',   '')
 
 #Initialise the window ID that was used to launch OTT (needed for SF functionality)
 xbmcgui.Window(10000).setProperty('OTT_LAUNCH_ID', str(xbmcgui.getCurrentWindowId()))
+
+if not os.path.exists(chanxml) and usenanchan == 'true':
+    dixie.log("Copying chan.xml to addon_data")
+    shutil.copyfile(xmlmaster, chanxml)
+else:
+    dixie.log("Chan.xml file already exists in addon_data")
+
+if not os.path.exists(catsxml) and usenancats == 'true':
+    dixie.log("Copying cats.xml to addon_data")
+    shutil.copyfile(catsmaster, catsxml)
+else:
+    dixie.log("Cats.xml file exists in addon_data")
 
 main()
 

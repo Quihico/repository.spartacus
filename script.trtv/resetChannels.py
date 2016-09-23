@@ -47,19 +47,19 @@ def resetChannels():
         success = 1
 
     if success == 1:
-        dialog.ok('TotalRevolution TV - Reset Channels', 'TotalRevolution TV Channels successfully reset.', 'They will be re-created next time', 'you start the guide')
+        dialog.ok('TRTV - Reset Channels', 'TRTV Channels successfully reset.', 'They will be re-created next time', 'you start the guide')
 
     if success == 0:
-        dialog.ok('TotalRevolution TV - Reset Channels', 'There was nothing to reset, please try running the add-on again so it can repopulate your channels.')
+        dialog.ok('TRTV - Reset Channels', 'There was nothing to reset, please try running the add-on again so it can repopulate your channels.')
 
     if os.path.exists(catsxml):
         choice = dialog.yesno('Do You Need To Reset Categories?','It\'s highly unlikely you\'ll need to use this but if your main categories list has become corrupt it can cause problems. Would you like to reset the categories to the defaults?')
         if choice == 1:
             try:
                 os.remove(catsxml)
-                dialog.ok('TotalRevolution TV - Reset Categories', 'TotalRevolution TV Categories successfully reset to addon defaults. Any customisations you previously had are now lost.')
+                dialog.ok('TRTV - Reset Categories', 'TRTV Categories successfully reset to addon defaults. Any customisations you previously had are now lost.')
             except:
-                dialog.ok('TotalRevolution TV - Reset Categories', 'There was nothing to reset, please try running the add-on again so it can repopulate your categories.')
+                dialog.ok('TRTV - Reset Categories', 'There was nothing to reset, please try running the add-on again so it can repopulate your categories.')
                 dixie.log("### IMPORTANT ### Unable to remove the cats.xml file in your addon_data folder. Please manually delete")
 if __name__ == '__main__':
     resetChannels()

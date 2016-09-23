@@ -82,12 +82,23 @@ countryarray =  [['AF','Afghanistan'],['AL','Albania'],['DZ','Algeria'],['AO','A
 ##########################################################################################
 # Check if the online file date has changed
 def Check_Date(url):
-    req = urllib2.Request(url)
-    req.add_header('User-Agent','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-    conn = urllib2.urlopen(req)
-    last_modified = conn.info().getdate('last-modified')
-    last_modified = time.strftime('%Y%m%d%H%M%S', last_modified)
-    dixie.log("Last modified: "+last_modified)
+    if not 'github' in url:
+        req = urllib2.Request(url)
+        req.add_header('User-Agent','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+        conn = urllib2.urlopen(req)
+        last_modified = conn.info().getdate('last-modified')
+        last_modified = time.strftime('%Y%m%d%H%M%S', last_modified)
+        dixie.log("Last modified: "+last_modified)
+
+    else:
+        url = url.replace('raw.githubusercontent', 'github').replace('master/','blob/master/')
+        content = Open_URL(url).replace('\r','').replace('\n','').replace('\t','')
+        update_match = re.compile('<relative-time datetime="(.+?)"').findall(content)
+        try:
+            last_modified = update_match[0]
+        except:
+            last_modified = '0'
+
     return last_modified
 ##########################################################################################
 # Clean up the database and remove stale listings
@@ -257,6 +268,9 @@ def Create_CSV(channels,channelcount,listingcount,programmes,xsource,offset,xnum
             idarray.append(channelid)
         else:
             dixie.log("### Duplicate channel - skipping "+str(newdisplay))
+    
+    xbmc.log('#### idarray: %s' % idarray)
+
     writefile.write('</tv>')
     writefile.close()
     writefile2.write('</Document>')
@@ -272,13 +286,18 @@ def Create_CSV(channels,channelcount,listingcount,programmes,xsource,offset,xnum
     writetofile.write('channel,title,start_date,end_date,description,image_large,image_small,source,subTitle')
     for programme in programmes:
         try:
-            channel    = re.compile('channel="(.+?)">').findall(programme)[0]
+            channel    = re.compile('channel="(.+?)"').findall(programme)[0]
+            xbmc.log('channel: %s' % channel)
             if channel in str(idarray):
 #                channel = channel.encode('ascii', 'ignore').replace(' ','_')
                 starttime  = re.compile('start="(.+?)"').findall(programme)[0]
+                xbmc.log('start time 1: %s' % starttime)
                 starttime2 = Time_Convert(starttime,xsource,offset)
+                xbmc.log('start time 2: %s' % starttime2)
                 endtime    = re.compile('stop="(.+?)"').findall(programme)[0]
+                xbmc.log('end time 1: %s' % endtime)
                 endtime2   = Time_Convert(endtime,xsource,offset)
+                xbmc.log('end time 2: %s' % endtime2)
                 try:
                     title  = re.compile('title.*">(.+?)<\/title>').findall(programme)[0].encode('ascii', 'ignore').replace(',','.').replace('"','&quot;')
                 except:
@@ -295,6 +314,10 @@ def Create_CSV(channels,channelcount,listingcount,programmes,xsource,offset,xnum
                     icon = re.compile('<icon src="(.+?)"').findall(programme)[0]
                 except:
                     icon = 'special://home/addons/'+AddonID+'/resources/dummy.png'
+                xbmc.log('title: %s' % title)
+                xbmc.log('subtitle: %s' % subtitle)
+                xbmc.log('desc: %s' % desc)
+                xbmc.log('icon: %s' % icon)
 
 # Convert the channel id to real channel name
                 for matching in tempchans:
@@ -420,28 +443,8 @@ def Grab_XML_Settings(xnumber):
     countryxml = Convert_ISO(countryxml)
     dixie.log('#### Country%s: %s' % (xnumber, countryxml))
 
-    if int(xnumber)> 10 and countryxml != 'None':
-        xbmc.log('### CLIENT COUNTRY SET - WE WILL NOW SEARCH FOR A MATCHING URL')
-        xbmc.log('### CODE TO MATCH: %s' % countryxml)
-        try:
-            xml_urls = Grab_URL()
-            for item in xml_urls:
-                xml_array = item.split('|')
-                xbmc.log('## Match %s' % xml_array[0])
-
-    # Check if our iso code matches the one in the text file so we can grab the url
-                if xml_array[0] == countryxml:
-                    xbmc.log('####### WE HAVE A MATCH!!!')
-                    xmlpath = xml_array[1]
-                    xbmc.log('## %s = %s' % (countryxml, xmlpath))
-            if xmlpath:
-                localcheck = Check_Date(xmlpath)
-            isurl = 1
-        except:
-           addxmltodb = 0
-
 # If the XML type is a local file    
-    elif xmltype == 'File':
+    if xmltype == 'File':
         dixie.log("XML"+xnumber+': Local File')
         xmlpath = ADDON.getSetting('xmlpath%s.file' % xnumber)
         localcheck = hashlib.md5(open(xmlpath,'rb').read()).hexdigest()
@@ -668,7 +671,11 @@ def Wipe_XML_Sizes():
     except:
         pass
 ############### SCRIPT STARTS HERE ###############
-
+inprogress = os.path.join(ADDON_DATA,AddonID,'xml_scan_in_progress')
+try:
+    os.makedirs(inprogress)
+except:
+    pass
 # Allow update to take place if set off from settings menu even if music/video is playing
 try:
     xbmc.log('###### TRTV MODE: '+sys.argv[1])
@@ -700,16 +707,6 @@ Grab_XML_Settings('7')
 Grab_XML_Settings('8')
 Grab_XML_Settings('9')
 Grab_XML_Settings('10')
-Grab_XML_Settings('11')
-Grab_XML_Settings('12')
-Grab_XML_Settings('13')
-Grab_XML_Settings('14')
-Grab_XML_Settings('15')
-Grab_XML_Settings('16')
-Grab_XML_Settings('17')
-Grab_XML_Settings('18')
-Grab_XML_Settings('19')
-Grab_XML_Settings('20')
 if sys.argv[1]!='normal':
     Clean_DB()
     xbmc.executebuiltin("XBMC.Notification("+ADDON.getLocalizedString(30839)+","+ADDON.getLocalizedString(30840)+",5000,"+updateicon+")")
@@ -722,3 +719,8 @@ else:
 if sys.argv[1]=='full':
     dixie.log('### END CHECK ###')
     dixie.log('Listings updates and database clean is complete.')
+
+try:
+    shutil.rmtree(inprogress)
+except:
+    pass
