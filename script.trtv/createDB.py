@@ -287,17 +287,17 @@ def Create_CSV(channels,channelcount,listingcount,programmes,xsource,offset,xnum
     for programme in programmes:
         try:
             channel    = re.compile('channel="(.+?)"').findall(programme)[0]
-            xbmc.log('channel: %s' % channel)
+            dixie.log('channel: %s' % channel)
             if channel in str(idarray):
 #                channel = channel.encode('ascii', 'ignore').replace(' ','_')
                 starttime  = re.compile('start="(.+?)"').findall(programme)[0]
-                xbmc.log('start time 1: %s' % starttime)
+                dixie.log('start time 1: %s' % starttime)
                 starttime2 = Time_Convert(starttime,xsource,offset)
-                xbmc.log('start time 2: %s' % starttime2)
+                dixie.log('start time 2: %s' % starttime2)
                 endtime    = re.compile('stop="(.+?)"').findall(programme)[0]
-                xbmc.log('end time 1: %s' % endtime)
+                dixie.log('end time 1: %s' % endtime)
                 endtime2   = Time_Convert(endtime,xsource,offset)
-                xbmc.log('end time 2: %s' % endtime2)
+                dixie.log('end time 2: %s' % endtime2)
                 try:
                     title  = re.compile('title.*">(.+?)<\/title>').findall(programme)[0].encode('ascii', 'ignore').replace(',','.').replace('"','&quot;')
                 except:
@@ -314,10 +314,10 @@ def Create_CSV(channels,channelcount,listingcount,programmes,xsource,offset,xnum
                     icon = re.compile('<icon src="(.+?)"').findall(programme)[0]
                 except:
                     icon = 'special://home/addons/'+AddonID+'/resources/dummy.png'
-                xbmc.log('title: %s' % title)
-                xbmc.log('subtitle: %s' % subtitle)
-                xbmc.log('desc: %s' % desc)
-                xbmc.log('icon: %s' % icon)
+                dixie.log('title: %s' % title)
+                dixie.log('subtitle: %s' % subtitle)
+                dixie.log('desc: %s' % desc)
+                dixie.log('icon: %s' % icon)
 
 # Convert the channel id to real channel name
                 for matching in tempchans:

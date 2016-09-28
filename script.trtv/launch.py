@@ -165,7 +165,7 @@ def main():
     except:
         content = ''
     channels   = re.compile('<channel id="(.+?)"').findall(content)
-    xbmc.log('Channels: %s' % channels)
+    xbmc.log('### Channels 168 main: %s' % channels)
 #    if showSFchannels == 'false':
 #        channels.remove('- ADD OR REMOVE CHANNELS')
 

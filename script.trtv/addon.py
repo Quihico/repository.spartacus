@@ -80,7 +80,7 @@ def Check_Updates():
 #--------------------------------------------------------------------
 # Remove any channels that aren't in the SF folder
 def Clean_SF_Chans():
-    current_list = []
+    current_list = ['-_ADD_OR_REMOVE_CHANNELS']
 
 # Grab a list of all valid SF folders
     for item in os.listdir(sf_channels):
@@ -93,7 +93,7 @@ def Clean_SF_Chans():
             try:
                 os.remove(os.path.join(chanpath, item))
             except:
-                xbmc.log('### Failed to remove %s' % item)
+                dixie.log('### Failed to remove %s' % item)
 
 # TODO - Pull details of all channels in the database and all then to the exceptions list
 # Otherwise custom channel ordering will keep getting reset
@@ -112,7 +112,7 @@ def Check_Artwork():
         if not os.path.exists(logo_path):
             channel_list.append(item+'.png')
 
-    xbmc.log('MISSING ART ARRAY: %s' % channel_list)
+    dixie.log('MISSING ART ARRAY: %s' % channel_list)
 
 # If the logo doesn't exist locally check online to see if it exists there and download
     if len(channel_list) > 0:
@@ -126,11 +126,11 @@ def Check_Artwork():
             counter += 1
             for_progress.append(counter)
             progress = len(for_progress) / float(len(channel_list)) * 100
-            xbmc.log('### Progress Percent: %s' % progress)
+            dixie.log('### Progress Percent: %s' % progress)
             dp.update(int(progress),"Checking",'[COLOR yellow]%s[/COLOR]'%item.replace('.png',''), 'Please Wait')
 
             ret = requests.head('http://tlbb.me/useful_links/logos/Colour Logo Pack/%s' % item)
-            xbmc.log('## Item: %s   Code: %s' % (item, ret.status_code))
+            dixie.log('## Item: %s   Code: %s' % (item, ret.status_code))
             if ret.status_code == 200:
                 response = requests.get('http://tlbb.me/useful_links/logos/Colour Logo Pack/%s' % item)
                 with open(os.path.join(logopack_colour, item), 'wb') as f:
@@ -155,19 +155,19 @@ def Set_Setting(setting, value = ''):
         response = xbmc.executeJSONRPC(query)
         if debug == 'true':
             xbmc.log(query)
-        xbmc.log('### Set [%s, %s]' % (setting, value))
-        xbmc.log('### RETURN %s' % response)
+        dixie.log('### Set [%s, %s]' % (setting, value))
+        dixie.log('### RETURN %s' % response)
 
         if 'error' in str(response):
             query = '{"jsonrpc":"2.0", "method":"Settings.SetSettingValue","params":{"setting":%s,"value":%s}, "id":1}' % (setting, value.replace('"',''))
             response = xbmc.executeJSONRPC(query)
             if debug == 'true':
-                xbmc.log(query)
-            xbmc.log('### Set [%s, %s]' % (setting, value))
-            xbmc.log('### RETURN %s' % response)
+                dixie.log(query)
+            dixie.log('### Set [%s, %s]' % (setting, value))
+            dixie.log('### RETURN %s' % response)
 
     except:
-        xbmc.log('### Failed to set [%s, %s]' % (setting, value))
+        dixie.log('### Failed to set [%s, %s]' % (setting, value))
 #--------------------------------------------------------------------
 if not os.path.exists(os.path.join(ADDON_DATA,AddonID)):
     dixie.log("New addon_data folder created")
@@ -223,6 +223,12 @@ if not os.path.exists(catsxml):
     shutil.copyfile(catsmaster, catsxml)
 else:
     dixie.log("Cats.xml file exists in addon_data")
+
+if not os.path.exists(chanxml):
+    dixie.log("Copying chan.xml to addon_data")
+    shutil.copyfile(xmlmaster, chanxml)
+else:
+    dixie.log("Chan.xml file exists in addon_data")
 
 sf_channels = xbmc.translatePath(default_path)
 xbmc.log('SF CHANS PATH: %s' % sf_channels)

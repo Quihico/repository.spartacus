@@ -652,46 +652,52 @@ class TVGuide(xbmcgui.WindowXML):
 
     def tryProgram(self, program):
 # Work out if it's catchup or live
-        catchup = ''
-        if usecatchup == 'true' and program.channel.title != '- ADD OR REMOVE CHANNELS' and program.title != ADDON.getLocalizedString(30009):
-            choice = dialog.yesno('Catch-up or Live?','[COLOR=dodgerblue]Catchup:[/COLOR] Search for "%s" in one of your add-ons and view with no adverts.'%program.title,'','[COLOR=dodgerblue]Live:[/COLOR] Watch %s?' % program.channel.title, yeslabel='CATCHUP', nolabel='LIVE')
-            if choice:
-                choice = dialog.yesno('Movie or TV?','[COLOR=yellow]%s[/COLOR]' % program.title,'Is this a Movie or a TV show?',yeslabel='MOVIE', nolabel='TV SHOW')
-                if choice:
-                    catchup = 'movies/play_by_name/'+program.title+'/en'
-                else:
-                    catchup = 'tv/play_by_name_only/'+program.title+'/en'
-
-        if self.playChannel(program.channel):
-            if IGNORESTRM:
-                self.database.deleteCustomStreamUrl(program.channel)
-            return
-        result = self.streamingService.detectStream(program.channel,catchup)
-        if not result:
-            if self.touch:
-                return
-
-# could not detect stream, show context menu
-            self._showContextMenu(program)
-        elif type(result) == str:
-
-# one single stream detected, save it and start streaming
-            self.database.setCustomStreamUrl(program.channel, result)
-            self.playChannel(program.channel)
-            if IGNORESTRM:
-                self.database.deleteCustomStreamUrl(program.channel)
-
-# multiple matches, let user decide
+        if program.channel.title == '- ADD OR REMOVE CHANNELS':
+            if dialog.yesno('Add/remove channels','Would you like to add more channels to your guide','or would you like to remove existing channels?', yeslabel = 'ADD', nolabel = 'REMOVE'):
+                xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url=live_tv",return)')
+            else:
+                xbmc.executebuiltin('ActivateWindow(programs,"plugin://plugin.program.tbs/?description&mode=search_content_main&url=from_the_live_tv_menu",return)')
         else:
-            import detect
-            d = detect.StreamAddonDialog(result)
-            d.doModal()
-            
-            if d.stream is not None:
-                self.database.setCustomStreamUrl(program.channel, d.stream)
+            catchup = ''
+            if usecatchup == 'true' and program.channel.title != '- ADD OR REMOVE CHANNELS' and program.title != ADDON.getLocalizedString(30009):
+                choice = dialog.yesno('Catch-up or Live?','[COLOR=dodgerblue]Catchup:[/COLOR] Search for "%s" in one of your add-ons and view with no adverts.'%program.title,'','[COLOR=dodgerblue]Live:[/COLOR] Watch %s?' % program.channel.title, yeslabel='CATCHUP', nolabel='LIVE')
+                if choice:
+                    choice = dialog.yesno('Movie or TV?','[COLOR=yellow]%s[/COLOR]' % program.title,'Is this a Movie or a TV show?',yeslabel='MOVIE', nolabel='TV SHOW')
+                    if choice:
+                        catchup = 'movies/play_by_name_guide/'+program.title+'/en'
+                    else:
+                        catchup = 'tv/play_by_name_only_guide/'+program.title+'/en'
+
+            if self.playChannel(program.channel):
+                if IGNORESTRM:
+                    self.database.deleteCustomStreamUrl(program.channel)
+                return
+            result = self.streamingService.detectStream(program.channel,catchup)
+            if not result:
+                if self.touch:
+                    return
+
+    # could not detect stream, show context menu
+                self._showContextMenu(program)
+            elif type(result) == str:
+
+    # one single stream detected, save it and start streaming
+                self.database.setCustomStreamUrl(program.channel, result)
                 self.playChannel(program.channel)
                 if IGNORESTRM:
                     self.database.deleteCustomStreamUrl(program.channel)
+
+    # multiple matches, let user decide
+            else:
+                import detect
+                d = detect.StreamAddonDialog(result)
+                d.doModal()
+                
+                if d.stream is not None:
+                    self.database.setCustomStreamUrl(program.channel, d.stream)
+                    self.playChannel(program.channel)
+                    if IGNORESTRM:
+                        self.database.deleteCustomStreamUrl(program.channel)
 
     def _showContextMenu(self, program):
         self._hideControl(self.C_MAIN_MOUSE_CONTROLS)
@@ -986,7 +992,7 @@ class TVGuide(xbmcgui.WindowXML):
 
         if url:
             path = os.path.join(ADDON.getAddonInfo('path'), 'player.py')
-            if not 'tv/play_by_name_only/' in url and not 'movies/search_by_name' in url:
+            if not 'tv/play_by_name_only_guide/' in url and not 'movies/play_by_name_guide' in url:
                 xbmcgui.Window(10000).setProperty('OTT_CHANNEL', channel.id)
                 if url.startswith('UKTV'):
                     self.removeHighlight()

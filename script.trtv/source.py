@@ -570,6 +570,9 @@ class Database(object):
 
     def getAllChannels(self):
         channels       = []
+        if show_social == 'true':
+            channels   = ['-_ADD_OR_REMOVE_CHANNELS']
+
 
         if showSFchannels == 'true':
             try:
@@ -580,11 +583,10 @@ class Database(object):
 
     # Grab a list of SF folders not in the channels folder and add as dummy channels
             for dir in dirs:
-                if (dir == '-_ADD_OR_REMOVE_CHANNELS' and show_social == 'true') or (dir != '-_ADD_OR_REMOVE_CHANNELS'):
+                if dir != '-_ADD_OR_REMOVE_CHANNELS':
                     try:
                         if os.path.exists(os.path.join(SF_CHANNELS,dir,'favourites.xml')):
                             channels.append(dir)
-
                     except:
                         dixie.log("Special characters in directory, skipping: "+dir)
 
@@ -596,7 +598,7 @@ class Database(object):
                 return channels
 
             for file in files:
-                if (file == '-_ADD_OR_REMOVE_CHANNELS' and show_social == 'true') or (file != '-_ADD_OR_REMOVE_CHANNELS'):
+                if file != '-_ADD_OR_REMOVE_CHANNELS':
                     try:
                         channels.append(file)
                     except:
