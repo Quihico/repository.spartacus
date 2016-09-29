@@ -262,7 +262,7 @@ if cont:
         Clean_SF_Chans()
 
     xbmc.executebuiltin("XBMC.Notification(PLEASE WAIT,Channels are currently updating,5000,%s)" % (updateicon))
-    xbmc.executebuiltin('RunScript(special://home/addons/script.trtv/createDB.py,normal)')
+    xbmc.executebuiltin('RunScript(special://home/addons/script.trtv/createDB.py,ignoreplayer)')
     xbmc.sleep(2000)
     xml_alive = os.path.exists(inprogress)
 

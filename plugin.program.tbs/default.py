@@ -1059,191 +1059,195 @@ def Gotham_Confirm():
         Gotham()
 #---------------------------------------------------------------------------------------------------
 def Grab_Updates(url, runtype = ''):
-    isplaying = xbmc.Player().isPlaying()
-    if not isplaying:
-        urlparams   = URL_Params()
-        mysuccess   = 0
-        failed      = 0
-        counter     = 0
-        changetimer = 0
-        multi       = 0
-        previous    = ''
+    if runtype != 'ignoreplayer':
+        isplaying = xbmc.Player().isPlaying()
+        while isplaying:
+            xbmc.sleep(1000)
+            isplaying = xbmc.Player().isPlaying()
+
+    urlparams   = URL_Params()
+    mysuccess   = 0
+    failed      = 0
+    counter     = 0
+    changetimer = 0
+    multi       = 0
+    previous    = ''
 
 # SET TO 1 FOR TEST MODE - THIS WILL OUTPUT TO LOG AND DISPLAY COMMAND DIALOGS ON SCREEN
-        showdialogs = 0
-        if urlparams != 'Unknown':
-            if url == 'http://tlbb.me/comm.php?multi&z=c&x=':
-                multi = 1
-                url=url.replace('multi&','')
-            if url == 'http://tlbb.me/comm.php?update&z=c&x=':
-                Notify('Checking For Updates','Please wait...','1000',os.path.join(ADDONS,'script.openwindow','resources','images','update_software.png'))
-                url=url.replace('update&','')
-            xbmc.executebuiltin("ActivateWindow(busydialog)")
-            while mysuccess != 1 and failed != 1:
+    showdialogs = 0
+    if urlparams != 'Unknown':
+        if url == 'http://tlbb.me/comm.php?multi&z=c&x=':
+            multi = 1
+            url=url.replace('multi&','')
+        if url == 'http://tlbb.me/comm.php?update&z=c&x=':
+            Notify('Checking For Updates','Please wait...','1000',os.path.join(ADDONS,'script.openwindow','resources','images','update_software.png'))
+            url=url.replace('update&','')
+        xbmc.executebuiltin("ActivateWindow(busydialog)")
+        while mysuccess != 1 and failed != 1:
 
-                try:
+            try:
+                if debug == 'true':
+                    xbmc.log("### URL: "+url+encryptme('e',urlparams))
+                link = Open_URL2(url+encryptme('e',urlparams))
+                if link != '' and not 'sleep' in link:
+                    link = encryptme('d',link).replace('\n',';').replace('|_|',' ').replace('|!|','\n').replace('http://venztech.com/repo_jpegs/','http://tlbb.me/repo_jpegs/')
+                if debug == 'true':
+                    try:
+                        xbmc.log("### Return: "+link)
+                    except:
+                        pass
+
+                if link == '':
+                    xbmc.log("### Blank page returned")
+                    counter += 1
+                    if counter == 3:
+                        failed = 1
+#                    return
+
+# Check that no body tag exists, if it does then we know TLBB is offline
+                if not '<body' in link and link != '':
+                    linematch  = re.compile('com(.+?)="').findall(link)
+                    commline   = linematch[0] if (len(linematch) > 0) else ''
+                    commatch   = re.compile('="(.+?)endcom"').findall(link)
+                    command    = commatch[0] if (len(commatch) > 0) else 'End'
+                
+                    SF_match   = re.compile('<favourite[\s\S]*?</favourite>').findall(command)
+                    SF_command = SF_match[0] if (len(SF_match) > 0) else 'None'
+
+# Create array of commands so we can check if the install video needs to be played
+                    previous += command
+
                     if debug == 'true':
-                        xbmc.log("### URL: "+url+encryptme('e',urlparams))
-                    link = Open_URL2(url+encryptme('e',urlparams))
-                    if link != '' and not 'sleep' in link:
-                        link = encryptme('d',link).replace('\n',';').replace('|_|',' ').replace('|!|','\n').replace('http://venztech.com/repo_jpegs/','http://tlbb.me/repo_jpegs/')
+
+                        xbmc.log("### command: "+command)
+                        xbmc.log("### SF_command: "+SF_command)
+
+                    Open_URL2(binascii.unhexlify('687474703a2f2f746c62622e6d652f636f6d6d2e7068703f783d')+encryptme('e',urlparams)+'&y='+commline)
+
                     if debug == 'true':
-                        try:
-                            xbmc.log("### Return: "+link)
-                        except:
-                            pass
+                        xbmc.log("### COMMAND *CLEANED: "+command.replace('|#|',';'))
+                        xbmc.log("### LINK *ORIG: "+link)
+                    if SF_command!='None':
+                        localfile = open(progresstemp, mode='w+')
+                        localfile.write(SF_command)
+                        localfile.close()
 
-                    if link == '':
-                        xbmc.log("### Blank page returned")
-                        counter += 1
-                        if counter == 3:
-                            failed = 1
-    #                    return
+                    elif command!='End' and not 'sleep' in link:
+                        if ';' in command:
+                            if debug == 'true':
+                                xbmc.log(command)
+                            newcommands = command.split(';')
+                            for item in newcommands:
+                                if 'branding/install.mp4' in item:
+                                    item = ''
 
-    # Check that no body tag exists, if it does then we know TLBB is offline
-                    if not '<body' in link and link != '':
-                        linematch  = re.compile('com(.+?)="').findall(link)
-                        commline   = linematch[0] if (len(linematch) > 0) else ''
-                        commatch   = re.compile('="(.+?)endcom"').findall(link)
-                        command    = commatch[0] if (len(commatch) > 0) else 'End'
-                    
-                        SF_match   = re.compile('<favourite[\s\S]*?</favourite>').findall(command)
-                        SF_command = SF_match[0] if (len(SF_match) > 0) else 'None'
-
-    # Create array of commands so we can check if the install video needs to be played
-                        previous += command
-
-                        if debug == 'true':
-
-                            xbmc.log("### command: "+command)
-                            xbmc.log("### SF_command: "+SF_command)
-
-                        Open_URL2(binascii.unhexlify('687474703a2f2f746c62622e6d652f636f6d6d2e7068703f783d')+encryptme('e',urlparams)+'&y='+commline)
-
-                        if debug == 'true':
-                            xbmc.log("### COMMAND *CLEANED: "+command.replace('|#|',';'))
-                            xbmc.log("### LINK *ORIG: "+link)
-                        if SF_command!='None':
-                            localfile = open(progresstemp, mode='w+')
-                            localfile.write(SF_command)
-                            localfile.close()
-
-                        elif command!='End' and not 'sleep' in link:
-                            if ';' in command:
-                                if debug == 'true':
-                                    xbmc.log(command)
-                                newcommands = command.split(';')
-                                for item in newcommands:
-                                    if 'branding/install.mp4' in item:
-                                        item = ''
-
-                                    if 'extract.all' in item:
-                                        try:
-                                            exec item
-                                            if showdialogs == 1:
-                                                TXT.TXT('ITEM',item.replace('|#|',';'))
-                                            if os.path.exists(os.path.join(packages,'updates.zip')):
-                                                os.remove(os.path.join(packages,'updates.zip'))
-                                        except Exception as e:
-                                            xbmc.log(str(e))
-                                    else:
-                                        try:
-                                            if 'Dialog().ok(' in item:
-                                                xbmc.sleep(1000)
-                                                while xbmc.Player().isPlaying():
-                                                    xbmc.sleep(500)
-                                            exec item.replace('|#|',';') # Change to semicolon for user agent otherwise it splits into a new command
-                                            if showdialogs == 1:
-                                                TXT.TXT('ITEM',item.replace('|#|',';'))
-                                                xbmc.log("### RUNNING ITEM: "+item.replace('|#|',';'))
-                                        except Exception as e:
-                                            xbmc.log("### Failed with item: "+item.replace('|#|',';'))
-                                            xbmc.log(str(e))
-                                            if showdialogs == 1:
-                                                TXT.TXT('FAILED ITEM',item.replace('|#|',';'))
-    #                                    while xbmc.Player().isPlaying():
-    #                                        xbmc.sleep(500)
-                            else:
-                                try:
-                                    if 'Dialog().ok(' in command:
-                                        if not multi:
+                                if 'extract.all' in item:
+                                    try:
+                                        exec item
+                                        if showdialogs == 1:
+                                            TXT.TXT('ITEM',item.replace('|#|',';'))
+                                        if os.path.exists(os.path.join(packages,'updates.zip')):
+                                            os.remove(os.path.join(packages,'updates.zip'))
+                                    except Exception as e:
+                                        xbmc.log(str(e))
+                                else:
+                                    try:
+                                        if 'Dialog().ok(' in item:
                                             xbmc.sleep(1000)
-                                            xbmc.log("### Dialog.ok in this command, checking if xbmc is playing....")
                                             while xbmc.Player().isPlaying():
                                                 xbmc.sleep(500)
-                                        else: command = ''
-
-                                    if 'extract.all' in command:
-                                        try:
-                                            exec command
-                                            if showdialogs == 1:
-                                                TXT.TXT('ITEM',command.replace('|#|',';'))
-                                            if os.path.exists(os.path.join(packages,'updates.zip')):
-                                                os.remove(os.path.join(packages,'updates.zip'))
-                                                TXT.TXT('ITEM','Successfully removed updates.zip')
-                                        except Exception as e:
-                                            xbmc.log("### Failed with command: "+command.replace('|#|',';'))
-                                            xbmc.log(str(e))
-
-                                    if 'branding/install.mp4' in command:
-                                        command = ''
-
-                                    else:
-                                        exec command.replace('|#|',';') # Change to semicolon for user agent otherwise it splits into a new command
+                                        exec item.replace('|#|',';') # Change to semicolon for user agent otherwise it splits into a new command
                                         if showdialogs == 1:
-                                            TXT.TXT('COMMAND',item.replace('|#|',';'))
-                                            xbmc.log("### RUNNING COMMAND: "+item.replace('|#|',';'))
-                                except:
-                                    xbmc.log("### Failed with command: "+command.replace('|#|',';'))
-    #                        while xbmc.Player().isPlaying():
-    #                            xbmc.sleep(500)
-                            previous = ''
-                            if os.path.exists(progresstemp):
-                                os.remove(progresstemp)
-                            
-                        elif command=='End':
-                            if 'sleep' in link:
-                                readfile = open(sleeper, 'r')
-                                content = readfile.read()
-                                readfile.close()
-                                if content != "sleep=STOPALL":
-                                    sleep = str(link[6:])
-                                else:
-                                    sleep = "23:59:59"
-                                    xbmc.log("### SLEEP MODE - SERVER MAINTENANCE")
-                                if str(sleep) != str(content):
-                                    writefile = open(sleeper, 'w+')
-                                    writefile.write(sleep)
-                                    writefile.close()
-                                    xbmc.log("### Changed timer to "+sleep)
-                                    changetimer = 1
-                                else:
-                                    if debug == 'true':
-                                        xbmc.log("### Timer same, no changes required")
-                            if sleep != '23:59:59':
-                                if runtype != 'silent':
-                                    Notify('Updates Complete','No more updates to show','1000',os.path.join(ADDONS,'plugin.program.tbs','resources','tick.png'))
-    #                            if not multi:
-    #                                xbmc.executebuiltin( 'Container.Refresh' )
-                                xbmc.executebuiltin( 'UpdateLocalAddons' )
-                                xbmc.executebuiltin( 'UpdateAddonRepos' )
-                                mysuccess = 1
-                except Exception as e:
-                    xbmc.log("### Failed with update command: "+str(e))
-                    failed = 1
-            try:
-                xbmc.executebuiltin("Dialog.Close(busydialog)")
-            except:
-                pass
+                                            TXT.TXT('ITEM',item.replace('|#|',';'))
+                                            xbmc.log("### RUNNING ITEM: "+item.replace('|#|',';'))
+                                    except Exception as e:
+                                        xbmc.log("### Failed with item: "+item.replace('|#|',';'))
+                                        xbmc.log(str(e))
+                                        if showdialogs == 1:
+                                            TXT.TXT('FAILED ITEM',item.replace('|#|',';'))
+#                                    while xbmc.Player().isPlaying():
+#                                        xbmc.sleep(500)
+                        else:
+                            try:
+                                if 'Dialog().ok(' in command:
+                                    if not multi:
+                                        xbmc.sleep(1000)
+                                        xbmc.log("### Dialog.ok in this command, checking if xbmc is playing....")
+                                        while xbmc.Player().isPlaying():
+                                            xbmc.sleep(500)
+                                    else: command = ''
 
-            if changetimer == 1:
-                xbmc.executebuiltin('StopScript(special://home/addons/plugin.program.tbs/service.py)')
-                xbmc.executebuiltin('RunScript(special://home/addons/plugin.program.tbs/service.py)')
+                                if 'extract.all' in command:
+                                    try:
+                                        exec command
+                                        if showdialogs == 1:
+                                            TXT.TXT('ITEM',command.replace('|#|',';'))
+                                        if os.path.exists(os.path.join(packages,'updates.zip')):
+                                            os.remove(os.path.join(packages,'updates.zip'))
+                                            TXT.TXT('ITEM','Successfully removed updates.zip')
+                                    except Exception as e:
+                                        xbmc.log("### Failed with command: "+command.replace('|#|',';'))
+                                        xbmc.log(str(e))
+
+                                if 'branding/install.mp4' in command:
+                                    command = ''
+
+                                else:
+                                    exec command.replace('|#|',';') # Change to semicolon for user agent otherwise it splits into a new command
+                                    if showdialogs == 1:
+                                        TXT.TXT('COMMAND',item.replace('|#|',';'))
+                                        xbmc.log("### RUNNING COMMAND: "+item.replace('|#|',';'))
+                            except:
+                                xbmc.log("### Failed with command: "+command.replace('|#|',';'))
+#                        while xbmc.Player().isPlaying():
+#                            xbmc.sleep(500)
+                        previous = ''
+                        if os.path.exists(progresstemp):
+                            os.remove(progresstemp)
+                        
+                    elif command=='End':
+                        if 'sleep' in link:
+                            readfile = open(sleeper, 'r')
+                            content = readfile.read()
+                            readfile.close()
+                            if content != "sleep=STOPALL":
+                                sleep = str(link[6:])
+                            else:
+                                sleep = "23:59:59"
+                                xbmc.log("### SLEEP MODE - SERVER MAINTENANCE")
+                            if str(sleep) != str(content):
+                                writefile = open(sleeper, 'w+')
+                                writefile.write(sleep)
+                                writefile.close()
+                                xbmc.log("### Changed timer to "+sleep)
+                                changetimer = 1
+                            else:
+                                if debug == 'true':
+                                    xbmc.log("### Timer same, no changes required")
+                        if sleep != '23:59:59':
+                            if runtype != 'silent':
+                                Notify('Updates Complete','No more updates to show','1000',os.path.join(ADDONS,'plugin.program.tbs','resources','tick.png'))
+#                            if not multi:
+#                                xbmc.executebuiltin( 'Container.Refresh' )
+                            xbmc.executebuiltin( 'UpdateLocalAddons' )
+                            xbmc.executebuiltin( 'UpdateAddonRepos' )
+                            mysuccess = 1
+            except Exception as e:
+                xbmc.log("### Failed with update command: "+str(e))
+                failed = 1
         try:
-            xbmc.executebuiltin('RunScript(special://home/addons/script.openwindow/functions.py)')
+            xbmc.executebuiltin("Dialog.Close(busydialog)")
         except:
-            xbmc.executebuiltin('RunScript(special://xbmc/addons/script.openwindow/functions.py)')
-        Remove_Files()
+            pass
+
+        if changetimer == 1:
+            xbmc.executebuiltin('StopScript(special://home/addons/plugin.program.tbs/service.py)')
+            xbmc.executebuiltin('RunScript(special://home/addons/plugin.program.tbs/service.py)')
+    try:
+        xbmc.executebuiltin('RunScript(special://home/addons/script.openwindow/functions.py)')
+    except:
+        xbmc.executebuiltin('RunScript(special://xbmc/addons/script.openwindow/functions.py)')
+    Remove_Files()
 #---------------------------------------------------------------------------------------------------
 #function to grab system info
 def URL_Params():
@@ -1309,7 +1313,7 @@ def Install_Venz(url):
     if debug == 'true':
         xbmc.log(link)
     if link == "record added sucessfully":
-        Grab_Updates('http://tlbb.me/comm.php?z=c&x=')
+        Grab_Updates('http://tlbb.me/comm.php?z=c&x=','ignoreplayer')
         success = 1
 #        xbmc.executebuiltin('Action(Back)')
     else:
@@ -1542,6 +1546,7 @@ def Install_Venz_Menu(function):
 
                 if len(contentarray)>0:
                     choices = multiselect('Please select the categories you would like to install', contentarray, imagearray, descarray)
+                    xbmc.executebuiltin('ActivateWindow(HOME)')
                     xbmc.log('Choices: %s' % choices)
                     if len(choices) > 0:
                         Install_Shares(function, menutype, menu, choices, contentarray, imagearray, descarray)
@@ -1568,6 +1573,7 @@ def Remove_Menu(function, menutype = ''):
     contenturl   = []
     urlparams = URL_Params()
     if debug == 'true':
+        xbmc.log('### OPENING URL TO GRAB DETAILS OF WHAT TO REMOVE:')
         xbmc.log('http://tlbb.me/boxer/category_search.php?&x=%s' % (encryptme('e','%s&%s&0&%s&%s' % (urlparams, function, social_shares, menutype))))
     sharelist_URL  = 'http://tlbb.me/boxer/category_search.php?&x=%s' % (encryptme('e','%s&%s&0&%s&%s' % (urlparams, function, social_shares, menutype)))
     content_list   = Open_URL2(sharelist_URL)
@@ -1596,7 +1602,7 @@ def Remove_Menu(function, menutype = ''):
                 xbmc.log('### URL TO REMOVE: %s' % item)
                 Open_URL2(item)
 
-        Grab_Updates('http://tlbb.me/comm.php?multi&z=c&x=')
+        Grab_Updates('http://tlbb.me/comm.php?multi&z=c&x=','ignoreplayer')
     elif menutype == '':
         dialog.ok('NOTHING TO REMOVE','You currently have no items installed on the system, please try adding shares.')
 #---------------------------------------------------------------------------------------------------
@@ -1641,15 +1647,15 @@ def Install_Shares(function, menutype, menu, choices, contentarray = '', imagear
                     xbmc.log('### Removing any old instances of %s' % item)
                     if item.startswith('Add'):
                         item         = 'Remove'+item[3:]
-                        change_text  = re.compile(' to the (.+?)Menu').findall(item)[0]
-                        if change_text.endswith(' '):
-                            change_text = change_text[:-1]
-                        item         = item.replace(' to the %s' % change_text, '%'+' from the %s' % change_text)
-                        if 'by box' in item:
-                            change_text2 = re.compile('by box (.+?)from').findall(item)[0]
-                            xbmc.log('by box: %s' % change_text2)
-                            item         = item.replace(change_text2, '%')
-                        Remove_Menu('from_the_%s_menu' % change_text.lower().replace(' ', '_'), item)
+                    change_text  = re.compile(' to the (.+?)Menu').findall(item)[0]
+                    if change_text.endswith(' '):
+                        change_text = change_text[:-1]
+                    item         = item.replace(' to the %s' % change_text, '%'+' from the %s' % change_text)
+                    if 'by box' in item:
+                        change_text2 = re.compile('by box (.+?)from').findall(item)[0]
+                        xbmc.log('by box: %s' % change_text2)
+                        item         = item.replace(change_text2, '%')
+                    Remove_Menu('from_the_%s_menu' % change_text.lower().replace(' ', '_'), item)
 #            content_list   = Open_URL2(sharelist_URL)
 
                 Open_URL2(install_share)
@@ -1661,7 +1667,7 @@ def Install_Shares(function, menutype, menu, choices, contentarray = '', imagear
             del shares_contenturl[:]
             del match[:]
         xbmc.executebuiltin('ActivateWindow(HOME)')
-        Grab_Updates('http://tlbb.me/comm.php?multi&z=c&x=')
+        Grab_Updates('http://tlbb.me/comm.php?multi&z=c&x=','ignoreplayer')
 #---------------------------------------------------------------------------------------------------
 # Function to pull commands and update
 def DLE(command,repo_link,repo_id):
@@ -2142,7 +2148,7 @@ def Open_Link(url):
     if debug == 'true':
         xbmc.log("### "+response)
     if "record" in response:
-        Grab_Updates('http://tlbb.me/comm.php?z=c&x=')
+        Grab_Updates('http://tlbb.me/comm.php?z=c&x=','ignoreplayer')
         xbmc.executebuiltin('Container.Refresh')
     else:
         dialog.ok('Problem Detected',"Sorry it wasn't possible to execute this command, please check your internet connection. If you're sure this is ok we may be experiencing some downtime on our servers, if that's the case we apologise and they will be back online asap.")

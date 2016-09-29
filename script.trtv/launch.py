@@ -164,13 +164,9 @@ def main():
         readfile.close()
     except:
         content = ''
-    channels   = re.compile('<channel id="(.+?)"').findall(content)
-    xbmc.log('### Channels 168 main: %s' % channels)
-#    if showSFchannels == 'false':
-#        channels.remove('- ADD OR REMOVE CHANNELS')
-
-    totalchans = len(channels)
-    weight     = len(os.listdir(chanpath))
+    channels    = re.compile('<channel id="(.+?)"').findall(content)
+    totalchans  = len(channels)
+    weight      = len(os.listdir(chanpath))
 
 
     for channel in channels:
