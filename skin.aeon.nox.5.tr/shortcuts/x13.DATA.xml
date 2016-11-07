@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <shortcuts>
 	<shortcut>
+		<visible>!Skin.HasSetting(SubEditsDisable) + !Skin.HasSetting(SubEdit.Disable)</visible>
 		<defaultID />
 		<label>+-</label>
 		<label2>Video Add-On</label2>

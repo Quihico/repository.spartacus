@@ -308,7 +308,7 @@
 				<width>400</width>
 				<height>120</height>
 				<aspectratio>keep</aspectratio>
-				<texture>aeon-nox-logo.png</texture>
+				<texture>custom-logo.png</texture>
 			</control>
 			<control type="grouplist" id="9000">
 				<left>0</left>

@@ -10,6 +10,7 @@
 		<action>ActivateWindow(Music,musicdb://recentlyaddedalbums/,return)</action>
 	</shortcut>
 	<shortcut>
+		<visible>!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(MusicSubEditOff)</visible>
 		<defaultID />
 		<label>+-</label>
 		<label2>Video Add-On</label2>

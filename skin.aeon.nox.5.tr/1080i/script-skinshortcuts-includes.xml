@@ -11,10 +11,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_NEWS%2fHOME_NEWS_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(ProgramsSubEditOff)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x1)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,news)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,news)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,news)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x1)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x1</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -26,10 +27,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_SPORTS%2fHOME_SPORTS_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(VideosSubEditOff)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x2)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,sports)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,sports)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,sports)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x2)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x2</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -57,10 +59,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_MUSIC%2fHOME_MUSIC_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(MusicSubEditOff)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x3)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,music)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,music)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,music)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x3)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x3</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -88,10 +91,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_WORLD%2fHOME_WORLD_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(PicturesSubEditOff)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x4)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,world)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,world)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,world)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x4)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x4</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -238,10 +242,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_YOUTUBE%2fHOME_YOUTUBE_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(ShutdownSubEditOff)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x6)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,youtube)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,youtube)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,youtube)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x6)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x6</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -283,10 +288,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_TRAVEL%2fHOME_TRAVEL_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(WeatherSubEditOff)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x7)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,travel)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,travel)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,travel)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x7)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x7</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -298,10 +304,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_KIDS%2fHOME_KIDS_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(FavouritesSubEditOff)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x8)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,kids)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,kids)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,kids)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x8)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x8</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -344,10 +351,11 @@
 			<thumb>image://special://home/media/branding/backgrounds/HOME_MOVIES/HOME_MOVIES_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(MovieSubEditOff)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x10)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,movies)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,movies)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,movies)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x10)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x10</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -421,10 +429,11 @@
 			<thumb>image://special://home/media/branding/backgrounds/HOME_TV_SHOWS/HOME_TV_SHOWS_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(TVShowSubEditOff)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x11)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,tv_shows)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,tv_shows)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,tv_shows)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x11)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x11</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -467,10 +476,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_LIVE_TV%2fHOME_LIVE_TV_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(LiveTVSubEditOff)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x12)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,live_tv)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,live_tv)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,live_tv)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x12)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x12</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -482,10 +492,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_XXX%2fHOME_XXX_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(SubEditsDisable) + !Skin.HasSetting(SubEdit.Disable)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x13)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,xxx)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,xxx)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,xxx)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x13)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x13</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -497,10 +508,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_TECHNOLOGY%2fHOME_TECHNOLOGY_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(Custom2SubEditOff)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x202)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,technology)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,technology)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,technology)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x202)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x202</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -512,10 +524,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_COOKING%2fHOME_COOKING_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(Custom3SubEditOff)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x303)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,cooking)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,cooking)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,cooking)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x303)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x303</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -527,10 +540,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_FITNESS%2fHOME_FITNESS_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(Custom4SubEditOff)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x404)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,fitness)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,fitness)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,fitness)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x404)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x404</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -542,10 +556,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_GAMING%2fHOME_GAMING_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(Custom5SubEditOff)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x505)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,gaming)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,gaming)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,gaming)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x505)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x505</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -557,10 +572,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_COMEDY%2fHOME_COMEDY_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(Custom6SubEditOff)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x606)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,comedy)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,comedy)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,comedy)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Container(9000).ListItem.Property(submenuVisibility),x606)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x606</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -574,6 +590,7 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_NEWS%2fHOME_NEWS_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(ProgramsSubEditOff)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,news)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,news)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,news)</property>
@@ -591,10 +608,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_NEWS%2fHOME_NEWS_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(ProgramsSubEditOff)] + StringCompare(Window(10000).Property(submenuVisibility),x1)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,news)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,news)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,news)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Window(10000).Property(submenuVisibility),x1)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x1</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -608,6 +626,7 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_SPORTS%2fHOME_SPORTS_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(VideosSubEditOff)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,sports)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,sports)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,sports)</property>
@@ -625,10 +644,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_SPORTS%2fHOME_SPORTS_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(VideosSubEditOff)] + StringCompare(Window(10000).Property(submenuVisibility),x2)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,sports)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,sports)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,sports)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Window(10000).Property(submenuVisibility),x2)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x2</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -658,6 +678,7 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_MUSIC%2fHOME_MUSIC_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(MusicSubEditOff)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,music)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,music)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,music)</property>
@@ -707,10 +728,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_MUSIC%2fHOME_MUSIC_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(MusicSubEditOff)] + StringCompare(Window(10000).Property(submenuVisibility),x3)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,music)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,music)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,music)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Window(10000).Property(submenuVisibility),x3)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x3</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -740,6 +762,7 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_WORLD%2fHOME_WORLD_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(PicturesSubEditOff)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,world)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,world)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,world)</property>
@@ -757,10 +780,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_WORLD%2fHOME_WORLD_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(PicturesSubEditOff)] + StringCompare(Window(10000).Property(submenuVisibility),x4)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,world)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,world)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,world)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Window(10000).Property(submenuVisibility),x4)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x4</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -1018,6 +1042,7 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_YOUTUBE%2fHOME_YOUTUBE_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(ShutdownSubEditOff)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,youtube)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,youtube)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,youtube)</property>
@@ -1095,10 +1120,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_YOUTUBE%2fHOME_YOUTUBE_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(ShutdownSubEditOff)] + StringCompare(Window(10000).Property(submenuVisibility),x6)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,youtube)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,youtube)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,youtube)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Window(10000).Property(submenuVisibility),x6)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x6</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -1142,6 +1168,7 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_TRAVEL%2fHOME_TRAVEL_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(WeatherSubEditOff)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,travel)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,travel)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,travel)</property>
@@ -1159,10 +1186,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_TRAVEL%2fHOME_TRAVEL_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(WeatherSubEditOff)] + StringCompare(Window(10000).Property(submenuVisibility),x7)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,travel)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,travel)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,travel)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Window(10000).Property(submenuVisibility),x7)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x7</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -1176,6 +1204,7 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_KIDS%2fHOME_KIDS_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(FavouritesSubEditOff)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,kids)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,kids)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,kids)</property>
@@ -1193,10 +1222,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_KIDS%2fHOME_KIDS_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(FavouritesSubEditOff)] + StringCompare(Window(10000).Property(submenuVisibility),x8)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,kids)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,kids)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,kids)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Window(10000).Property(submenuVisibility),x8)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x8</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -1247,6 +1277,7 @@
 			<thumb>image://special://home/media/branding/backgrounds/HOME_MOVIES/HOME_MOVIES_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(MovieSubEditOff)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,movies)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,movies)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,movies)</property>
@@ -1326,10 +1357,11 @@
 			<thumb>image://special://home/media/branding/backgrounds/HOME_MOVIES/HOME_MOVIES_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(MovieSubEditOff)] + StringCompare(Window(10000).Property(submenuVisibility),x10)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,movies)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,movies)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,movies)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Window(10000).Property(submenuVisibility),x10)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x10</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -1405,6 +1437,7 @@
 			<thumb>image://special://home/media/branding/backgrounds/HOME_TV_SHOWS/HOME_TV_SHOWS_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(TVShowSubEditOff)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,tv_shows)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,tv_shows)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,tv_shows)</property>
@@ -1484,10 +1517,11 @@
 			<thumb>image://special://home/media/branding/backgrounds/HOME_TV_SHOWS/HOME_TV_SHOWS_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(TVShowSubEditOff)] + StringCompare(Window(10000).Property(submenuVisibility),x11)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,tv_shows)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,tv_shows)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,tv_shows)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Window(10000).Property(submenuVisibility),x11)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x11</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -1532,6 +1566,7 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_LIVE_TV%2fHOME_LIVE_TV_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(LiveTVSubEditOff)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,live_tv)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,live_tv)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,live_tv)</property>
@@ -1549,10 +1584,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_LIVE_TV%2fHOME_LIVE_TV_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(LiveTVSubEditOff)] + StringCompare(Window(10000).Property(submenuVisibility),x12)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,live_tv)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,live_tv)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,live_tv)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Window(10000).Property(submenuVisibility),x12)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x12</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -1566,6 +1602,7 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_XXX%2fHOME_XXX_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>!Skin.HasSetting(SubEditsDisable) + !Skin.HasSetting(SubEdit.Disable)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,xxx)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,xxx)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,xxx)</property>
@@ -1583,10 +1620,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_XXX%2fHOME_XXX_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(SubEditsDisable) + !Skin.HasSetting(SubEdit.Disable)] + StringCompare(Window(10000).Property(submenuVisibility),x13)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,xxx)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,xxx)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,xxx)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Window(10000).Property(submenuVisibility),x13)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x13</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -1606,6 +1644,7 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_TECHNOLOGY%2fHOME_TECHNOLOGY_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(Custom2SubEditOff)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,technology)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,technology)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,technology)</property>
@@ -1623,10 +1662,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_TECHNOLOGY%2fHOME_TECHNOLOGY_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(Custom2SubEditOff)] + StringCompare(Window(10000).Property(submenuVisibility),x202)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,technology)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,technology)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,technology)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Window(10000).Property(submenuVisibility),x202)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x202</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -1640,6 +1680,7 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_COOKING%2fHOME_COOKING_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(Custom3SubEditOff)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,cooking)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,cooking)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,cooking)</property>
@@ -1657,10 +1698,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_COOKING%2fHOME_COOKING_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(Custom3SubEditOff)] + StringCompare(Window(10000).Property(submenuVisibility),x303)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,cooking)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,cooking)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,cooking)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Window(10000).Property(submenuVisibility),x303)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x303</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -1674,6 +1716,7 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_FITNESS%2fHOME_FITNESS_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(Custom4SubEditOff)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,fitness)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,fitness)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,fitness)</property>
@@ -1691,10 +1734,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_FITNESS%2fHOME_FITNESS_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(Custom4SubEditOff)] + StringCompare(Window(10000).Property(submenuVisibility),x404)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,fitness)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,fitness)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,fitness)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Window(10000).Property(submenuVisibility),x404)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x404</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -1708,6 +1752,7 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_GAMING%2fHOME_GAMING_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(Custom5SubEditOff)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,gaming)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,gaming)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,gaming)</property>
@@ -1725,10 +1770,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_GAMING%2fHOME_GAMING_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(Custom5SubEditOff)] + StringCompare(Window(10000).Property(submenuVisibility),x505)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,gaming)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,gaming)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,gaming)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Window(10000).Property(submenuVisibility),x505)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x505</property>
 			<property name="isSubmenu">True</property>
 		</item>
@@ -1742,6 +1788,7 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_COMEDY%2fHOME_COMEDY_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(Custom6SubEditOff)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,comedy)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,comedy)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,comedy)</property>
@@ -1759,10 +1806,11 @@
 			<thumb>image://special%3a%2f%2fhome%2fmedia%2fbranding%2fbackgrounds%2fHOME_COMEDY%2fHOME_COMEDY_001.jpg/</thumb>
 			<property name="labelID" />
 			<property name="defaultID" />
+			<visible>[!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(Custom6SubEditOff)] + StringCompare(Window(10000).Property(submenuVisibility),x606)</visible>
 			<onclick>RunScript(special://home/addons/plugin.program.tbs/epg.py,comedy)</onclick>
 			<property name="path">RunScript(special://home/addons/plugin.program.tbs/epg.py,comedy)</property>
 			<property name="list">RunScript(special://home/addons/plugin.program.tbs/epg.py,comedy)</property>
-			<visible>[StringCompare(System.ProfileName,Master user)] + StringCompare(Window(10000).Property(submenuVisibility),x606)</visible>
+			<visible>StringCompare(System.ProfileName,Master user)</visible>
 			<property name="group">x606</property>
 			<property name="isSubmenu">True</property>
 		</item>

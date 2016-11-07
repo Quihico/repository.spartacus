@@ -32,14 +32,14 @@
 				<include>VisibleFadeEffect</include>
 				<control type="image">
 					<left>0</left>
-					<top>-418</top>
+					<top>-428</top>
 					<width>1920</width>
 					<height>668</height>
 					<texture flipy="true" border="1">nowplaying_shadow.png</texture>
 				</control>
 				<control type="image">
 					<left>0</left>
-					<top>-418</top>
+					<top>-428</top>
 					<width>1920</width>
 					<height>668</height>
 					<texture flipy="true" border="1">nowplaying_shadow.png</texture>
@@ -55,11 +55,11 @@
 				<include>VisibleFadeEffect</include>
 				<!-- Different Positioning for Posters and Square Icons -->					
 				<control type="image">
-					<left>0</left>
+					<left>130</left>
 					<top>13</top>
-					<width>432</width>
+					<width>288</width>
 					<height>432</height>
-					<aspectratio align="right">keep</aspectratio>
+					<aspectratio>scale</aspectratio>
 					<texture background="true">$VAR[WidgetPosterVar]</texture>
 					<fadetime>IconCrossfadeTime</fadetime>
 					<bordertexture border="20">thumbs/thumb_shadow.png</bordertexture>
@@ -1524,19 +1524,19 @@
 			<animation effect="slide" tween="cubic" time="720" start="0,-1080" end="0,0">WindowOpen</animation>
 			<animation effect="slide" tween="cubic" time="720" end="0,-1080" start="0,0">WindowClose</animation>
 			<include>VisibleFadeEffect</include>
-			<visible>Container(9000).HasFocus(1) + Weather.IsFetched</visible>
+			<visible>Container(9000).HasFocus(1) + Weather.IsFetched + !ControlGroup(9003).HasFocus()</visible>
 			<control type="image">
 				<left>0</left>
-				<top>0</top>
+				<top>-150</top>
 				<width>FullScreenWidth</width>
-				<height>630</height>
-				<texture flipy="true" border="1">nowplaying_shadow.png</texture>
+				<height>1080</height>
+				<texture border="1">nowplaying_shadow.png</texture>
 				<animation effect="rotatex" end="180" time="320" center="20" tween="cubic" easing="inout" condition="Skin.HasSetting(lowermainmenu)">Conditional</animation>
 				<animation effect="slide" end="0,-810" time="320" tween="cubic" easing="inout" condition="Skin.HasSetting(lowermainmenu)">Conditional</animation>
 			</control>
 			<control type="panel" id="300">
 				<left>0</left>
-				<top>0</top>
+				<top>-300</top>
 				<width>FullScreenWidth</width>
 				<height>300</height>
 				<onup>9000</onup>

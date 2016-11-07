@@ -1,3 +1,14 @@
+[B]5.7.7[/B]
+- Added customizable logo
+- Added default widget content for news
+- Added automatically setting of 'newlook' and 'lowermainmenu' on first run
+- Changed default widget content for YouTube
+- Changed position of weather widget so it does not cover widget info
+- Changed background for systeminfo and settings
+- Changed default widget content to TMDB-lists for faster loading
+- Fixed cut-off widgets when aspect ratio is not posters
+- Fixed minor miscellanious errors
+
 [B]5.7.6[/B]
 - Added browser button
 - Changed menu order so startup focus is on movies by default
@@ -5,7 +16,7 @@
 - Fixed minor miscellanious errors
 
 [B]5.7.5[/B]
-- Added compatible with TRMC
+- Added compatibility with TRMC
 - Added compatibility with [COLOR ff0084ff]Q[/COLOR]lick[COLOR ff0084ff]P[/COLOR]lay
 - Added media & addons button
 - Added skintegration for [COLOR ff0084ff]Q[/COLOR]lick[COLOR ff0084ff]P[/COLOR]lay

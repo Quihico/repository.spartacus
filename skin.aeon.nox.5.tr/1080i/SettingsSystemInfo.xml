@@ -120,7 +120,7 @@
 				<width>356</width>
 				<height>120</height>
 				<aspectratio>keep</aspectratio>
-				<texture>aeon-nox-logo.png</texture>
+				<texture>custom-logo.png</texture>
 			</control>
 			<include>SystemRightPanel</include>
 			<control type="image">
@@ -129,7 +129,7 @@
 				<width>1316</width>
 				<height>839</height>
 				<aspectratio align="center">scale</aspectratio>
-				<texture background="true">special://home/media/branding/backgrounds/HOME_SYSTEM/HOME_SYSTEM_001.jpg</texture>
+				<texture background="true">special://home/media/branding/AltSplash.png</texture>
 			</control>
 			<control type="image">
 				<left>522</left>

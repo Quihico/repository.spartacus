@@ -19,6 +19,7 @@
 	</shortcut>
 	<shortcut>
 		<defaultID />
+		<visible>!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(TVShowSubEditOff)</visible>
 		<label>+-</label>
 		<label2>Video Add-On</label2>
 		<icon>DefaultAddonProgram.png</icon>

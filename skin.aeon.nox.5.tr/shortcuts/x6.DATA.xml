@@ -17,6 +17,7 @@
 		<action>RunScript(script.qlickplay,info=list,type=video)</action>
 	</shortcut>
 	<shortcut>
+		<visible>!Skin.HasSetting(AllSubEditsOff) + !Skin.HasSetting(ShutdownSubEditOff)</visible>
 		<defaultID />
 		<label>+-</label>
 		<label2>Video Add-On</label2>

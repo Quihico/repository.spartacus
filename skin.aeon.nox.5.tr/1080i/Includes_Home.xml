@@ -220,8 +220,8 @@
 <!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_MOVIES&quot;,return)">$INFO[Skin.String(MovieHomeItem.Path)]</property>-->
 			<property name="Item">Movie</property>
 			<property name="BGType" fallback="2">$INFO[Skin.String(MovieHomeItem.BGType)]</property>
-			<property name="Widget" fallback="plugin://script.qlickplay/?info=trendingmovies">$INFO[Skin.String(MovieHomeItem.Widget)]</property>
-			<property name="WidgetLabel" fallback="Trending Movies">$INFO[Skin.String(MovieHomeItem.WidgetLabel)]</property>
+			<property name="Widget" fallback="plugin://script.qlickplay/?info=popularmovies">$INFO[Skin.String(MovieHomeItem.Widget)]</property>
+			<property name="WidgetLabel" fallback="Popular Movies">$INFO[Skin.String(MovieHomeItem.WidgetLabel)]</property>
 			<property name="WidgetType" fallback="1">$INFO[Skin.String(MovieHomeItem.WidgetType)]</property>
 			<property name="InfoLine">$INFO[Skin.String(MovieHomeItem.InfoLine)]</property>
 			<property name="submenuVisibility" fallback="x10">$INFO[Skin.String(MovieHomeItem.SubMenu)]</property>
@@ -238,8 +238,8 @@
 <!--			<property name="Path" fallback="ActivateWindow(10025,&quot;plugin://plugin.program.super.favourites/?folder=HOME_TV_SHOWS&quot;,return)">$INFO[Skin.String(TVShowHomeItem.Path)]</property>-->
 			<property name="Item">TVShow</property>
 			<property name="BGType" fallback="2">$INFO[Skin.String(TVShowHomeItem.BGType)]</property>
-			<property name="Widget" fallback="plugin://script.qlickplay/?info=trendingshows">$INFO[Skin.String(TVShowHomeItem.Widget)]</property>
-			<property name="WidgetLabel" fallback="Trending Shows">$INFO[Skin.String(TVShowHomeItem.WidgetLabel)]</property>
+			<property name="Widget" fallback="plugin://script.qlickplay/?info=populartvshows">$INFO[Skin.String(TVShowHomeItem.Widget)]</property>
+			<property name="WidgetLabel" fallback="Popular Shows">$INFO[Skin.String(TVShowHomeItem.WidgetLabel)]</property>
 			<property name="WidgetType" fallback="1">$INFO[Skin.String(TVShowHomeItem.WidgetType)]</property>
 			<property name="InfoLine">$INFO[Skin.String(TVShowHomeItem.InfoLine)]</property>
 			<property name="submenuVisibility" fallback="x11">$INFO[Skin.String(TVShowHomeItem.SubMenu)]</property>
@@ -273,8 +273,8 @@
 			<property name="Path" fallback="RunScript(special://home/addons/plugin.program.tbs/home.py,HOME_YOUTUBE)">$INFO[Skin.String(ShutdownHomeItem.Path)]</property>
 			<property name="Item">Shutdown</property>
 			<property name="BGType" fallback="2">$INFO[Skin.String(ShutdownHomeItem.BGType)]</property>
-			<property name="Widget" fallback="plugin://script.qlickplay/?info=youtubesearch&&id=Best%20of%20Youtube">$INFO[Skin.String(ShutdownHomeItem.Widget)]</property>
-			<property name="WidgetLabel" fallback="Best of Youtube">$INFO[Skin.String(ShutdownHomeItem.WidgetLabel)]</property>
+			<property name="Widget" fallback="plugin://script.qlickplay/?info=youtubeplaylist&&id=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-">$INFO[Skin.String(ShutdownHomeItem.Widget)]</property>
+			<property name="WidgetLabel" fallback="Populair Now">$INFO[Skin.String(ShutdownHomeItem.WidgetLabel)]</property>
 			<property name="WidgetType" fallback="1">$INFO[Skin.String(ShutdownHomeItem.WidgetType)]</property>
 			<property name="InfoLine">$INFO[Skin.String(ShutdownHomeItem.InfoLine)]</property>
 			<property name="submenuVisibility" fallback="x6">$INFO[Skin.String(ShutdownHomeItem.SubMenu)]</property>
