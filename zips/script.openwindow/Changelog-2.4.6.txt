@@ -1,0 +1,41 @@
+v.2.4.6:
+- Bug fix for loop with hitting server if unregistered
+
+v.2.4.5:
+- Can now choose which sections to show in startup wizard (done via admin panel)
+- Added Android resolution/calibration page as well as Android audio
+
+v.2.3.8:
+- Will now startup just once automatically, if not licensed opens into Startup Wizard
+- If not licensed a dialog appears in Social Share menu of how to register along with MAC info.
+- Defaults to TR branding in startup wizard unless branding exists in media folder
+
+v.2.3.7:
+- Fixed service
+- Tweaked
+
+v.2.3.6:
+- Fixed service not starting from root install location (Android apk/OE/LE)
+- Fixed update service also not starting from root
+
+v.2.3.5:
+- Added check for internet on startup
+
+v2.1:
+- Added extra menu to enable/disable social sharing
+
+
+v2.0:
+- Added support for weather.openweathermap.extended
+
+- Switched Region and Country positions
+
+- Clean dialog messages if no results are populated (esp. useful for region section)
+
+- Fixed autorun of social update
+
+- Added back tar option
+
+
+
+v1.0.5.1: Fixed keywords and added social tv update after wizard.
