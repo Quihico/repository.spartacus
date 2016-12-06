@@ -1,9 +1,15 @@
-import xbmc, default, binascii
+import default
+import binascii
+import xbmc
+import xbmcaddon
 
-start_option  = 'normal'
+AddonID 	    = 'plugin.program.tbs'
+start_option 	= 'normal'
+ADDON           = xbmcaddon.Addon(id=AddonID)
+mastercheck 	= ADDON.getSetting('master')
 
 try:
-    if sys.argv[1] == 'shares':
+    if sys.argv[1] == 'shares' and mastercheck == 'false':
         start_option = 'shares'
 except:
     start_option  = 'normal'

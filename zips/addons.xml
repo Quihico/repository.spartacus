@@ -117,7 +117,7 @@
   </extension>
 </addon>
 
-<addon id="plugin.program.tbs" name="Maintenance"  provider-name="TotalRevolution" version="4.0">
+<addon id="plugin.program.tbs" name="Maintenance"  provider-name="TotalRevolution" version="4.0.3">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0"/>
 		<import addon="script.trtv" version="1.2.1"/>
@@ -169,13 +169,13 @@
 	</extension>
 </addon>
 
-<addon id="script.openwindow" name="Startup Wizard" version="2.4.7" provider-name="TotalRevolution">
+<addon id="script.openwindow" name="Startup Wizard" version="2.5.3" provider-name="TotalRevolution">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0"/>
 	</requires>
 	<extension point="xbmc.python.script" library="default.py" >
 	</extension>
-	<extension point="xbmc.service" library="service.py" start="startup" />
+	<extension point="xbmc.service" library="service.py" start="[login|startup]" />
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en"></summary>
 		<description lang="en"></description>

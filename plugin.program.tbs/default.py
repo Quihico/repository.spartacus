@@ -1,4 +1,4 @@
-import urllib, urllib2, re, xbmcplugin, xbmcgui, xbmc, xbmcaddon
+﻿import urllib, urllib2, re, xbmcplugin, xbmcgui, xbmc, xbmcaddon
 import os, sys, time, xbmcvfs, glob, shutil, datetime, zipfile
 import subprocess, threading
 import yt, downloader, SF, clean, TXT, kll
@@ -21,6 +21,7 @@ debug            =  ADDON.getSetting('debug')
 USB              =  ADDON.getSetting('zip')
 thirdparty       =  ADDON.getSetting('thirdparty')
 enable_adult     =  ADDON.getSetting('adult')
+userid           =  ADDON.getSetting('userid')
 dialog           =  xbmcgui.Dialog()
 dp               =  xbmcgui.DialogProgress()
 HOME             =  xbmc.translatePath('special://home/')
@@ -89,9 +90,9 @@ updatedst        =  xbmc.translatePath('special://home/addons/packages/update')
 remlist          =  xbmc.translatePath('special://profile/addon_data/plugin.program.tbs/remlist')
 pos              =  0
 listicon         =  ''
-ACTION_NAV_BACK  = 92
-ACTION_MOVE_UP   = 3
-ACTION_MOVE_DOWN = 4
+ACTION_NAV_BACK  =  92
+ACTION_MOVE_UP   =  3
+ACTION_MOVE_DOWN =  4
 
 if os.path.exists(BRANDART):
     FANART = BRANDART
@@ -102,62 +103,6 @@ if thirdparty == 'true':
     social_shares = 1
 else:
     social_shares = 0
-#-----------------------------------------------------------------------------------------------------------------    
-def Check_File_Date(url, datefile, localdate, dst):
-    try:
-        req = urllib2.Request(url)
-        req.add_header('User-Agent','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-        conn = urllib2.urlopen(req)
-        last_modified = conn.info().getdate('last-modified')
-        last_modified = time.strftime('%Y%m%d%H%M%S', last_modified)
-        if int(last_modified) > int(localdate):
-            urllib.urlretrieve(url,dst)
-            if dst==epgdst:
-                extract.all(dst,ADDON_DATA)         
-            else:
-                extract.all(dst,STORAGE)
-            writefile = open(datefile, 'w+')
-            writefile.write(last_modified)
-            writefile.close()
-        try:
-            if os.path.exists(dst):
-                os.remove(dst)
-        except:
-            pass
-    except Exception as e:
-        xbmc.log("Failed with update: %s" % str(url))
-        xbmc.log(str(e))
-    Remove_Files()
-#-----------------------------------------------------------------------------------------------------------------    
-def Check_Updates(url, datefile, dst):
-    if os.path.exists(datefile):
-        readfile = open(datefile,'r')
-        localdate = readfile.read()
-        readfile.close()
-    else:
-        localdate = 0
-    Check_File_Date(url, datefile, int(localdate), dst)
-#-----------------------------------------------------------------------------------------------------------------    
-# Remove a path, whether folder or file it will be deleted
-def Remove_Files():
-    xbmc.log('### Attempting to Remove Files')
-    if os.path.exists(remlist):
-        readfile = open(remlist,'r')
-        content  = readfile.read().splitlines()
-        readfile.close()
-        for item in content:
-            rempath = xbmc.translatePath('special://home')+item
-            if os.path.exists(rempath):
-                try:
-                    os.remove(rempath)
-                    xbmc.log('### Successfully removed file: %s' % rempath)
-                except:
-                    try:
-                        shutil.rmtree(rempath)
-                        xbmc.log('### Successfully removed folder: %s' % rempath)
-                    except:
-                        xbmc.log("### Failed to remove: %s" %rempath)
-        os.remove(remlist)
 #-----------------------------------------------------------------------------------------------------------------    
 # Popup class - thanks to whoever codes the help popup in TVAddons Maintenance for this section. Unfortunately there doesn't appear to be any author details in that code so unable to credit by name.
 class SPLASH(xbmcgui.WindowXMLDialog):
@@ -279,22 +224,46 @@ def Addon_Settings():
     ADDON.openSettings(sys.argv[0])
     xbmc.executebuiltin('Container.Refresh')
 #-----------------------------------------------------------------------------------------------------------------
-# Check for the real log path, even makes exceptions for idiots who've left their old kodi logs in their builds
-def Log_Check():
-    finalfile = 0
-    logfilepath = os.listdir(log_path)
-    for item in logfilepath:
-        if item.endswith('.log') and not item.endswith('.old.log'):
-            mylog        = os.path.join(log_path,item)
-            lastmodified = os.path.getmtime(mylog)
-            if lastmodified > finalfile:
-                finalfile = lastmodified
-                logfile   = mylog
-    
-    filename    = open(logfile, 'r')
-    logtext     = filename.read()
-    filename.close()
-    return logtext
+# Enable/disable the visibility of adult add-ons (use true or false)
+def Adult_Filter(value, loadtype = ''):
+    success = 0
+    try:
+        master_list = Open_URL('http://noobsandnerds.com/TI/AddonPortal/adult.php',10)
+        id_list     = re.compile('i="(.+?)"').findall(master_list)
+    except:
+        id_list = []
+
+    if value == 'true':
+        try:
+            password = binascii.unhexlify(Text_File(xbmc.translatePath('special://home/userdata/addon_data/plugin.program.tbs/x'),'r'))
+        except:
+            password = ''
+
+# If the password in the local file is blank we set it to the default of 69
+        if password == '':
+            password = '69'
+
+        userpw   = SEARCH('ENTER PASSWORD').replace('%20',' ')
+        if userpw != password:
+            value = 'false'
+            dialog.ok('INCORRECT PASSWORD','Wrong password entered!')
+            xbmc.executebuiltin('HOME')
+        else:
+            success = 1
+
+
+    for addon_id in id_list:
+        addon_id = '"%s"' % addon_id
+        query = '{"jsonrpc":"2.0", "method":"Addons.SetAddonEnabled","params":{"addonid":%s,"enabled":%s}, "id":1}' % (addon_id, value)
+        response = xbmc.executeJSONRPC(query)
+
+    if value == 'false':
+        filter_type = 'disabled'
+    else:
+        filter_type = 'enabled'
+    if loadtype != 'startup':
+        dialog.ok('ADULT CONTENT %s' % filter_type.upper(), 'Your adult rated add-ons have now been %s' % filter_type)
+    return success
 #-----------------------------------------------------------------------------------------------------------------
 # Check for storage location on android
 def Android_Path_Check():
@@ -308,7 +277,7 @@ def Archive_Tree(sourcefile, destfile, message_header, message1, message2, messa
     zipobj       = zipfile.ZipFile(destfile , 'w', zipfile.ZIP_DEFLATED)
     rootlen      = len(sourcefile)
     for_progress = []
-    ITEM         =[]
+    ITEM         = []
     
     dp.create(message_header, message1, message2, message3)
     
@@ -535,7 +504,15 @@ def Categories():
     addDir('folder','Install Content','','install_content', 'Search_Addons.png','','','')
     addDir('','Startup Wizard','','startup_wizard', 'Startup_Wizard.png','','','')
     addDir('folder','Maintenance','none', 'tools', 'Additional_Tools.png','','','')
-#-----------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------
+def Change_ID():
+    newid = SEARCH('Enter new User ID')
+    if newid != '':
+        ADDON.setSetting('userid', encryptme('e',newid))
+    else:
+        ADDON.setSetting('userid', '')
+    xbmc.executebuiltin('Container.Refresh')
+#---------------------------------------------------------------------------------------------------
 # Function to check the download path set in settings
 def Check_Download_Path():
     path = os.path.join(USB,'testCBFolder')
@@ -543,6 +520,41 @@ def Check_Download_Path():
     if not os.path.exists(USB):
         dialog.ok('Download/Storage Path Check','The download location you have stored does not exist .\nPlease update the addon settings and try again.') 
         ADDON.openSettings(sys.argv[0])
+#-----------------------------------------------------------------------------------------------------------------    
+def Check_File_Date(url, datefile, localdate, dst):
+    try:
+        req = urllib2.Request(url)
+        req.add_header('User-Agent','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+        conn = urllib2.urlopen(req)
+        last_modified = conn.info().getdate('last-modified')
+        last_modified = time.strftime('%Y%m%d%H%M%S', last_modified)
+        if int(last_modified) > int(localdate):
+            urllib.urlretrieve(url,dst)
+            if dst==epgdst:
+                extract.all(dst,ADDON_DATA)         
+            else:
+                extract.all(dst,STORAGE)
+            writefile = open(datefile, 'w+')
+            writefile.write(last_modified)
+            writefile.close()
+        try:
+            if os.path.exists(dst):
+                os.remove(dst)
+        except:
+            pass
+    except Exception as e:
+        xbmc.log("Failed with update: %s" % str(url))
+        xbmc.log(str(e))
+    Remove_Files()
+#-----------------------------------------------------------------------------------------------------------------    
+def Check_Updates(url, datefile, dst):
+    if os.path.exists(datefile):
+        readfile = open(datefile,'r')
+        localdate = readfile.read()
+        readfile.close()
+    else:
+        localdate = 0
+    Check_File_Date(url, datefile, int(localdate), dst)
 #---------------------------------------------------------------------------------------------------
 # Split string into arrays
 def chunks(s, n):
@@ -762,7 +774,12 @@ def Delete_Userdata():
             
             for d in dirs:
                 shutil.rmtree(os.path.join(root, d))        
-#-----------------------------------------------------------------------------------------------------------------  
+#---------------------------------------------------------------------------------------------------
+# Disable the master mode
+def Disable_Master():
+    ADDON.setSetting('master','false')
+    xbmc.executebuiltin('Container.Refresh')
+#---------------------------------------------------------------------------------------------------
 # Function to do a full wipe.
 def Destroy_Path(path):
     dp.create("Cleaning Path","Wiping...",'', 'Please Wait')
@@ -822,6 +839,15 @@ def encryptme(mode, message):
         finalarray = [ str(unichr(x)) for x in numbers ]
         finaltext = ''.join(finalarray)
         return finaltext.encode('utf-8')
+#-----------------------------------------------------------------------------------------------------------------
+# Firmware update
+def Firmware_Update(url):
+    dl_path = '/tmp/cache/update.zip'
+    os.system('mkdir -p /tmp/cache\nmount -t ext4 /dev/cache /tmp/cache\nrm -f /tmp/cache/*.zip')
+    dp.create('UPDATING SYSTEM','Please Wait')
+    downloader.download(url,dl_path,dp)
+    os.system('mkdir -p /tmp/cache/recovery')
+    os.system('echo -e "--update_package=/cache/update.zip\n--wipe_cache" > /tmp/cache/recovery/command || exit 1\numount /tmp/cache\nreboot recovery')
 #---------------------------------------------------------------------------------------------------
 # Convert physical paths to special paths
 def Fix_Special(url):
@@ -840,6 +866,28 @@ def Fix_Special(url):
                  f = open((os.path.join(root, file)), mode='w')
                  f.write(str(b))
                  f.close()
+#---------------------------------------------------------------------------------------------------
+# Set/Pull the os variables in Android
+def preexec_fn():
+    uid = os.getuid()
+    gid = os.getgid()
+    os.setgid(uid)
+    os.setuid(gid)
+#---------------------------------------------------------------------------------------------------
+# Perform a hard reset on OE/LE or wipe Android kodi/spmc userdata
+def Fresh_Install():
+    if xbmc.getCondVisibility("System.HasAddon(service.libreelec.settings)") or xbmc.getCondVisibility("System.HasAddon(service.openelec.settings)"):
+        resetpath='storage/.cache/reset_oe'
+        resetfile=open(resetpath,'w')
+        resetfile.write()
+        resetfile.close()
+        xbmc.executebuiltin('reboot')
+        return False
+    elif xbmc.getCondVisibility('System.Platform.Android'):
+        running   = Running_App()
+        cleanwipe = subprocess.Popen(['exec ''pm clear '+str(running)+''], executable='/system/bin/sh', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, preexec_fn=preexec_fn).communicate()[0]
+    else:
+        return True
 #---------------------------------------------------------------------------------------------------
 # Clean up all known cache files
 def Full_Clean():
@@ -1249,38 +1297,29 @@ def Grab_Updates(url, runtype = ''):
         xbmc.executebuiltin('RunScript(special://xbmc/addons/script.openwindow/functions.py)')
     Remove_Files()
 #---------------------------------------------------------------------------------------------------
-#function to grab system info
-def URL_Params():
-    try:
-        wifimac = Get_Mac('wifi').rstrip().lstrip()
-    except:
-        wifimac = 'Unknown'
-    try:
-        ethmac  = Get_Mac('eth0').rstrip().lstrip()
-    except:
-        ethmac  = 'Unknown'
-    try:
-        cpu     = CPU_Check().rstrip().lstrip()
-    except:
-        cpu     = 'Unknown'
-    try:
-        build   = Build_Info().rstrip().lstrip()
-    except:
-        build   = 'Unknown'
-
-    if ethmac == 'Unknown' and wifimac != 'Unknown':
-        ethmac = wifimac
-    if ethmac != 'Unknown' and wifimac == 'Unknown':
-        wifimac = ethmac
-
-    if ethmac != 'Unknown' and wifimac != 'Unknown':
-        return (wifimac+'&'+cpu+'&'+build+'&'+ethmac).replace(' ','%20')
-        xbmc.log('### maintenance: '+(wifimac+'&'+cpu+'&'+build+'&'+ethmac).replace(' ','%20'))
-    else:
-        return 'Unknown'
-        xbmc.log("### BUILD:"+build)
+# Function to execute a command
+def Exec_XBMC(command):
+    xbmc.executebuiltin(command)
+    xbmc.executebuiltin('Container.Refresh')
 #---------------------------------------------------------------------------------------------------
-#Function to populate the search based on the initial first filter
+# Grab contents of the log
+def Grab_Log():
+    finalfile = 0
+    logfilepath = os.listdir(log_path)
+    for item in logfilepath:
+        if item.endswith('.log') and not item.endswith('.old.log'):
+            mylog        = os.path.join(log_path,item)
+            lastmodified = os.path.getmtime(mylog)
+            if lastmodified>finalfile:
+                finalfile = lastmodified
+                logfile   = mylog
+    
+    filename    = open(logfile, 'r')
+    logtext     = filename.read()
+    filename.close()
+    return logtext
+#---------------------------------------------------------------------------------------------------
+# Populate the search based on the initial first filter
 def Install_Menu():
     key = SEARCH('Enter Key Phrase To Search For')
     xbmc.executebuiltin("ActivateWindow(busydialog)")
@@ -1305,7 +1344,7 @@ def Install_Menu():
     else:
         dialog.ok('FAULT DETECTED', 'It was not possible to obtain your MAC address details, please check your wifi and ethernet modules are enabled.')
 #---------------------------------------------------------------------------------------------------
-#Function to populate the search based on the initial first filter
+# Function to populate the search based on the initial first filter
 def Install_Venz(url):
     Notify('Installing Content','Please be patient during this process','5000',os.path.join(ADDONS,'plugin.program.tbs','resources','update.png'))
     link = Open_URL2(url)
@@ -1328,87 +1367,105 @@ def Install_Venz(url):
         match      = re.compile('n="(.+?)"t="(.+?)"d="(.+?)"l="(.+?)"', re.DOTALL).findall(link)
         for name, thumb, desc, link in match:
             addDir('',name,link,'openlink',thumb,'','',desc)
-#---------------------------------------------------------------------------------------------------
-# Function to execute a command
-def Exec_XBMC(command):
-    xbmc.executebuiltin(command)
-    xbmc.executebuiltin('Container.Refresh')
+#-----------------------------------------------------------------------------------------------------------------
+# Check for the real log path, even makes exceptions for idiots who've left their old kodi logs in their builds
+def Log_Check():
+    finalfile = 0
+    logfilepath = os.listdir(log_path)
+    for item in logfilepath:
+        if item.endswith('.log') and not item.endswith('.old.log'):
+            mylog        = os.path.join(log_path,item)
+            lastmodified = os.path.getmtime(mylog)
+            if lastmodified > finalfile:
+                finalfile = lastmodified
+                logfile   = mylog
+    
+    filename    = open(logfile, 'r')
+    logtext     = filename.read()
+    filename.close()
+    return logtext
 #---------------------------------------------------------------------------------------------------
 # Function to enable/disable the main menu items - added due to glitch on server
 def Main_Menu_Install(menumode):
     xbmc.log('MENU MODE: %s' % menumode)
     if menumode == 'add':
-        if xbmc.getCondVisibility('Skin.String(Custom6HomeItem.Disable)'):
-            addDir('','Enable Comedy','Skin.SetString(Custom6HomeItem.Disable,)','exec_xbmc','https://i.ytimg.com/vi/zZ_mFOG1H-o/maxresdefault.jpg','','','')
-        if xbmc.getCondVisibility('Skin.String(Custom3HomeItem.Disable)'):
-            addDir('','Enable Cooking','Skin.SetString(Custom3HomeItem.Disable,)','exec_xbmc','http://videos2.healthination.com/HN_BB_05_EasyCooking_ProRes_739/HN_BB_05_EasyCooking_ProRes_739-img_1280x720.jpg','','','')
-        if xbmc.getCondVisibility('Skin.String(Custom4HomeItem.Disable)'):
-            addDir('','Enable Fitness','Skin.SetString(Custom4HomeItem.Disable,)','exec_xbmc','http://www.fourseasons.com/content/dam/fourseasons/images/web/VGS/VGS_342_aspect16x9.jpg/jcr:content/renditions/cq5dam.web.1280.1280.jpeg','','','')
-        if xbmc.getCondVisibility('Skin.String(Custom5HomeItem.Disable)'):
-            addDir('','Enable Gaming','Skin.SetString(Custom5HomeItem.Disable,)','exec_xbmc','https://cdn2.vox-cdn.com/thumbor/ez8SzxLVWcfCqRlgOdfWsh6lfRc=/0x0:1920x1080/1280x720/cdn0.vox-cdn.com/uploads/chorus_image/image/47030516/youtube-gaming-end-screen_1920.0.0.png','','','')
-        if xbmc.getCondVisibility('Skin.String(FavoritesHomeItem.Disable)'):
-            addDir('','Enable Kids','Skin.SetString(FavoritesHomeItem.Disable,)','exec_xbmc','http://b.fastcompany.net/multisite_files/fastcompany/imagecache/1280/poster/2014/04/3029893-poster-p-wearable-kid.jpg','','','')
-        if xbmc.getCondVisibility('Skin.String(LiveTVHomeItem.Disable)'):
-            addDir('','Enable Live TV','Skin.SetString(LiveTVHomeItem.Disable,)','exec_xbmc','http://www.fci-wardrobes.co.uk/site-assets/import/Presotto/dama-tv-3.jpg','','','')
-        if xbmc.getCondVisibility('Skin.String(MovieHomeItem.Disable)'):
-            addDir('','Enable Movies','Skin.SetString(MovieHomeItem.Disable,)','exec_xbmc','https://i.ytimg.com/vi/mohrB3ZDqu4/maxresdefault.jpg','','','')
-        if xbmc.getCondVisibility('Skin.String(MusicHomeItem.Disable)'):
-            addDir('','Enable Music','Skin.SetString(MusicHomeItem.Disable,)','exec_xbmc','http://cienciaetecnologias.com/wp-content/uploads/2013/07/efeito-mozart-musica-inteligencia.jpg','','','')
-        if xbmc.getCondVisibility('Skin.String(ProgramsHomeItem.Disable)'):
-            addDir('','Enable News','Skin.SetString(ProgramsHomeItem.Disable,)','exec_xbmc','http://cdn.abclocal.go.com/content/kfsn/images/cms/26184_1280x720.jpg','','','')
-        if xbmc.getCondVisibility('Skin.String(VideosHomeItem.Disable)'):
-            addDir('','Enable Sports','Skin.SetString(VideosHomeItem.Disable,)','exec_xbmc','http://theartmad.com/wp-content/uploads/2015/08/Different-Sports-Wallpaper-4.jpg','','','')
-        if xbmc.getCondVisibility('Skin.String(Custom2HomeItem.Disable)'):
-            addDir('','Enable Technology','Skin.SetString(Custom2HomeItem.Disable,)','exec_xbmc','http://hpwallpaperku.com/wp-content/uploads/2016/01/Technology-Wallpaper.jpg','','','')
-        if xbmc.getCondVisibility('Skin.String(WeatherHomeItem.Disable)'):
-            addDir('','Enable Travel','Skin.SetString(WeatherHomeItem.Disable,)','exec_xbmc','http://www.travelafghanistan.co.uk/wp-content/uploads/2015/09/jour87ix9aoikm1zpjct.jpg','','','')
-        if xbmc.getCondVisibility('Skin.String(TVShowHomeItem.Disable)'):
-            addDir('','Enable TV Shows','Skin.SetString(TVShowHomeItem.Disable,)','exec_xbmc','http://cd8ba0b44a15c10065fd-24461f391e20b7336331d5789078af53.r23.cf1.rackcdn.com/plex.vanillacommunity.com/ipb/monthly_11_2010/post-25236-048502800%201289080759.jpg','','','')
-        if xbmc.getCondVisibility('Skin.String(PicturesHomeItem.Disable)'):
-            addDir('','Enable World','Skin.SetString(PicturesHomeItem.Disable,)','exec_xbmc','http://cdn.bulbagarden.net/upload/6/68/PokemonWorldAnime.png','','','')
-        if xbmc.getCondVisibility('Skin.String(ShutdownHomeItem.Disable)'):
-            addDir('','Enable YouTube','Skin.SetString(ShutdownHomeItem.Disable,)','exec_xbmc','https://i.ytimg.com/vi/s5y-4EpmfRQ/maxresdefault.jpg','','','')
-        if xbmc.getCondVisibility('Skin.String(MusicVideoHomeItem.Disable)'):
-            addDir('','Enable XXX','Skin.SetString(MusicVideoHomeItem.Disable,)','exec_xbmc','http://celebmafia.com/wp-content/uploads/2015/11/bella-thorne-photoshoot-for-glamour-magazine-mexico-december-2015-_1.jpg','','','')
+        urlparams = URL_Params()
+        menu_options = Open_URL2('http://tlbb.me/boxer/my_details.php?x=%s&m=1' % encryptme('e', urlparams))
+        menu_options = encryptme('d', menu_options)
+        xbmc.log('return: %s' % menu_options)
+        if xbmc.getCondVisibility('Skin.String(Custom6HomeItem.Disable)') and 'comedy' in menu_options:
+            addDir('','Enable Comedy','Skin.SetString(Custom6HomeItem.Disable,)','exec_xbmc','special://home/media/branding/backgrounds/HOME_COMEDY/HOME_COMEDY_001.jpg','','','')
+        if xbmc.getCondVisibility('Skin.String(Custom3HomeItem.Disable)') and 'cooking' in menu_options:
+            addDir('','Enable Cooking','Skin.SetString(Custom3HomeItem.Disable,)','exec_xbmc','special://home/media/branding/backgrounds/HOME_COOKING/HOME_COOKING_001.jpg','','','')
+        if xbmc.getCondVisibility('Skin.String(Custom4HomeItem.Disable)') and 'fitness' in menu_options:
+            addDir('','Enable Fitness','Skin.SetString(Custom4HomeItem.Disable,)','exec_xbmc','special://home/media/branding/backgrounds/HOME_FITNESS/HOME_FITNESS_001.jpg','','','')
+        if xbmc.getCondVisibility('Skin.String(Custom5HomeItem.Disable)') and 'gaming' in menu_options:
+            addDir('','Enable Gaming','Skin.SetString(Custom5HomeItem.Disable,)','exec_xbmc','special://home/media/branding/backgrounds/HOME_GAMING/HOME_GAMING_001.jpg','','','')
+        if xbmc.getCondVisibility('Skin.String(FavoritesHomeItem.Disable)') and 'kids' in menu_options:
+            addDir('','Enable Kids','Skin.SetString(FavoritesHomeItem.Disable,)','exec_xbmc','special://home/media/branding/backgrounds/HOME_KIDS/HOME_KIDS_001.jpg','','','')
+        if xbmc.getCondVisibility('Skin.String(LiveTVHomeItem.Disable)') and 'livetv' in menu_options:
+            addDir('','Enable Live TV','Skin.SetString(LiveTVHomeItem.Disable,)','exec_xbmc','special://home/media/branding/backgrounds/HOME_LIVE_TV/HOME_LIVE_TV_001.jpg','','','')
+        if xbmc.getCondVisibility('Skin.String(MovieHomeItem.Disable)') and 'movies' in menu_options:
+            addDir('','Enable Movies','Skin.SetString(MovieHomeItem.Disable,)','exec_xbmc','special://home/media/branding/backgrounds/HOME_MOVIES/HOME_MOVIES_001.jpg','','','')
+        if xbmc.getCondVisibility('Skin.String(MusicHomeItem.Disable)') and 'music' in menu_options:
+            addDir('','Enable Music','Skin.SetString(MusicHomeItem.Disable,)','exec_xbmc','special://home/media/branding/backgrounds/HOME_MUSIC/HOME_MUSIC_001.jpg','','','')
+        if xbmc.getCondVisibility('Skin.String(ProgramsHomeItem.Disable)') and 'news' in menu_options:
+            addDir('','Enable News','Skin.SetString(ProgramsHomeItem.Disable,)','exec_xbmc','special://home/media/branding/backgrounds/HOME_NEWS/HOME_NEWS_001.jpg','','','')
+        if xbmc.getCondVisibility('Skin.String(VideosHomeItem.Disable)') and 'sports' in menu_options:
+            addDir('','Enable Sports','Skin.SetString(VideosHomeItem.Disable,)','exec_xbmc','special://home/media/branding/backgrounds/HOME_SPORTS/HOME_SPORTS_001.jpg','','','')
+        if xbmc.getCondVisibility('Skin.String(Custom2HomeItem.Disable)') and 'technology' in menu_options:
+            addDir('','Enable Technology','Skin.SetString(Custom2HomeItem.Disable,)','exec_xbmc','special://home/media/branding/backgrounds/HOME_TECHNOLOGY/HOME_TECHNOLOGY_001.jpg','','','')
+        if xbmc.getCondVisibility('Skin.String(WeatherHomeItem.Disable)') and 'travel' in menu_options:
+            addDir('','Enable Travel','Skin.SetString(WeatherHomeItem.Disable,)','exec_xbmc','special://home/media/branding/backgrounds/HOME_TRAVEL/HOME_TRAVEL_001.jpg','','','')
+        if xbmc.getCondVisibility('Skin.String(TVShowHomeItem.Disable)') and 'tvshows' in menu_options:
+            addDir('','Enable TV Shows','Skin.SetString(TVShowHomeItem.Disable,)','exec_xbmc','special://home/media/branding/backgrounds/HOME_TV_SHOWS/HOME_TV_SHOWS_001.jpg','','','')
+        if xbmc.getCondVisibility('Skin.String(PicturesHomeItem.Disable)') and 'world' in menu_options:
+            addDir('','Enable World','Skin.SetString(PicturesHomeItem.Disable,)','exec_xbmc','special://home/media/branding/backgrounds/HOME_WORLD/HOME_WORLD_001.jpg','','','')
+        if xbmc.getCondVisibility('Skin.String(ShutdownHomeItem.Disable)') and 'youtube' in menu_options:
+            addDir('','Enable YouTube','Skin.SetString(ShutdownHomeItem.Disable,)','exec_xbmc','special://home/media/branding/backgrounds/HOME_YOUTUBE/HOME_YOUTUBE_001.jpg','','','')
+        if xbmc.getCondVisibility('Skin.String(MusicVideoHomeItem.Disable)') and 'xxx' in menu_options:
+            addDir('','Enable XXX','Skin.SetString(MusicVideoHomeItem.Disable,)','exec_xbmc','special://home/media/branding/backgrounds/HOME_XXX/HOME_XXX_001.jpg','','','')
     if menumode == 'remove':
         if not xbmc.getCondVisibility('Skin.String(Custom6HomeItem.Disable)'):
-            addDir('','Disable Comedy','Skin.SetString(Custom6HomeItem.Disable,True)','exec_xbmc','https://i.ytimg.com/vi/zZ_mFOG1H-o/maxresdefault.jpg','','','')
+            addDir('','Disable Comedy','Skin.SetString(Custom6HomeItem.Disable,True)','exec_xbmc','special://home/media/branding/backgrounds/HOME_COMEDY/HOME_COMEDY_001.jpg','','','')
         if not xbmc.getCondVisibility('Skin.String(Custom3HomeItem.Disable)'):
-            addDir('','Disable Cooking','Skin.SetString(Custom3HomeItem.Disable,True)','exec_xbmc','http://videos2.healthination.com/HN_BB_05_EasyCooking_ProRes_739/HN_BB_05_EasyCooking_ProRes_739-img_1280x720.jpg','','','')
+            addDir('','Disable Cooking','Skin.SetString(Custom3HomeItem.Disable,True)','exec_xbmc','special://home/media/branding/backgrounds/HOME_COOKING/HOME_COOKING_001.jpg','','','')
         if not xbmc.getCondVisibility('Skin.String(Custom4HomeItem.Disable)'):
-            addDir('','Disable Fitness','Skin.SetString(Custom4HomeItem.Disable,True)','exec_xbmc','http://www.fourseasons.com/content/dam/fourseasons/images/web/VGS/VGS_342_aspect16x9.jpg/jcr:content/renditions/cq5dam.web.1280.1280.jpeg','','','')
+            addDir('','Disable Fitness','Skin.SetString(Custom4HomeItem.Disable,True)','exec_xbmc','special://home/media/branding/backgrounds/HOME_FITNESS/HOME_FITNESS_001.jpg','','','')
         if not xbmc.getCondVisibility('Skin.String(Custom5HomeItem.Disable)'):
-            addDir('','Disable Gaming','Skin.SetString(Custom5HomeItem.Disable,True)','exec_xbmc','https://cdn2.vox-cdn.com/thumbor/ez8SzxLVWcfCqRlgOdfWsh6lfRc=/0x0:1920x1080/1280x720/cdn0.vox-cdn.com/uploads/chorus_image/image/47030516/youtube-gaming-end-screen_1920.0.0.png','','','')
+            addDir('','Disable Gaming','Skin.SetString(Custom5HomeItem.Disable,True)','exec_xbmc','special://home/media/branding/backgrounds/HOME_GAMING/HOME_GAMING_001.jpg','','','')
         if not xbmc.getCondVisibility('Skin.String(FavoritesHomeItem.Disable)'):
-            addDir('','Disable Kids','Skin.SetString(FavoritesHomeItem.Disable,True)','exec_xbmc','http://b.fastcompany.net/multisite_files/fastcompany/imagecache/1280/poster/2014/04/3029893-poster-p-wearable-kid.jpg','','','')
+            addDir('','Disable Kids','Skin.SetString(FavoritesHomeItem.Disable,True)','exec_xbmc','special://home/media/branding/backgrounds/HOME_KIDS/HOME_KIDS_001.jpg','','','')
         if not xbmc.getCondVisibility('Skin.String(LiveTVHomeItem.Disable)'):
-            addDir('','Disable Live TV','Skin.SetString(LiveTVHomeItem.Disable,True)','exec_xbmc','http://www.fci-wardrobes.co.uk/site-assets/import/Presotto/dama-tv-3.jpg','','','')
+            addDir('','Disable Live TV','Skin.SetString(LiveTVHomeItem.Disable,True)','exec_xbmc','special://home/media/branding/backgrounds/HOME_LIVE_TV/HOME_LIVE_TV_001.jpg','','','')
         if not xbmc.getCondVisibility('Skin.String(MovieHomeItem.Disable)'):
-            addDir('','Disable Movies','Skin.SetString(MovieHomeItem.Disable,True)','exec_xbmc','https://i.ytimg.com/vi/mohrB3ZDqu4/maxresdefault.jpg','','','')
+            addDir('','Disable Movies','Skin.SetString(MovieHomeItem.Disable,True)','exec_xbmc','special://home/media/branding/backgrounds/HOME_MOVIES/HOME_MOVIES_001.jpg','','','')
         if not xbmc.getCondVisibility('Skin.String(MusicHomeItem.Disable)'):
-            addDir('','Disable Music','Skin.SetString(MusicHomeItem.Disable,True)','exec_xbmc','http://cienciaetecnologias.com/wp-content/uploads/2013/07/efeito-mozart-musica-inteligencia.jpg','','','')
+            addDir('','Disable Music','Skin.SetString(MusicHomeItem.Disable,True)','exec_xbmc','special://home/media/branding/backgrounds/HOME_MUSIC/HOME_MUSIC_001.jpg','','','')
         if not xbmc.getCondVisibility('Skin.String(ProgramsHomeItem.Disable)'):
-            addDir('','Disable News','Skin.SetString(ProgramsHomeItem.Disable,True)','exec_xbmc','http://cdn.abclocal.go.com/content/kfsn/images/cms/26184_1280x720.jpg','','','')
+            addDir('','Disable News','Skin.SetString(ProgramsHomeItem.Disable,True)','exec_xbmc','special://home/media/branding/backgrounds/HOME_NEWS/HOME_NEWS_001.jpg','','','')
         if not xbmc.getCondVisibility('Skin.String(VideosHomeItem.Disable)'):
-            addDir('','Disable Sports','Skin.SetString(VideosHomeItem.Disable,True)','exec_xbmc','http://theartmad.com/wp-content/uploads/2015/08/Different-Sports-Wallpaper-4.jpg','','','')
+            addDir('','Disable Sports','Skin.SetString(VideosHomeItem.Disable,True)','exec_xbmc','special://home/media/branding/backgrounds/HOME_SPORTS/HOME_SPORTS_001.jpg','','','')
         if not xbmc.getCondVisibility('Skin.String(Custom2HomeItem.Disable)'):
-            addDir('','Disable Technology','Skin.SetString(Custom2HomeItem.Disable,True)','exec_xbmc','http://hpwallpaperku.com/wp-content/uploads/2016/01/Technology-Wallpaper.jpg','','','')
+            addDir('','Disable Technology','Skin.SetString(Custom2HomeItem.Disable,True)','exec_xbmc','special://home/media/branding/backgrounds/HOME_TECHNOLOGY/HOME_TECHNOLOGY_001.jpg','','','')
         if not xbmc.getCondVisibility('Skin.String(WeatherHomeItem.Disable)'):
-            addDir('','Disable Travel','Skin.SetString(WeatherHomeItem.Disable,True)','exec_xbmc','http://www.travelafghanistan.co.uk/wp-content/uploads/2015/09/jour87ix9aoikm1zpjct.jpg','','','')
+            addDir('','Disable Travel','Skin.SetString(WeatherHomeItem.Disable,True)','exec_xbmc','special://home/media/branding/backgrounds/HOME_TRAVEL/HOME_TRAVEL_001.jpg','','','')
         if not xbmc.getCondVisibility('Skin.String(TVShowHomeItem.Disable)'):
-            addDir('','Disable TV Shows','Skin.SetString(TVShowHomeItem.Disable,True)','exec_xbmc','http://cd8ba0b44a15c10065fd-24461f391e20b7336331d5789078af53.r23.cf1.rackcdn.com/plex.vanillacommunity.com/ipb/monthly_11_2010/post-25236-048502800%201289080759.jpg','','','')
+            addDir('','Disable TV Shows','Skin.SetString(TVShowHomeItem.Disable,True)','exec_xbmc','special://home/media/branding/backgrounds/HOME_TV_SHOWS/HOME_TV_SHOWS_001.jpg','','','')
         if not xbmc.getCondVisibility('Skin.String(PicturesHomeItem.Disable)'):
-            addDir('','Disable World','Skin.SetString(PicturesHomeItem.Disable,True)','exec_xbmc','http://cdn.bulbagarden.net/upload/6/68/PokemonWorldAnime.png','','','')
+            addDir('','Disable World','Skin.SetString(PicturesHomeItem.Disable,True)','exec_xbmc','special://home/media/branding/backgrounds/HOME_WORLD/HOME_WORLD_001.jpg','','','')
         if not xbmc.getCondVisibility('Skin.String(ShutdownHomeItem.Disable)'):
-            addDir('','Disable YouTube','Skin.SetString(ShutdownHomeItem.Disable,True)','exec_xbmc','https://i.ytimg.com/vi/s5y-4EpmfRQ/maxresdefault.jpg','','','')
+            addDir('','Disable YouTube','Skin.SetString(ShutdownHomeItem.Disable,True)','exec_xbmc','special://home/media/branding/backgrounds/HOME_YOUTUBE/HOME_YOUTUBE_001.jpg','','','')
         if not xbmc.getCondVisibility('Skin.String(MusicVideoHomeItem.Disable)'):
-            addDir('','Disable XXX','Skin.SetString(MusicVideoHomeItem.Disable,True)','exec_xbmc','http://celebmafia.com/wp-content/uploads/2015/11/bella-thorne-photoshoot-for-glamour-magazine-mexico-december-2015-_1.jpg','','','')
+            addDir('','Disable XXX','Skin.SetString(MusicVideoHomeItem.Disable,True)','exec_xbmc','special://home/media/branding/backgrounds/HOME_XXX/HOME_XXX_001.jpg','','','')
 #---------------------------------------------------------------------------------------------------
 # Function to move a directory to another location, use 1 for clean paramater if you want to remove original source.
 def Move_Tree(src,dst,clean):
+    xbmc.log('SOURCE TO MOVE: %s'%src)
     for src_dir, dirs, files in os.walk(src):
         dst_dir = src_dir.replace(src, dst, 1)
         if not os.path.exists(dst_dir):
+            xbmc.log('Creating path: %s'% dst_dir)
             os.makedirs(dst_dir)
         for file_ in files:
             src_file = os.path.join(src_dir, file_)
@@ -1416,11 +1473,13 @@ def Move_Tree(src,dst,clean):
             if os.path.exists(dst_file):
                 os.remove(dst_file)
             shutil.move(src_file, dst_dir)
-    if clean == 1:
+            xbmc.log('moved: %s to %s'% (src_file, dst_dir))
+    if clean:
         try:
             shutil.rmtree(src)
+            xbmc.log('Successfully removed %s'% src)
         except:
-            pass
+            xbmc.log('Failed to remove %s'% src)
 #---------------------------------------------------------------------------------------------------
 # Multiselect Dialog - try the built-in multiselect or fallback to pre-jarvis workaround
 def multidialog(title, mylist, images, description):
@@ -1564,6 +1623,27 @@ def Install_Venz_Menu(function):
             Notify('No Response from server','Sorry Please try later','1000',os.path.join(ADDONS,'plugin.program.tbs','resources','cross.png'))
     else:
         dialog.ok('FAULT DETECTED', 'It was not possible to obtain your MAC address details, please check your wifi and ethernet modules are enabled.')    
+#-----------------------------------------------------------------------------------------------------------------    
+# Remove a path, whether folder or file it will be deleted
+def Remove_Files():
+    xbmc.log('### Attempting to Remove Files')
+    if os.path.exists(remlist):
+        readfile = open(remlist,'r')
+        content  = readfile.read().splitlines()
+        readfile.close()
+        for item in content:
+            rempath = xbmc.translatePath('special://home')+item
+            if os.path.exists(rempath):
+                try:
+                    os.remove(rempath)
+                    xbmc.log('### Successfully removed file: %s' % rempath)
+                except:
+                    try:
+                        shutil.rmtree(rempath)
+                        xbmc.log('### Successfully removed folder: %s' % rempath)
+                    except:
+                        xbmc.log("### Failed to remove: %s" %rempath)
+        os.remove(remlist)
 #---------------------------------------------------------------------------------------------------
 # Remove an item from the system
 def Remove_Menu(function, menutype = ''):
@@ -1752,7 +1832,10 @@ def Hide_Passwords():
 #---------------------------------------------------------------------------------------------------
 # Menu to install content via the TR add-on
 def Install_Content(url):
-#    addDir('folder','Search For Content','','search_content', 'Search_Addons.png','','','')
+    if ADDON.getSetting('master') == 'true':
+        addDir('','[COLOR=gold]WARNING: YOU ARE IN MASTER MODE[/COLOR]','','disable_master', '','','','')
+    if ADDON.getSetting('userid') != '':
+        addDir('','[COLOR=lime]USER ID: [/COLOR]%s' % encryptme('d',userid),'','change_id', '','','','')
     addDir('','[COLOR=dodgerblue]Check For Updates[/COLOR]','http://tlbb.me/comm.php?z=c&x=', 'grab_updates', '','','','')
     addDir('','Install A Keyword', '', 'keywords', 'Keywords.png','','','')
     addDir('','Install From Zip','','install_from_zip','','','','')
@@ -1805,8 +1888,25 @@ def Keyword_Search():
     if keyword == 'testoff':
         ADDON.setSetting('debug','false')
         return
+    if keyword == 'masteron':
+        ADDON.setSetting('master','true')
+        xbmc.executebuiltin('Container.Refresh')
+        return
+    if keyword == 'masteroff':
+        ADDON.setSetting('master','false')
+        xbmc.executebuiltin('Container.Refresh')
+        return
+    if keyword == 'uidoff':
+        ADDON.setSetting('userid','')
+        xbmc.executebuiltin('Container.Refresh')
+        return
+    if keyword.startswith('uid'):
+        idsetting = keyword.replace('uid','')
+        ADDON.setSetting('userid', encryptme('e',idsetting))
+        xbmc.executebuiltin('Container.Refresh')
+        return
     else:
-        url='http://urlshortbot.com/venztech'
+        url='http://urlshortbot.com/totalrevolution'
         if os.path.exists(KEYWORD_FILE):
             url  = Text_File(KEYWORD_FILE,'r')
         downloadurl = url+keyword
@@ -1844,12 +1944,13 @@ def Keyword_Search():
                 if zipfile.is_zipfile(lib):
                 
                     try:
-                        if 'venztech' in url:
-                            extract.all(lib,'/storage',dp)
-                        else:
-                            extract.all(lib,HOME,dp)
+                        extract.all(lib,HOME,dp)
                         xbmc.executebuiltin('UpdateLocalAddons')
                         xbmc.executebuiltin( 'UpdateAddonRepos' )
+                        if xbmc.getCondVisibility('System.Platform.Android'):
+                            xbmc.log('### System is android, checking apk installs')
+                            APK_Install_Loop()
+                            APK_Data_Install()
                         dialog.ok("Web Installer", "","Content now installed", "")
                         dp.close()
                 
@@ -1879,185 +1980,10 @@ def Keyword_Search():
 # Force close Kodi
 def Kill_XBMC(wipedb = ''):
     os._exit(1)
-#     dbfolder = xbmc.translatePath(os.path.join(USERDATA, 'Database'))
-#     if not os.path.exists(scriptfolder):
-#         os.makedirs(scriptfolder)
-#     xbmc_version=xbmc.getInfoLabel("System.BuildVersion")
-#     version=float(xbmc_version[:4])
-#     if xbmc.getCondVisibility('system.platform.windows'):
-#         if version < 14:
-#             try:
-#                 writefile = open(os.path.join(scriptfolder,'win_xbmc.bat'), 'w+')
-#                 writefile.write('@ECHO off\nTASKKILL /im XBMC.exe /f\ntskill XBMC.exe\nXBMC.exe')
-#                 writefile.close()
-#                 os.system(os.path.join(scriptfolder,'win_xbmc.bat'))
-#             except:
-#                 xbmc.log("### Failed to run win_xbmc.bat")
-#         else:
-#             try:
-#                 writefile = open(os.path.join(scriptfolder,'win_kodi.bat'), 'w+')
-#                 if wipedb == 'wipe':
-#                     writefile.write('@ECHO off\nTASKKILL /im Kodi.exe /f\necho ----------------------------------------------------------\necho IN ORDER TO FULLY CLEANSE YOUR KODI INSTALL YOU NEED TO WIPE YOUR KODI DATABASE FILES.\necho IF YOU\'RE HAPPY TO PROCEED WITH THIS ACTION PRESS "Y" FOLLOWED BY "ENTER".\necho ----------------------------------------------------------\necho DELETE:\ndel %s\nKodi.exe\nclose' % (os.path.join(dbfolder,'*.*')))
-#                 else:
-#                     writefile.write('@ECHO off\nTASKKILL /im Kodi.exe /f\nKodi.exe\nclose')
-#                 writefile.close()
-#                 os.system(os.path.join(scriptfolder,'win_kodi.bat'))
-#             except:
-#                 xbmc.log("### Failed to run win_kodi.bat")
-#     elif xbmc.getCondVisibility('system.platform.osx'):
-#         if version < 14:
-#             try:
-#                 writefile = open(os.path.join(scriptfolder,'osx_xbmc.sh'), 'w+')
-#                 writefile.write('killall -9 XBMC\nXBMC')
-#                 writefile.close()
-#             except:
-#                 pass
-#             try:
-#                 os.system('chmod 755 '+os.path.join(scriptfolder,'osx_xbmc.sh'))
-#             except:
-#                 pass
-#             try:
-#                 os.system(os.path.join(scriptfolder,'osx_xbmc.sh'))
-#             except:
-#                 xbmc.log("### Failed to run osx_xbmc.sh")
-#         else:
-#             try:
-#                 writefile = open(os.path.join(scriptfolder,'osx_kodi.sh'), 'w+')
-#                 writefile.write('killall -9 Kodi\nKodi')
-#                 writefile.close()
-#             except:
-#                 pass
-#             try:
-#                 os.system('chmod 755 '+os.path.join(scriptfolder,'osx_kodi.sh'))
-#             except:
-#                 pass
-#             try:
-#                 os.system(os.path.join(scriptfolder,'osx_kodi.sh'))
-#             except:
-#                 xbmc.log("### Failed to run osx_kodi.sh")
-# #    else:
-#     elif xbmc.getCondVisibility('system.platform.android'):
-#         if os.path.exists('/data/data/com.rechild.advancedtaskkiller'):
-#             dialog.ok('Attempting to force close','On the following screen please press the big button at the top which says "KILL selected apps". Kodi will restart, please be patient while your system updates the necessary files and your skin will automatically switch once fully updated.')
-#             try:
-#                 xbmc.executebuiltin('StartAndroidActivity(com.rechild.advancedtaskkiller)')
-#             except:
-#                 xbmc.log("### Failed to run Advanced Task Killer. Make sure you have it installed, you can download from https://archive.org/download/com.rechild.advancedtaskkiller/com.rechild.advancedtaskkiller.apk")
-#         else:
-#             dialog.ok('Advanced Task Killer Not Found',"The Advanced Task Killer app cannot be found on this system. Please make sure you actually installed it after downloading. We can't do everything for you - on Android you do have to physically click on the download to install an app.")
-#         try:
-#             os.system('adb shell am force-stop org.xbmc.kodi')
-#         except:
-#             pass
-#         try:
-#             os.system('adb shell am force-stop org.kodi')
-#         except:
-#             pass
-#         try:
-#             os.system('adb shell am force-stop org.xbmc.xbmc')
-#         except:
-#             pass
-#         try:
-#             os.system('adb shell am force-stop org.xbmc')
-#         except:
-#             pass
-#         try:
-#             os.system('adb shell kill org.xbmc.kodi')
-#         except:
-#             pass
-#         try:
-#             os.system('adb shell kill org.kodi')
-#         except:
-#             pass
-#         try:
-#             os.system('adb shell kill org.xbmc.xbmc')
-#         except:
-#             pass
-#         try:
-#             os.system('adb shell kill org.xbmc')
-#         except:
-#             pass
-#         try:
-#             os.system('Process.killProcess(android.os.Process.org.xbmc,kodi());')
-#         except:
-#             pass
-#         try:
-#             os.system('Process.killProcess(android.os.Process.org.kodi());')
-#         except:
-#             pass
-#         try:
-#             os.system('Process.killProcess(android.os.Process.org.xbmc.xbmc());')
-#         except:
-#             pass
-#         try:
-#             os.system('Process.killProcess(android.os.Process.org.xbmc());')
-#         except:
-#             pass
-#     elif xbmc.getCondVisibility('system.platform.linux'):
-#         if version < 14:
-#             try:
-#                 writefile = open(os.path.join(scriptfolder,'linux_xbmc'), 'w+')
-#                 writefile.write('killall XBMC\nkillall -9 xbmc.bin\nXBMC')
-#                 writefile.close()
-#             except:
-#                 pass
-#             try:
-#                 os.system('chmod a+x '+os.path.join(scriptfolder,'linux_xbmc'))
-#             except:
-#                 pass
-#             try:
-#                 os.system(os.path.join(scriptfolder,'linux_xbmc'))
-#             except:
-#                 print "### Failed to run: linux_xbmc"
-#         else:
-#             try:
-#                 writefile = open(os.path.join(scriptfolder,'linux_kodi'), 'w+')
-#                 writefile.write('killall Kodi\nkillall -9 kodi.bin\nkodi')
-#                 writefile.close()
-#             except:
-#                 pass
-#             try:
-#                 os.system('chmod a+x '+os.path.join(scriptfolder,'linux_kodi'))
-#             except:
-#                 pass
-#             try:
-#                 os.system(os.path.join(scriptfolder,'linux_kodi'))
-#             except:
-#                 print "### Failed to run: linux_kodi"
-#     else: #ATV and OSMC
-#         try:
-#             os.system('killall AppleTV')
-#         except:
-#             pass
-#         try:
-#             os.system('sudo initctl stop kodi')
-#         except:
-#             pass
-#         try:
-#             os.system('sudo initctl stop xbmc')
-#         except:
-#             pass
 #---------------------------------------------------------------------------------------------------
 # Open Kodi Settings
 def Kodi_Settings():
     xbmc.executebuiltin('ReplaceWindow(settings)')
-#---------------------------------------------------------------------------------------------------
-# Grab contents of the log
-def Grab_Log():
-    finalfile = 0
-    logfilepath = os.listdir(log_path)
-    for item in logfilepath:
-        if item.endswith('.log') and not item.endswith('.old.log'):
-            mylog        = os.path.join(log_path,item)
-            lastmodified = os.path.getmtime(mylog)
-            if lastmodified>finalfile:
-                finalfile = lastmodified
-                logfile   = mylog
-    
-    filename    = open(logfile, 'r')
-    logtext     = filename.read()
-    filename.close()
-    return logtext
 #---------------------------------------------------------------------------------------------------
 # View the log from within Kodi
 def Log_Viewer():
@@ -2284,12 +2210,12 @@ def Remove_Addons(url):
         Clean_Addons()
 # Need to create function to wipe relevant bits from db
 #        Cleanup_Old_Addons()
-        dialog.ok('REMOVAL COMPLETE','The addons database file now needs purging, to do so we need to restart. If prompted please agree to the deletion otherwise your add-ons may still appear in Kodi even if they don\'t physically exist.')
+        dialog.ok('REMOVAL COMPLETE','The addons database file now needs purging, to do so we need to restart. If prompted please agree to the deletion otherwise your add-ons may still appear even if they don\'t physically exist.')
         Kill_XBMC('wipe')
 #---------------------------------------------------------------------------------------------------
 # Function to clear the packages folder
 def Remove_Crash_Logs():
-    if dialog.yesno('Remove All Crash Logs?', 'There is absolutely no harm in doing this, these are log files generated when Kodi crashes and are only used for debugging purposes.', nolabel='Cancel',yeslabel='Delete'):
+    if dialog.yesno('Remove All Crash Logs?', 'There is absolutely no harm in doing this, these are log files generated when the system crashes and are only used for debugging purposes.', nolabel='Cancel',yeslabel='Delete'):
         Delete_Logs()
         dialog.ok("Crash Logs Removed", '', 'Your crash log files have now been removed.','')
 #---------------------------------------------------------------------------------------------------
@@ -2306,7 +2232,7 @@ def Remove_Textures_Dialog():
         Remove_Textures()
         Destroy_Path(THUMBNAILS)
         
-        if dialog.yesno('Quit Kodi Now?', 'Cache has been successfully deleted.', 'You must now restart Kodi, would you like to quit now?','', nolabel='I\'ll restart later',yeslabel='Yes, quit'):
+        if dialog.yesno('Quit Kodi Now?', 'Cache has been successfully deleted.', 'You must now restart, would you like to quit now?','', nolabel='I\'ll restart later',yeslabel='Yes, quit'):
             try:
                 xbmc.executebuiltin("RestartApp")
             except:
@@ -2335,6 +2261,22 @@ def Remove_Textures():
         dbcon.commit()
     except:
         pass
+#---------------------------------------------------------------------------------------------------
+# Remove all underscores from directories in a particular folder
+def Remove_Underscores():
+    if dialog.yesno('WARNING!!!','Use this with extreme care, you could break your setup with this option. This is for advanced users ONLY, it will allow you to scan a folder for any items containing underscores and will automatically rename them. Do you want to continue?'):
+        sourcefile   = dialog.browse(3, 'Select the folder to scan', 'files', '', False, False)
+        xbmc.log('### Removing underscores from all folders in: %s' % sourcefile)
+        for item in os.listdir(sourcefile):
+            # if item.endswith('_') or item.endswith(' '):
+            #     item = item[:-1]
+            path    = os.path.join(sourcefile,item)
+            newpath = os.path.join(sourcefile,item.replace('_',' '))
+            try:
+                os.rename(path,newpath)
+                xbmc.log('### Successfully renamed to: %s' % newpath)
+            except:
+                xbmc.log('### Failed to rename: %s' % path)
 #---------------------------------------------------------------------------------------------------
 # Function to restore a backup xml file (guisettings, sources, RSS)
 def Restore_Backup_XML(name,url,description):
@@ -2469,7 +2411,7 @@ def Restore_Zip_File(url):
         xbmc.executebuiltin("UpdateAddonRepos")        
 
         if 'Backup' in url:
-            dialog.ok("Install Complete", 'Kodi will now close. Just re-open Kodi and wait for all the updates to complete.')
+            dialog.ok("Install Complete", 'The system will now close. When you restart please wait for all the updates to complete.')
             Kill_XBMC()
 
         else:
@@ -2478,6 +2420,15 @@ def Restore_Zip_File(url):
 # Basic function to run an add-on
 def Run_Addon(url):
     xbmc.executebuiltin('RunAddon('+url+')')
+#---------------------------------------------------------------------------------------------------
+# Return the current running Kodi app id
+def Running_App():
+    root_folder = xbmc.translatePath('special://xbmc')
+    root_folder = root_folder.split('/cache')[0]
+    root_folder = root_folder.split('/')
+    finalitem   = len(root_folder)-1
+    running     = root_folder[finalitem]
+    return running
 #---------------------------------------------------------------------------------------------------
 # Search text box (used in keyword search)
 def SEARCH(title):
@@ -2694,10 +2645,10 @@ def Timestamp():
 def Tools():
     addDir('folder','Add-on Tools','none','tools_addons','','','','')
     addDir('folder','Backup/Restore','none','backup_restore','','','','')
-    addDir('folder','Clean up my Kodi', '', 'tools_clean', '','','','')
+    addDir('folder','Clean up my system', '', 'tools_clean', '','','','')
     addDir('folder','Misc. Tools', '', 'tools_misc', '','','','')
     if OpenELEC_Check():
-        addDir('','[COLOR=dodgerblue]Wi-Fi / OpenELEC Settings[/COLOR]','', 'openelec_settings', '','','','')
+        addDir('','[COLOR=dodgerblue]Wi-Fi / System Settings[/COLOR]','', 'openelec_settings', '','','','')
 #-----------------------------------------------------------------------------------------------------------------
 # Add-on based tools
 def Tools_Addons():
@@ -2710,7 +2661,7 @@ def Tools_Addons():
 #-----------------------------------------------------------------------------------------------------------------
 # Clean Tools
 def Tools_Clean():
-    addDir('','[COLOR=gold]CLEAN MY KODI FOLDERS (Save Space)[/COLOR]', '', 'full_clean', '','','','')
+    addDir('','[COLOR=gold]CLEAN MY FOLDERS (Save Space)[/COLOR]', '', 'full_clean', '','','','')
     addDir('','Clear All Cache Folders','url','clear_cache','','','','')
     addDir('','Clear Cached Artwork (thumbnails & textures)', 'none', 'remove_textures', '','','','')
     addDir('','Clear Packages Folder','url','remove_packages','','','','')
@@ -2721,11 +2672,14 @@ def Tools_Clean():
 def Tools_Misc():
     addDir('','Check For Special Characters In Filenames','', 'ASCII_Check', '','','','')
     addDir('','Check My IP Address', 'none', 'ipcheck', '','','','')
-    addDir('','Check XBMC/Kodi Version', 'none', 'xbmcversion', '','','','')
+    addDir('','Check System Version', 'none', 'xbmcversion', '','','','')
     addDir('','Convert Physical Paths To Special',HOME,'fix_special','','','','')
-    addDir('','Force Close Kodi','','kill_xbmc','','','','')
+    addDir('','Force Close','','kill_xbmc','','','','')
+    addDir('','Remove Underscores From Folder Names','','remove_underscores', '','','','')
     addDir('','Upload Log','none','uploadlog', '','','','')
     addDir('','View My Log','none','log', '','','','')
+    addDir('','XXX - Hide my adult add-ons', 'false', 'adult_filter', '','','','')
+    addDir('','XXX - Show my adult add-ons', 'true', 'adult_filter', '','','','')
 #-----------------------------------------------------------------------------------------------------------------
 #Unhide passwords in addon settings - THANKS TO MIKEY1234 FOR THIS CODE (taken from Xunity Maintenance)
 def Unhide_Passwords():
@@ -2761,8 +2715,39 @@ def Update_Repo():
     xbmc.executebuiltin( 'UpdateAddonRepos' )    
     xbmcgui.Dialog().ok('Force Refresh Started Successfully', 'Depending on the speed of your device it could take a few minutes for the update to take effect.')
     return
+#---------------------------------------------------------------------------------------------------
+# Grab system info
+def URL_Params():
+    try:
+        wifimac = Get_Mac('wifi').rstrip().lstrip()
+    except:
+        wifimac = 'Unknown'
+    try:
+        ethmac  = Get_Mac('eth0').rstrip().lstrip()
+    except:
+        ethmac  = 'Unknown'
+    try:
+        cpu     = CPU_Check().rstrip().lstrip()
+    except:
+        cpu     = 'Unknown'
+    try:
+        build   = Build_Info().rstrip().lstrip()
+    except:
+        build   = 'Unknown'
+
+    if ethmac == 'Unknown' and wifimac != 'Unknown':
+        ethmac = wifimac
+    if ethmac != 'Unknown' and wifimac == 'Unknown':
+        wifimac = ethmac
+
+    if ethmac != 'Unknown' and wifimac != 'Unknown':
+        return (wifimac+'&'+cpu+'&'+build+'&'+ethmac).replace(' ','%20')
+        xbmc.log('### maintenance: '+(wifimac+'&'+cpu+'&'+build+'&'+ethmac).replace(' ','%20'))
+    else:
+        return 'Unknown'
+        xbmc.log("### BUILD:"+build)
 #-----------------------------------------------------------------------------------------------------------------
-# Thanks to Mikey1234 for some of these paths and also lambda for the clear cache option in genesis.
+# Wipe known cache locations
 def Wipe_Cache():
     PROFILE_ADDON_DATA = os.path.join(xbmc.translatePath(os.path.join('special://profile','addon_data')))
 
@@ -2819,50 +2804,49 @@ def Wipe_Cache():
     except:
         pass
 #-----------------------------------------------------------------------------------------------------------------
-# Function to clear the addon_data
+# Function to completely wipe kodi
 def Wipe_Kodi():
     stop = 0
     if dialog.yesno("ABSOLUTELY CERTAIN?!!!", 'Are you absolutely certain you want to wipe?', '', 'All addons and settings will be completely wiped!', yeslabel='YES, WIPE',nolabel='NO, STOP!'):
+        if Fresh_Install():
 # Check Confluence is running before doing a wipe
-        if skin!= "skin.confluence":
-            dialog.ok('Default Confluence Skin Required','Please switch to the default Confluence skin before performing a wipe.')
-            xbmc.executebuiltin("ActivateWindow(appearancesettings,return)")
-            return
-        else:
+            if skin!= "skin.confluence":
+                dialog.ok('Default Confluence Skin Required','Please switch to the default Confluence skin before performing a wipe.')
+                xbmc.executebuiltin("ActivateWindow(appearancesettings,return)")
+                return
+            else:
 # Give the option to do a full backup before wiping
-            if dialog.yesno("BACKUP EXISTING BUILD", 'Would you like to create a backup of your existing setup before proceeding?'):
-                if USB == '':
-                    dialog.ok('Please set your backup location before proceeding','You have not set your backup storage folder.\nPlease update the addon settings and try again.')
-                    ADDON.openSettings(sys.argv[0])
-                    if ADDON.getSetting('zip') == '' or not os.path.exists(ADDON.getSetting('zip')):
-                        stop = 1
-                        return
+                if dialog.yesno("BACKUP EXISTING BUILD", 'Would you like to create a backup of your existing setup before proceeding?'):
+                    if USB == '':
+                        dialog.ok('Please set your backup location before proceeding','You have not set your backup storage folder.\nPlease update the addon settings and try again.')
+                        ADDON.openSettings(sys.argv[0])
+                        if ADDON.getSetting('zip') == '' or not os.path.exists(ADDON.getSetting('zip')):
+                            stop = 1
+                            return
+                    if not stop:
+                        CBPATH       = ADDON.getSetting('zip')
+                        mybackuppath = os.path.join(CBPATH,'My_Builds')
+                        if not os.path.exists(mybackuppath):
+                            os.makedirs(mybackuppath)
+                        vq = Get_Keyboard( heading="Enter a name for this backup" )
+                        if ( not vq ): return False, 0
+                        title = urllib.quote_plus(vq)
+                        backup_zip = xbmc.translatePath(os.path.join(mybackuppath,title+'.zip'))
+                        exclude_dirs_full =  ['plugin.program.nan.maintenance','plugin.program.tbs']
+                        exclude_files_full = ["xbmc.log","xbmc.old.log","kodi.log","kodi.old.log",'.DS_Store','.setup_complete','XBMCHelper.conf','.gitignore']
+                        message_header = "Creating full backup of existing build"
+                        message1 = "Archiving..."
+                        message2 = ""
+                        message3 = "Please Wait"
+                        Archive_Tree(HOME, backup_zip, message_header, message1, message2, message3, exclude_dirs_full, exclude_files_full)
                 if not stop:
-                    CBPATH       = ADDON.getSetting('zip')
-                    mybackuppath = os.path.join(CBPATH,'My_Builds')
-                    if not os.path.exists(mybackuppath):
-                        os.makedirs(mybackuppath)
-                    vq = Get_Keyboard( heading="Enter a name for this backup" )
-                    if ( not vq ): return False, 0
-                    title = urllib.quote_plus(vq)
-                    backup_zip = xbmc.translatePath(os.path.join(mybackuppath,title+'.zip'))
-                    exclude_dirs_full =  ['plugin.program.nan.maintenance','plugin.program.tbs']
-                    exclude_files_full = ["xbmc.log","xbmc.old.log","kodi.log","kodi.old.log",'.DS_Store','.setup_complete','XBMCHelper.conf','.gitignore']
-                    message_header = "Creating full backup of existing build"
-                    message1 = "Archiving..."
-                    message2 = ""
-                    message3 = "Please Wait"
-                    Archive_Tree(HOME, backup_zip, message_header, message1, message2, message3, exclude_dirs_full, exclude_files_full)
-            if not stop:
-                keeprepos = dialog.yesno('DELETE REPOSITORIES?','Do you want to delete your repositories? Keeping bad repositories can be the cause of many problems, we recommend running Security Shield if you\'re in doubt.', yeslabel = 'KEEP REPOS', nolabel = 'DELETE REPOS')
-                Wipe_Home(EXCLUDES)
-                Wipe_Userdata()
-                Wipe_Addons(keeprepos)
-                Wipe_Addon_Data()
-                Wipe_Home2(EXCLUDES)
-                Kill_XBMC('wipe')
-    else:
-        return
+                    keeprepos = dialog.yesno('DELETE REPOSITORIES?','Do you want to delete your repositories? Keeping bad repositories can be the cause of many problems, we recommend running Security Shield if you\'re in doubt.', yeslabel = 'KEEP REPOS', nolabel = 'DELETE REPOS')
+                    Wipe_Home(EXCLUDES)
+                    Wipe_Userdata()
+                    Wipe_Addons(keeprepos)
+                    Wipe_Addon_Data()
+                    Wipe_Home2(EXCLUDES)
+                    Kill_XBMC('wipe')
 #-----------------------------------------------------------------------------------------------------------------
 # For loop to wipe files in special://home but leave ones in EXCLUDES untouched
 def Wipe_Home(excludefiles):
@@ -3045,12 +3029,19 @@ def DB_Open(db_path):
 #-----------------------------------------------------------------------------------------------------------------
 # Upload social share
 def Upload_Share():
+    userid         = ADDON.getSetting('userid')
     choice         = 0
+    master         = ADDON.getSetting('master')
+    master_share   = 0
     urlparams      = URL_Params()
     item           = sys.listitem.getLabel()
     item           = item.replace('[COLOR ]','').replace('[/COLOR]','')
     path           = xbmc.getInfoLabel('ListItem.FolderPath')
     path           = urllib.unquote(path)
+
+    if master == 'true':
+        master_share = 1
+
     if urlparams != 'Unknown':
         if debug == 'true':
             xbmc.log('### ORIG PATH: %s' % path)
@@ -3109,7 +3100,22 @@ def Upload_Share():
         except:
             cfg=''
 
-        
+
+        try:
+            cfgfile=open(os.path.join(fullpath,'folder.cfg'),'r')
+            cfg_raw = cfgfile.read().splitlines()
+            cfgfile.close()
+        except:
+            cfg_raw = ''
+
+        xbmc.log('### RAW CONFIG: %s'%cfg_raw)
+        SF_fanart = encryptme('e','None')
+        for line in cfg_raw:
+            if line.startswith('FANART='):
+                SF_fanart = line.replace('FANART=','').replace('\n','').replace('\t','').replace('\r','')
+                SF_fanart = encryptme('e',SF_fanart)
+        xbmc.log('### SF Fanart: %s' % SF_fanart)
+
         try:
             pluginname=xbmc.getInfoLabel('Container.PluginName')
             if debug == 'true':
@@ -3127,7 +3133,10 @@ def Upload_Share():
     #        if choice == 0 and quit != 1:
             elif quit != 1:
                 try:
-                    sendfaves = Open_URL2('http://tlbb.me/boxer/share_box.php?x=%s&z=gs&k=%s&c=%s&p=%s' % (encryptme('e',urlparams), encryptme('e',xml), encryptme('e',cfg), encryptme('e',newpath)))
+#                    oem = Open_URL2('http://tlbb.me/boxer/my_details.php').replace('\n','').replace('\t','').replace('\r','')
+                    if userid == '':
+                        userid = encryptme('e','None')
+                    sendfaves = Open_URL2('http://tlbb.me/boxer/share_box_new.php?x=%s&z=gs&k=%s&c=%s&p=%s&m=%s&i=%s&f=%s' % (encryptme('e',urlparams), encryptme('e',xml), encryptme('e',cfg), encryptme('e',newpath), master_share, userid, SF_fanart))
                     if 'success' in sendfaves:
                         dialog.ok('Content Submitted', 'Thank you for sharing with the community.[COLOR=dodgerblue]',item,'[/COLOR]has now been shared and is publicly available.')
                     elif 'no response' in sendfaves:
@@ -3198,19 +3207,23 @@ def Launch():
     #  writefile.close()
 
     if mode   == None                 : Categories()
-    elif mode == 'ASCII_Check'        : ASCII_Check()
     elif mode == 'addon_removal_menu' : Addon_Removal_Menu()
+    elif mode == 'adult_filter'       : Adult_Filter(url)
+    elif mode == 'ASCII_Check'        : ASCII_Check()
     elif mode == 'backup'             : BACKUP()
     elif mode == 'backup_restore'     : Backup_Restore()
     elif mode == 'backup_option'      : Backup_Option()
     elif mode == 'browse_repos'       : Browse_Repos()
+    elif mode == 'change_id'          : Change_ID()
     elif mode == 'check_shares'       : Check_My_Shares(url)
     elif mode == 'check_updates'      : Addon_Check_Updates()
     elif mode == 'clear_cache'        : Clear_Cache()
     elif mode == 'delete_path'        : Delete_Path(url)
+    elif mode == 'disable_master'     : Disable_Master()
     elif mode == 'fix_special'        : Fix_Special(url)
     elif mode == 'enable_shares'      : Enable_Shares(url)
     elif mode == 'exec_xbmc'          : Exec_XBMC(url)
+    elif mode == 'fresh_install'      : Fresh_Install()
     elif mode == 'full_clean'         : Full_Clean()
     elif mode == 'grab_updates'       : Grab_Updates(url)
     elif mode == 'gotham'             : Gotham_Confirm()
@@ -3241,6 +3254,7 @@ def Launch():
     elif mode == 'remove_crash_logs'  : Remove_Crash_Logs()
     elif mode == 'remove_packages'    : Remove_Packages()
     elif mode == 'remove_textures'    : Remove_Textures_Dialog()
+    elif mode == 'remove_underscores' : Remove_Underscores()
     elif mode == 'restore_backup'     : Restore_Backup_XML(video,url,description)
     elif mode == 'restore_option'     : Restore_Option()
     elif mode == 'restore_zip'        : Restore_Zip_File(url)         

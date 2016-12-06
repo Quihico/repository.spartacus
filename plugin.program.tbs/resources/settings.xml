@@ -17,5 +17,7 @@
 		<setting id="thirdparty" type="bool" default="false" visible="false"/>
 		<setting id="adult" type="bool" default="false" visible="false"/>
 		<setting id="debug" type="bool" default="false" visible="false"/>
+		<setting id="master" type="bool" default="false" visible="false"/>
+		<setting id="userid" type="text" default="" visible="false"/>
     </category>
 </settings>

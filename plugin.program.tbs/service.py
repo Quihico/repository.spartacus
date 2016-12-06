@@ -1,4 +1,12 @@
-import re, xbmcplugin, xbmcgui, xbmc, xbmcaddon, os, sys, time, default
+import default
+import xbmc
+import xbmcaddon
+import xbmcgui
+import xbmcplugin
+import os
+import re
+import sys
+import time
 
 ######################################################
 AddonID='plugin.program.tbs'
@@ -8,9 +16,9 @@ ADDON            =  xbmcaddon.Addon(id=AddonID)
 dialog           =  xbmcgui.Dialog()
 dp               =  xbmcgui.DialogProgress()
 HOME             =  xbmc.translatePath('special://home/')
-USERDATA         =  xbmc.translatePath(os.path.join('special://home/userdata',''))
+USERDATA         =  xbmc.translatePath('special://home/userdata')
 ADDON_DATA       =  xbmc.translatePath(os.path.join(USERDATA,'addon_data'))
-ADDONS           =  xbmc.translatePath(os.path.join('special://home','addons',''))
+ADDONS           =  xbmc.translatePath(os.path.join(HOME,'addons'))
 cfgfile          =  xbmc.translatePath(os.path.join(ADDON_DATA,AddonID,'cfg'))
 sleeper          =  os.path.join(ADDONS,AddonID,'resources','tmr')
 internetcheck    =  ADDON.getSetting('internetcheck')
@@ -22,7 +30,7 @@ newsplash        =  xbmc.translatePath('special://home/media/branding/Splash.png
 epgdst           =  xbmc.translatePath('special://home/addons/packages/epg')
 runwizard        =  os.path.join(ADDONS,'packages','RUN_WIZARD')
 #---------------------------------------------------------------------------------------------------
-
+default.Adult_Filter('false','startup')
 # Make sure this doesn't interfere with startup wizard
 if not os.path.exists(runwizard):
     xbmc.executebuiltin('RunScript(special://home/addons/script.openwindow/functions.py)')
