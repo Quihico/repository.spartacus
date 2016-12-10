@@ -169,11 +169,12 @@
 	</extension>
 </addon>
 
-<addon id="script.openwindow" name="Startup Wizard" version="2.5.3" provider-name="TotalRevolution">
+<addon id="script.openwindow" name="Startup Wizard" version="2.5.6" provider-name="TotalRevolution">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0"/>
 	</requires>
 	<extension point="xbmc.python.script" library="default.py" >
+		<provides>executable</provides>
 	</extension>
 	<extension point="xbmc.service" library="service.py" start="[login|startup]" />
 	<extension point="xbmc.addon.metadata">
