@@ -1,3 +1,13 @@
+v.2.6:
+- Imporoved debugging option
+- Added fix for clients who upload master settings with empty lines
+
+v.2.5.8:
+- Fixed auto update after startup wizard is complete
+
+v.2.5.7:
+- Fixed typo in default, if download fails it should now restart.
+
 v.2.5.6:
 - Replaced the wrong language.jpg file
 - Added forced re-populate of skinshortcuts after setup wizard
