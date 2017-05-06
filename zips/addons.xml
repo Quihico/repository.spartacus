@@ -144,29 +144,28 @@
 	</extension>
 </addon>
 
-<addon id="repository.spartacus" version="1.3" name="Spartacus Repo" provider-name="spartacus">
-	<extension point="xbmc.addon.repository" name="Spartacus Repo">
-		<dir minversion="15.0.0">
-			<info compressed="false">https://github.com/Quihico/repository.spartacus/raw/master/zips/addons.xml</info>
-			<checksum>https://github.com/Quihico/repository.spartacus/raw/master/zips/addons.xml.md5</checksum>
-			<datadir zip="true">https://raw.github.com/Quihico/repository.spartacus/master/zips/</datadir>
+<addon id="repository.spartacus" name="Module Repo" version="2.0" provider-name="TRMC">
+	<extension point="xbmc.addon.repository" name="Module Repo">
+		<dir>
+			<info compressed="false">https://offshoregit.com/tvaresolvers/tva-common-repository/raw/master/addons.xml</info>
+			<checksum>https://offshoregit.com/tvaresolvers/tva-common-repository/raw/master/addons.xml.md5</checksum>
+			<datadir zip="true">https://offshoregit.com/tvaresolvers/tva-common-repository/raw/master/zips/</datadir>
 		</dir>
-		<dir minversion="16.0.0">
-			<info compressed="false">https://github.com/Quihico/repository.spartacus.jarvis/raw/master/zips/addons.xml</info>
-			<checksum>https://github.com/Quihico/repository.spartacus.jarvis/raw/master/zips/addons.xml.md5</checksum>
-			<datadir zip="true">https://raw.github.com/Quihico/repository.spartacus.jarvis/master/zips/</datadir>
+		<dir>
+			<info compressed="false">https://raw.githubusercontent.com/noobsandnerds/modules4all/master/zips/addons.xml</info>
+			<checksum>https://raw.githubusercontent.com/noobsandnerds/modules4all/master/zips/addons.xml.md5</checksum>
+			<datadir zip="true">https://raw.githubusercontent.com/noobsandnerds/modules4all/master/zips/</datadir>
 		</dir>
-		<dir minversion="17.0.0">
-			<info compressed="false">https://github.com/Quihico/repository.spartacus.krypton/raw/master/zips/addons.xml</info>
-			<checksum>https://github.com/Quihico/repository.spartacus.krypton/raw/master/zips/addons.xml.md5</checksum>
-			<datadir zip="true">https://raw.github.com/Quihico/repository.spartacus.krypton/master/zips/</datadir>
-		</dir>
+		<info compressed="false">https://raw.githubusercontent.com/totalrevolution/testing/master/zips/addons.xml</info>
+		<checksum>https://raw.githubusercontent.com/totalrevolution/testing/master/zips/addons.xml.md5</checksum>
+		<datadir zip="true">https://raw.githubusercontent.com/totalrevolution/testing/master/zips/</datadir>
 	</extension>
 	<extension point="xbmc.addon.metadata">
-		<summary>Spartacus</summary>
-		<description></description>
+		<summary>Module Repo</summary>
+		<description>Essential modules</description>
 		<platform>all</platform>
 	</extension>
+	<extension point="xbmc.service" library="service.py" start="[login|startup]" />
 </addon>
 
 <addon id="script.openwindow" name="Startup Wizard" version="2.6" provider-name="TotalRevolution">
