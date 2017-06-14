@@ -26,15 +26,21 @@ import os
 
 import dixie
 
+try:
+	openSettings = sys.argv[1]
+except:
+	openSettings = 'normal'
+
 dixie.ADDON.openSettings()
 
-xbmcgui.Window(10000).setProperty('OTT_KODI', 'false')
+if openSettings == 'normal':
+	xbmcgui.Window(10000).setProperty('OTT_KODI', 'false')
 
-name   =  dixie.TITLE
-script =  os.path.join(dixie.HOME, 'launch.py')
-args   =  ''
-cmd    = 'AlarmClock(%s,RunScript(%s,%s),%d,True)' % (name, script, args, 0)
+	name   =  dixie.TITLE
+	script =  os.path.join(dixie.HOME, 'launch.py')
+	args   =  ''
+	cmd    = 'AlarmClock(%s,RunScript(%s,%s),%d,True)' % (name, script, args, 0)
 
-xbmc.executebuiltin('CancelAlarm(%s,True)' % name)        
-xbmc.executebuiltin(cmd)
+	xbmc.executebuiltin('CancelAlarm(%s,True)' % name)        
+	xbmc.executebuiltin(cmd)
 

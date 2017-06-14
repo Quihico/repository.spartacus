@@ -1,4 +1,4 @@
-#
+﻿#
 #      Copyright (C) 2014 Sean Poyser
 #
 #  This Program is free software; you can redistribute it and/or modify
@@ -19,7 +19,6 @@
 
 
 import xbmcaddon
-import notification
 import xbmc
 import os
 import source
@@ -29,12 +28,15 @@ import dixie
 ADDON = dixie.ADDON
 ID    = dixie.ADDONID
 
+xbmc.log('TRTV SERVICE STARTED')
 
-datapath   = dixie.PROFILE
-cookiepath = os.path.join(datapath,   'cookies')
-cookiefile = os.path.join(cookiepath, 'cookie')
-dbpath     =  xbmc.translatePath('special://profile/addon_data/script.trtv/program.db')
-
+update_links = ADDON.getSetting('update_links')
+datapath     = dixie.PROFILE
+cookiepath   = os.path.join(datapath,   'cookies')
+cookiefile   = os.path.join(cookiepath, 'cookie')
+dbpath       = xbmc.translatePath('special://profile/addon_data/script.trtv/program.db')
+xbmc.log('global vars initialised')
+xbmc.log('### update links status: %s' % update_links)
 
 class Service(object):
     def __init__(self):
@@ -58,9 +60,6 @@ class Service(object):
 
 
     def onCachesUpdated(self):
-        if ADDON.getSetting('notifications.enabled') == 'true':
-            n = notification.Notification(self.database, ADDON.getAddonInfo('path'))
-            n.scheduleNotifications()
         self.database.close(None)
 
 
@@ -131,6 +130,11 @@ if ADDON.getSetting('autoStart') == "true":
 # Run script to remove old listings from db
 if os.path.exists(dbpath):
     xbmc.executebuiltin('XBMC.AlarmClock(cleandb,XBMC.RunScript(special://home/addons/script.trtv/createDB.py,full,silent=true),12:00:00,silent,loop)')
+
+# Run the addons ini creator script to update listings every 12hrs
+if update_links == 'true':
+    xbmc.log('### update_links == TRUE')
+    xbmc.executebuiltin('XBMC.AlarmClock(updateini,XBMC.RunScript(special://home/addons/script.trtv/updateini.py,full,silent=true),12:00:00,silent,loop)')
 
 monitor = MyMonitor()
 monitor.tidySettings()

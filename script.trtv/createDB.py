@@ -29,6 +29,7 @@ import xbmc, xbmcgui, os, xbmcaddon, sys, urllib2, urllib
 import time, datetime, re, shutil, csv, hashlib, binascii
 import dixie, sfile, download
 import calendar as cal
+import koding
 
 from sqlite3 import dbapi2 as sqlite
 from time import mktime
@@ -167,9 +168,9 @@ def Convert_ISO(mycountry):
 def Create_DB():
     if not os.path.exists(dbpath):
         DB_Open()
-        versionvalues = [1,4,0]
+        versionvalues = [1,4,1]
         try:
-            cur.execute('create table programs(channel TEXT, title TEXT, start_date TIMESTAMP, end_date TIMESTAMP, description TEXT, image_large TEXT, image_small TEXT, source TEXT, subTitle TEXT);')
+            cur.execute('CREATE TABLE programs(channel TEXT, title TEXT, start_date TIMESTAMP, end_date TIMESTAMP, description TEXT, image_large TEXT, image_small TEXT, source TEXT, subTitle TEXT, season TEXT, episode TEXT, is_movie TEXT, language TEXT)')
             con.commit()
             cur.execute('create table updates(id INTEGER, source TEXT, date TEXT, programs_updated TIMESTAMP, PRIMARY KEY(id));')
             con.commit()
@@ -282,22 +283,18 @@ def Create_CSV(channels,channelcount,listingcount,programmes,xsource,offset,xnum
     dixie.log("Total Listings to scan in: "+str(listingcount))
     xbmc.executebuiltin("XBMC.Notification("+ADDON.getLocalizedString(30818)+"[COLOR=dodgerblue]"+str(listingcount)+"[/COLOR],"+ADDON.getLocalizedString(30812)+",10000,"+updateicon+")")
     writetofile = open(csvfile,'w+')
-    dp.create('Converting XML','','Please wait...','')
-    writetofile.write('channel,title,start_date,end_date,description,image_large,image_small,source,subTitle')
+    dp.create(ADDON.getLocalizedString(30984),'',ADDON.getLocalizedString(30815),'')
+    writetofile.write('channel,title,start_date,end_date,description,image_large,image_small,source,subTitle,season,'
+                      'episode,is_movie,language')
     for programme in programmes:
         try:
             channel    = re.compile('channel="(.+?)"').findall(programme)[0]
-            dixie.log('channel: %s' % channel)
             if channel in str(idarray):
 #                channel = channel.encode('ascii', 'ignore').replace(' ','_')
                 starttime  = re.compile('start="(.+?)"').findall(programme)[0]
-                dixie.log('start time 1: %s' % starttime)
                 starttime2 = Time_Convert(starttime,xsource,offset)
-                dixie.log('start time 2: %s' % starttime2)
                 endtime    = re.compile('stop="(.+?)"').findall(programme)[0]
-                dixie.log('end time 1: %s' % endtime)
                 endtime2   = Time_Convert(endtime,xsource,offset)
-                dixie.log('end time 2: %s' % endtime2)
                 try:
                     title  = re.compile('title.*">(.+?)<\/title>').findall(programme)[0].encode('ascii', 'ignore').replace(',','.').replace('"','&quot;')
                 except:
@@ -314,16 +311,45 @@ def Create_CSV(channels,channelcount,listingcount,programmes,xsource,offset,xnum
                     icon = re.compile('<icon src="(.+?)"').findall(programme)[0]
                 except:
                     icon = 'special://home/addons/'+AddonID+'/resources/dummy.png'
-                dixie.log('title: %s' % title)
-                dixie.log('subtitle: %s' % subtitle)
-                dixie.log('desc: %s' % desc)
-                dixie.log('icon: %s' % icon)
+
+                season = "None"
+                episode = "None"
+                is_movie = "None"
+                language = re.compile('title.*lang="(.*).*">.+?<\/title>').findall(programme)[0]
+                episode_nums = re.compile('<episode-num.*>(.+?)<\/episode-num>').findall(programme)
+                program_categories = re.compile('<category.*>(.+?)<\/category>').findall(programme)
+                for category in program_categories:
+                    if "movie" in category.lower() or channel.lower().find("sky movies") != -1 \
+                            or "film" in category.lower():
+                        is_movie = "Movie"
+                        break
+
+                for episode_num in episode_nums:
+                    episode_num = episode_num.encode('ascii', 'ignore')
+                    if str.find(episode_num, ".") != -1:
+                        splitted = str.split(episode_num, ".")
+                        if splitted[0] != "":
+                            season = str(int(splitted[0]) + 1)
+                            is_movie = "None"  # fix for misclassification
+                            if str.find(splitted[1], "/") != -1:
+                                episode = str(int(splitted[1].split("/")[0]) + 1)
+                            elif splitted[1] != "":
+                                episode = str(int(splitted[1]) + 1)
+                        break
+
+                    elif str.find(episode_num.lower(), "season") != -1 and episode_num != "Season ,Episode ":
+                        pattern = re.compile(r"Season\s(\d+).*?Episode\s+(\d+).*", re.I | re.U)
+                        season = re.sub(pattern, r"\1", episode_num)
+                        episode = re.sub(pattern, r"\2", episode_num)
+                        break
+
 
 # Convert the channel id to real channel name
                 for matching in tempchans:
                     if matching[0] == channel:
                         cleanchan = CleanDBname(matching[1])
-                        writetofile.write('\n"'+str(cleanchan)+'","'+str(title)+'",'+str(starttime2)+','+str(endtime2)+',"'+str(desc)+'",,'+str(icon)+',dixie.ALL CHANNELS,'+subtitle+',')
+                        writetofile.write('\n"'+str(cleanchan)+'","'+str(title)+'",'+str(starttime2)+','+str(endtime2)+',"'+str(desc)+'",,'+str(icon)+',dixie.ALL CHANNELS,'+subtitle+',"'+
+                                          season+'","'+episode+'","'+is_movie+'","'+language+'",')
 
                 listcount += 1
                 if listcount == int(listingcount/100):
@@ -524,10 +550,12 @@ def Grab_XML_Tree(xpath):
 def Import_CSV(mode):
     with open(csvfile,'rb') as fin:
         dr = csv.DictReader(fin) # comma is default delimiter
-        to_db = [(i['channel'], i['title'],i['start_date'], i['end_date'], i['description'],i['image_large'], i['image_small'], i['source'], i['subTitle']) for i in dr]
+        to_db = [(i['channel'], i['title'],i['start_date'], i['end_date'], i['description'],i['image_large'], i['image_small'], i['source'], i['subTitle'],
+                  i['season'], i['episode'], i['is_movie'], i['language']) for i in dr]
 
     DB_Open()
-    cur.executemany("INSERT INTO programs (channel,title,start_date,end_date,description,image_large,image_small,source,subTitle) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);", to_db)
+    cur.executemany("INSERT INTO programs (channel,title,start_date,end_date,description,image_large,image_small,source,subTitle,"
+                    "season, episode, is_movie, language) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", to_db)
     con.commit()
     cur.execute("DELETE FROM programs WHERE RowID NOT IN (SELECT MIN(RowID) FROM programs GROUP BY channel,start_date,end_date);")
     con.commit()
@@ -565,6 +593,23 @@ def Open_URL(url):
     response.close()
     return link.decode('utf-8', 'ignore')
 ##########################################################################################
+# Work out how many days worth of guides we have available
+def Return_EPG_Only():
+    DB_Open()
+    EPG_channel_list = ['-_ADD_OR_REMOVE_CHANNELS']
+    try:
+        cur.execute("SELECT DISTINCT(channel) from programs;")
+        final_array = cur.fetchall()
+        for row in final_array:
+            try:
+                EPG_channel_list.append(str(row[0]))
+            except Exception as e:
+                xbmc.log('Error: %s' % e)
+    except Exception as e:
+        xbmc.log('Error: %s' % e)
+    cur.close()
+    return EPG_channel_list
+##########################################################################################
 # Remove the channel folders so we can repopulate. All mappings will be lost unless set in the master chan.xml
 def Start(xpath, offset, isurl, xnumber):
     stop    = 0
@@ -593,6 +638,14 @@ def Start(xpath, offset, isurl, xnumber):
         if isurl:
             dixie.log('File is URL, downloading to temp.xml')
             download.download(xpath, tempxml)
+            if xpath.endswith('.zip'):
+                extract_path = os.path.join(ADDON_DATA,AddonID,'temp%s.xml'%xnumber)
+                koding.Extract(tempxml, extract_path)
+                os.remove(tempxml)
+                for item in os.listdir(extract_path):
+                    if item.endswith('.xml'):
+                        os.rename(os.path.join(extract_path,item),tempxml)
+                        shutil.rmtree(extract_path)
             xpath = tempxml
 
 # Read contents of xml
@@ -671,56 +724,60 @@ def Wipe_XML_Sizes():
     except:
         pass
 ############### SCRIPT STARTS HERE ###############
-inprogress = os.path.join(ADDON_DATA,AddonID,'xml_scan_in_progress')
-try:
-    os.makedirs(inprogress)
-except:
-    pass
-# Allow update to take place if set off from settings menu even if music/video is playing
-try:
-    xbmc.log('###### TRTV MODE: '+sys.argv[1])
-except:
-    sys.argv[1] = 'normal'
-    xbmc.log('### TRTV MODE IS NORMAL')
-
-if sys.argv[1]=='normal' or sys.argv[1]=='rescan' or sys.argv[1]=='update':
-    while xbmc.Player().isPlaying():
-        xbmc.sleep(5000)
-
-# Force a rescan of the channel listings
-if sys.argv[1]=='rescan':
-    Wipe_XML_Sizes()
-
-if sys.argv[1]=='full':
-    dixie.log('### START CHECK ###')
-    dixie.log('Checking for updated listings and clearing out old data')
-
-xbmc.executebuiltin("XBMC.Notification("+ADDON.getLocalizedString(30837)+","+ADDON.getLocalizedString(30838)+",5000,"+updateicon+")")
-Create_DB()
-Grab_XML_Settings('1')
-Grab_XML_Settings('2')
-Grab_XML_Settings('3')
-Grab_XML_Settings('4')
-Grab_XML_Settings('5')
-Grab_XML_Settings('6')
-Grab_XML_Settings('7')
-Grab_XML_Settings('8')
-Grab_XML_Settings('9')
-Grab_XML_Settings('10')
-if sys.argv[1]!='normal':
-    Clean_DB()
-    xbmc.executebuiltin("XBMC.Notification("+ADDON.getLocalizedString(30839)+","+ADDON.getLocalizedString(30840)+",5000,"+updateicon+")")
-else:
+if __name__ == "__main__":
+    inprogress = os.path.join(ADDON_DATA,AddonID,'xml_scan_in_progress')
     try:
-        xbmc.executebuiltin('Dialog.Close(busydialog)')
+        os.makedirs(inprogress)
     except:
         pass
 
-if sys.argv[1]=='full':
-    dixie.log('### END CHECK ###')
-    dixie.log('Listings updates and database clean is complete.')
+# Allow update to take place if set off from settings menu even if music/video is playing
+    try:
+        xbmc.log('###### TRTV MODE: '+sys.argv[1])
+    except:
+        sys.argv[1] = 'normal'
+        xbmc.log('### TRTV MODE IS NORMAL')
 
-try:
-    shutil.rmtree(inprogress)
-except:
-    pass
+    if sys.argv[1]=='normal' or sys.argv[1]=='rescan' or sys.argv[1]=='update':
+        isplaying = xbmc.Player().isPlaying()
+        while isplaying:
+            xbmc.sleep(5000)
+            isplaying = xbmc.Player().isPlaying()
+
+# Force a rescan of the channel listings
+    if sys.argv[1]=='rescan':
+        Wipe_XML_Sizes()
+
+    if sys.argv[1]=='full':
+        dixie.log('### START CHECK ###')
+        dixie.log('Checking for updated listings and clearing out old data')
+
+    xbmc.executebuiltin("XBMC.Notification("+ADDON.getLocalizedString(30837)+","+ADDON.getLocalizedString(30838)+",5000,"+updateicon+")")
+    Create_DB()
+    Grab_XML_Settings('1')
+    Grab_XML_Settings('2')
+    Grab_XML_Settings('3')
+    Grab_XML_Settings('4')
+    Grab_XML_Settings('5')
+    Grab_XML_Settings('6')
+    Grab_XML_Settings('7')
+    Grab_XML_Settings('8')
+    Grab_XML_Settings('9')
+    Grab_XML_Settings('10')
+    if sys.argv[1]!='normal':
+        Clean_DB()
+        xbmc.executebuiltin("XBMC.Notification("+ADDON.getLocalizedString(30839)+","+ADDON.getLocalizedString(30840)+",5000,"+updateicon+")")
+    else:
+        try:
+            xbmc.executebuiltin('Dialog.Close(busydialog)')
+        except:
+            pass
+
+    if sys.argv[1]=='full':
+        dixie.log('### END CHECK ###')
+        dixie.log('Listings updates and database clean is complete.')
+
+    try:
+        shutil.rmtree(inprogress)
+    except:
+        pass

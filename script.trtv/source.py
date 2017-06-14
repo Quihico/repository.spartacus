@@ -92,7 +92,8 @@ def CleanFilename(text):
     return text.upper().replace('&AMP;','&amp;')
 #########################################################################################
 class Program(object):
-    def __init__(self, channel, title, startDate, endDate, description, subTitle, imageLarge = None, imageSmall = None, notificationScheduled = None):
+    def __init__(self, channel, title, startDate, endDate, description, subTitle, imageLarge = None, imageSmall = None,
+                 notificationScheduled = None, season=None, episode=None, is_movie = None, language = "en"):
 
         self.channel   = channel
         self.title     = title
@@ -103,11 +104,17 @@ class Program(object):
         self.imageLarge  = imageLarge
         self.imageSmall  = imageSmall
         self.notificationScheduled = notificationScheduled
+        self.season = season
+        self.episode = episode
+        self.is_movie = is_movie
+        self.language = language
         
 
     def __repr__(self):
-        return 'Program(channel=%s, title=%s, startDate=%s, endDate=%s, description=%s, subTitle=%s, imageLarge=%s, imageSmall=%s)' % \
-            (self.channel, self.title, self.startDate, self.endDate, self.description, self.subTitle, self.imageLarge, self.imageSmall)
+        return 'Program(channel=%s, title=%s, startDate=%s, endDate=%s, description=%s, subTitle=%s, imageLarge=%s, ' \
+               'imageSmall=%s, episode=%s, season=%s, is_movie=%s))' % \
+            (self.channel, self.title, self.startDate, self.endDate, self.description, self.subTitle, self.imageLarge,
+             self.imageSmall, self.season, self.episode, self.is_movie)
 
 
 class SourceException(Exception):
@@ -437,137 +444,6 @@ class Database(object):
         sqlite3.register_converter('timestamp', self.convert_datetime)
         return
 
-#         toDelete = self.getAllChannels()
-#         if not self._isCacheExpired(date):
-#             return
-# # Create a backup of all the existing channels
-#         dixie.BackupChannels()
-#         self.updateInProgress = True
-#         self.updateFailed = False
-#         dateStr = date.strftime('%Y-%m-%d')
-
-#         if len(self.channelDict) == 0:
-#             channels = self.getAllChannels()
-#             for channel in channels:
-#                 theChannel = self.getChannelFromFile(channel)
-#                 if theChannel:
-#                     self.channelDict[channel] = theChannel
-
-#         try:
-#             dixie.log('Updating caches...')
-#             if progress_callback:
-#                 progress_callback(0)
-
-#             dixie.GetCats()
-
-#             if self.settingsChanged:
-#                 self.source.doSettingsChanged()
-
-#             self.settingsChanged = False # only want to update once due to changed settings
-#             weight = 0
-
-# # Grab the list of channels found in chan.xml
-#             imported = imported_channels = imported_programs = 0
-#             mychannelarray = self.source.getDataFromExternal(date, progress_callback)
-#             for item in mychannelarray:
-#                 imported += 1
-
-# # If channel file exists we can add the weight (position)
-#                 if isinstance(item, Channel):
-#                     imported_channels += 1
-#                     channel = item
-
-#                     clean = CleanFilename(channel.id)
-#                     if clean in toDelete:
-#                         toDelete.remove(clean)
-
-#                     weight += 1
-#                     channel.weight = weight
-#                     self.createChannel(channel)                                   
-                        
-# # Channels updated
-#             try:    settings.set('ChannelsUpdated', self.adapt_datetime(datetime.datetime.now()), settingsFile)
-#             except: pass
-
-#             self.deleteOldChannels(toDelete)
-
-#             if imported_channels == 0:
-#                 self.updateFailed = True
-#             if imported_programs == 0:
-#                 self.updateFailed = (not USE_DB_FILE)
-  
-#         except SourceUpdateCanceledException:
-# # Force source update on next load
-#             try:    settings.set('ChannelsUpdated', 0, settingsFile)
-#             except: pass
-
-#         except Exception:
-#             import traceback as tb
-#             import sys
-#             (etype, value, traceback) = sys.exc_info()
-#             tb.print_exception(etype, value, traceback)
-
-#             try:
-# # Invalidate cached data
-#                 try:    settings.set('ChannelsUpdated', 0, settingsFile)
-#                 except: pass
-               
-#             except:
-#                 pass
-
-#             self.updateFailed = True
-
-#         update = dixie.GetSetting('updated.channels')
-#         if int(update) < 0:
-#             dixie.SetSetting('updated.channels', 0)
-#             dixie.SetSetting('current.channels', 0)
-#         else:
-#             dixie.SetSetting('current.channels', update)
-#             self.channelDict = {}
-#             self.updateInProgress = False
-
-#         self.initializeChannels()
-
-#         self.updateInProgress = False
-
-
-#     def deleteOldChannels(self, toDelete):
-#         dixie.log('START deleteOldChannels')
-
-#         dixie.log('Pass 1')
-#         dixie.log(toDelete)
-#         for i in xrange(len(toDelete), 0, -1):
-#             id = toDelete[i-1]
-#             try:
-#                 channel = self.getChannelFromFile(id)
-#                 dixie.log(channel)
-
-#                 if channel.isClone == 1:
-#                     original = id.split('_clone_')[0]
-#                     dixie.log('Clone of %s' % original)
-#                     if original not in toDelete:
-#                         dixie.log('NOT removing clone %s' % id)
-#                         toDelete.remove(id)
-
-#                 if channel.userDef == 1:
-#                     dixie.log('NOT removing userdef %s' % id)
-#                     toDelete.remove(id)
-
-#             except Exception, e:
-#                 dixie.log('ERROR in deleteOldChannels %s' % str(e))
-
-#         dixie.log('Pass 2')
-#         dixie.log(toDelete)
-#         for id in toDelete:
-#             try:                
-#                 dixie.log('Channel %s no longer available' % id)
-#                 self.removeCleanChannel(id)
-#             except:
-#                 pass
-
-#         dixie.log('END deleteOldChannels')
-
-
     def getAllChannels(self):
         channels       = []
         if show_social == 'true':
@@ -882,7 +758,8 @@ class Database(object):
             c.execute('SELECT * FROM programs WHERE channel IN ' + strCh  + ' AND source=? AND start_date <= ? AND end_date >= ?', [self.source.KEY, now, now])
             row = c.fetchone()
             if row:
-                program = Program(channel, row['title'], row['start_date'], row['end_date'], row['description'], row['subTitle'], row['image_large'], row['image_small'])
+                program = Program(channel, row['title'], row['start_date'], row['end_date'], row['description'], row['subTitle'], row['image_large'], row['image_small'],
+                                  None,row['season'],row['episode'],row['is_movie'],row['language'])
         except:
             pass
         c.close()
@@ -906,7 +783,8 @@ class Database(object):
         c.execute('SELECT * FROM programs WHERE channel IN ' + strCh + ' AND source=? AND start_date >= ? ORDER BY start_date ASC LIMIT 1', [self.source.KEY, program.endDate])
         row = c.fetchone()
         if row:
-            nextProgram = Program(program.channel, row['title'], row['start_date'], row['end_date'], row['description'], row['subTitle'], row['image_large'], row['image_small'])
+            nextProgram = Program(program.channel, row['title'], row['start_date'], row['end_date'], row['description'], row['subTitle'], row['image_large'], row['image_small'],
+                                  None, row['season'], row['episode'], row['is_movie'], row['language'])
         c.close()
 
         return nextProgram
@@ -928,7 +806,8 @@ class Database(object):
         c.execute('SELECT * FROM programs WHERE channel IN ' + strCh + ' AND source=? AND end_date <= ? ORDER BY start_date DESC LIMIT 1', [self.source.KEY, program.startDate])
         row = c.fetchone()
         if row:
-            previousProgram = Program(program.channel, row['title'], row['start_date'], row['end_date'], row['description'], row['subTitle'], row['image_large'], row['image_small'])
+            previousProgram = Program(program.channel, row['title'], row['start_date'], row['end_date'], row['description'], row['subTitle'], row['image_large'], row['image_small'],
+                                      None, row['season'], row['episode'], row['is_movie'], row['language'])
         c.close()
 
         return previousProgram
@@ -958,12 +837,13 @@ class Database(object):
         c = self.connP.cursor()
         strCh = '(\'' + '\',\''.join(channelMap.keys()) + '\')'
 
-        c.execute('SELECT channel, title, start_date, end_date, description, subTitle, image_large, image_small FROM programs WHERE channel IN ' + strCh + ' AND end_date > ? AND start_date < ? AND source = ?', (startTime, endTime, self.source.KEY))
+        c.execute('SELECT channel, title, start_date, end_date, description, subTitle, image_large, image_small, season, episode, is_movie, language FROM programs WHERE channel IN ' + strCh + ' AND end_date > ? AND start_date < ? AND source = ?', (startTime, endTime, self.source.KEY))
 
         for row in c:           
             channel = self._locateChannel(row['channel'].encode('utf-8'), channels)
             for ch in channel:
-                program = Program(ch, row["title"], row["start_date"], row["end_date"], row["description"], row["subTitle"], row['image_large'], row['image_small'])
+                program = Program(ch, row["title"], row["start_date"], row["end_date"], row["description"], row["subTitle"], row['image_large'], row['image_small'],
+                                  None, row['season'], row['episode'], row['is_movie'], row['language'])
                 #program.notificationScheduled = self._isNotificationRequiredForProgram(program)
                 programList.append(program)  
       
@@ -1065,6 +945,11 @@ class Database(object):
                 c.execute('CREATE TABLE programs(channel TEXT, title TEXT, start_date TIMESTAMP, end_date TIMESTAMP, description TEXT, image_large TEXT, image_small TEXT, source TEXT, subTitle TEXT)')
 
                 c.execute('create TABLE xmls(id INTEGER, size INTEGER)')
+            if version < [1,4,1]:
+                # Recreate tables with seasons, episodes and is_movie
+                c.execute('UPDATE version SET major=1, minor=4, patch=1')
+                c.execute('DROP TABLE programs')
+                c.execute('CREATE TABLE programs(channel TEXT, title TEXT, start_date TIMESTAMP, end_date TIMESTAMP, description TEXT, image_large TEXT, image_small TEXT, source TEXT, subTitle TEXT, season TEXT, episode TEXT, is_movie TEXT, language TEXT)')
 
             self.connP.commit()
             c.close()
@@ -1300,8 +1185,38 @@ def parseXMLTV(context, f, size, progress_callback, offset=0, categories=None):
                 mergeTitle = elem.findtext("sub-title")
                 if not description:
                     description = subTitle
+
+                season = None
+                episode = None
+                is_movie = None
+                language = elem.find("title").get("lang")
+                episode_num = elem.findtext("episode-num")
+                categories = elem.findall("category")
+                for category in categories:
+                    if "movie" in category.text.lower() or channel.lower().find("sky movies") != -1 \
+                            or "film" in category.text.lower():
+                        is_movie = "Movie"
+
+                if episode_num is not None:
+                    episode_num = unicode.encode(unicode(episode_num), 'ascii', 'ignore')
+                    if str.find(episode_num, ".") != -1:
+                        splitted = str.split(episode_num, ".")
+                        if splitted[0] != "":
+                            season = int(splitted[0]) + 1
+                            is_movie = None  # fix for misclassification
+                            if str.find(splitted[1], "/") != -1:
+                                episode = int(splitted[1].split("/")[0]) + 1
+                            elif splitted[1] != "":
+                                episode = int(splitted[1]) + 1
+
+                    elif str.find(episode_num.lower(), "season") != -1 and episode_num != "Season ,Episode ":
+                        pattern = re.compile(r"Season\s(\d+).*?Episode\s+(\d+).*", re.I | re.U)
+                        season = int(re.sub(pattern, r"\1", episode_num))
+                        episode = int(re.sub(pattern, r"\2", episode_num))
                     
-                result = Program(channel, title, parseXMLTVDate(elem.get('start'), offset), parseXMLTVDate(elem.get('stop'), offset), description, elem.findtext("sub-title"))
+                result = Program(channel, title, parseXMLTVDate(elem.get('start'), offset),
+                                 parseXMLTVDate(elem.get('stop'), offset), description, elem.findtext("sub-title"),
+                                 season=season, episode=episode, is_movie=is_movie, language=language)
 
             elif elem.tag == "channel":
                 id     = elem.get("id")

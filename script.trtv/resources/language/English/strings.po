@@ -1,15 +1,8 @@
 # XBMC Media Center language file
 # Addon Name: TV Guide
 # Addon id: script.trtv
-# Addon Provider: twinther [tommy@winther.nu]
 msgid ""
 msgstr ""
-"Project-Id-Version: XBMC Addons\n"
-"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
-"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: XBMC Translation Team\n"
-"Language-Team: English (http://www.transifex.com/projects/p/xbmc-addons/language/en/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -99,7 +92,7 @@ msgid "Remember to clear the cache when you change source"
 msgstr ""
 
 msgctxt "#30110"
-msgid "Update program information on XBMC startup"
+msgid "Update program information on startup"
 msgstr ""
 
 msgctxt "#30111"
@@ -163,7 +156,7 @@ msgid "Maintenance"
 msgstr ""
 
 msgctxt "#30126"
-msgid "Wipe listings but keep channel info - removes the db file."
+msgid "Wipe listings"
 msgstr ""
 
 msgctxt "#30127"
@@ -187,7 +180,7 @@ msgid "Rollback to previous channel list - may bring back old customisations"
 msgstr ""
 
 msgctxt "#30132"
-msgid "Click to - Fully Reset TRTV. ALL settings will be lost inc. user/pass."
+msgid "[COLOR=gold]Full Reset:[/COLOR] [COLOR=dodgerblue]ALL settings will be lost.[/COLOR]"
 msgstr ""
 
 #empty strings from id 30133 to 30149
@@ -329,10 +322,30 @@ msgid "My Recordings"
 msgstr ""
 
 msgctxt "#30320"
-msgid "TRTV Tools"
+msgid "TV Guide Tools"
 msgstr ""
 
-#empty strings from id 30321 to 30499
+msgctxt "#30321"
+msgid "Add-on Scanner"
+msgstr ""
+
+msgctxt "#30322"
+msgid "Choose the sections of add-ons you want the guide to scan when grabbing streams.[CR][CR]Please make sure the sections you choose do actually contain channel names, the scanner will NOT scan through sub-directories.[CR][CR][COLOR=gold]WARNING:[/COLOR] THE MORE SECTIONS YOU ADD THE LONGER THE SCAN TAKES!!!"
+msgstr ""
+
+msgctxt "#30323"
+msgid "Open the main TV Guide settings. In here you can edit all the advanced features such as adding your own channel listings.[CR][CR]The guide is very customisable and some features are very advanced, however don't worry if you break something - you can always use the Reset option to revert back to stock factory settings."
+msgstr ""
+
+msgctxt "#30324"
+msgid "This will allow you to filter channels by category. Only want sports, or maybe a combination of comedy, kids & entertainment? Simply tick the ones you want to appear in the guide and watch as the other channels magically disappear![CR][CR]You can also bring up this option by pressing left in the guide."
+msgstr ""
+
+msgctxt "#30325"
+msgid "Disable the channels you want to permanantly hide. You can also edit the positioning of where the channels appear in the guide here too.[CR][CR]To change a channel position just navigate down so you're highlighting the channel then click left. Move up/down until you're at the desired position then click right."
+msgstr ""
+
+#empty strings from id 30326 to 30499
 
 msgctxt "#30500"
 msgid "[B]Edit channel order and visibility[/B]"
@@ -398,7 +411,7 @@ msgid "Browse..."
 msgstr ""
 
 msgctxt "#30611"
-msgid "Click Browse... below and navigate to your stream file. When you have chosen your file you can preview the stream to test if it works in XBMC."
+msgid "Click Browse... below and navigate to your stream file. When you have chosen your file you can preview the stream to test if it works."
 msgstr ""
 
 #empty strings from id 30612 to 30619
@@ -413,28 +426,25 @@ msgstr ""
 
 
 msgctxt "#30622"
-msgid "Click Browse... below and navigate to your Super Favourite. When you have chosen it you can preview the stream to test if it works in TRTV."
+msgid "Click Browse... below and navigate to your Super Favourite. When you have chosen it you can preview the stream to test if it works in this guide."
 msgstr ""
 
 #empty strings from id 30623 to 30699
 
 msgctxt "#30700"
-msgid "Multiple addons provide this channels.[CR]Choose one to watch the stream."
+msgid "Multiple addons provide this channel.[CR]Choose one to watch the stream."
 msgstr ""
-
-#empty strings from id 30701 to 30799
-#weeb.tv mod
 
 msgctxt "#30800"
 msgid "JSON-EPG URL"
 msgstr ""
 
 msgctxt "#30801"
-msgid "Play channels using the Weeb.Tv addon"
+msgid "Enable Config Menu Tools"
 msgstr ""
 
 msgctxt "#30802"
-msgid "TV Guide is configured to stream using Weeb.Tv"
+msgid "URL for XML selector list:"
 msgstr ""
 
 msgctxt "#30803"
@@ -446,11 +456,11 @@ msgid "Streaming using that addon is now disabled."
 msgstr ""
 
 msgctxt "#30805"
-msgid "Support The Original Devs"
+msgid "EPG Config Tools Menu"
 msgstr ""
 
 msgctxt "#30806"
-msgid "This addon is based on the original work from On-Tapp.TV[CR]If you want reliable listings you may want to consider subscribing to their service. For more details visit [COLOR=dodgerblue]www.on-tapp.tv[/COLOR]"
+msgid "[COLOR=gold]OPEN CONFIG MENU[/COLOR]"
 msgstr ""
 
 msgctxt "#30807"
@@ -502,7 +512,7 @@ msgid "Listings found "
 msgstr ""
 
 msgctxt "#30819"
-msgid "TRTV Import Complete"
+msgid "Import Complete"
 msgstr ""
 
 msgctxt "#30820"
@@ -522,39 +532,39 @@ msgid "No Listings Found"
 msgstr ""
 
 msgctxt "#30824"
-msgid "To use this add-on you need to either import your channel listings or create your own dummy channels using the TRTV Tools."
+msgid "To use this add-on you need to either import your channel listings or create your own dummy channels using the TV Guide Tools."
 msgstr ""
 
 msgctxt "#30825"
-msgid "Wrong Password"
+msgid "Add-on Scanner - update links"
 msgstr ""
 
 msgctxt "#30826"
-msgid "You have entered an incorrect password for this account, please check settings and try again."
+msgid "Add-on Scanner - configure"
 msgstr ""
 
 msgctxt "#30827"
-msgid "Wrong Username"
+msgid "Reset EPG"
 msgstr ""
 
 msgctxt "#30828"
-msgid "You have not entered a valid username, please either correct your login details or register for FREE at www.noobsandnerds.com."
+msgid "EPG Settings"
 msgstr ""
 
 msgctxt "#30829"
-msgid "Account Restricted"
+msgid "Select Listings Provider"
 msgstr ""
 
 msgctxt "#30830"
-msgid "There is a ban on your account, the most likely cause for this is account sharing. Please make sure you haven\'t accidentally left your login details on a shared computer."
+msgid "PLEASE CONFIGURE YOUR MENU"
 msgstr ""
 
 msgctxt "#30831"
-msgid "Re-Activate Account"
+msgid "You have clicked on the EPG Tools option but it hasn't yet been configured. Press OK to be taken to your EPG Tools config settings."
 msgstr ""
 
 msgctxt "#30832"
-msgid "You need to re-activate your account on the new forum. Simply visit the forum at www.noobsandnerds.com and login with your existing credentials."
+msgid "Sync with online icons"
 msgstr ""
 
 msgctxt "#30833"
@@ -570,19 +580,19 @@ msgid "No Login Details"
 msgstr ""
 
 msgctxt "#30836"
-msgid "You have enabled the login feature but not entered any details. Please add your login details or disable the option."
+msgid "Are you sure you wish to quit?"
 msgstr ""
 
 msgctxt "#30837"
-msgid "Updating trtv database"
+msgid "Updating database"
 msgstr ""
 
 msgctxt "#30838"
-msgid "DO NOT close Kodi at this point"
+msgid "DO NOT exit the system at this point"
 msgstr ""
 
 msgctxt "#30839"
-msgid "trtv Updates Complete"
+msgid "Updates Complete"
 msgstr ""
 
 msgctxt "#30840"
@@ -590,27 +600,27 @@ msgid "All database files updated successfully"
 msgstr ""
 
 msgctxt "#30841"
-msgid "Use NaN channel ordering"
+msgid "Exit TV Guide"
 msgstr ""
 
 msgctxt "#30842"
-msgid "Premium Features"
+msgid "[COLOR=dodgerblue]VPN - Switch Location[/COLOR]"
 msgstr ""
 
 msgctxt "#30843"
-msgid "Unlock Features with noobsandnerds login"
+msgid "VPN Manager"
 msgstr ""
 
 msgctxt "#30844"
-msgid "Forum to use for login"
+msgid ""
 msgstr ""
 
 msgctxt "#30845"
-msgid "Username"
+msgid ""
 msgstr ""
 
 msgctxt "#30846"
-msgid "Password"
+msgid ""
 msgstr ""
 
 msgctxt "#30847"
@@ -622,11 +632,11 @@ msgid "Enter location for shared addon data"
 msgstr ""
 
 msgctxt "#30849"
-msgid "Sync with online ini files"
+msgid "Filter channels by category"
 msgstr ""
 
 msgctxt "#30850"
-msgid "Sync with NaN master logo pack"
+msgid ""
 msgstr ""
 
 msgctxt "#30851"
@@ -634,7 +644,7 @@ msgid "Show the XXX category"
 msgstr ""
 
 msgctxt "#30852"
-msgid "TV mini guide - bring up the tv guide from anywhere in Kodi"
+msgid "TV mini guide - bring up the tv guide from anywhere on the system"
 msgstr ""
 
 msgctxt "#30853"
@@ -694,7 +704,7 @@ msgid "Do not enable unless you absolutely need touchscreen support"
 msgstr ""
 
 msgctxt "#30867"
-msgid "Boot directly into the EPG on startup of Kodi"
+msgid "Boot directly into the EPG on startup"
 msgstr ""
 
 msgctxt "#30868"
@@ -714,7 +724,7 @@ msgid "Stop accidental backing out of the EPG - this gives a yes/no dialog"
 msgstr ""
 
 msgctxt "#30872"
-msgid "Confirm Exit From TRTV"
+msgid "Confirm Exit From EPG"
 msgstr ""
 
 msgctxt "#30873"
@@ -722,19 +732,19 @@ msgid "Set the global timezone offset"
 msgstr ""
 
 msgctxt "#30874"
-msgid "Use NaN category mapping"
+msgid ""
 msgstr ""
 
 msgctxt "#30875"
-msgid "Use NaN configs - see forum for full details"
+msgid ""
 msgstr ""
 
 msgctxt "#30876"
-msgid "Synchronise with NaN categories"
+msgid ""
 msgstr ""
 
 msgctxt "#30877"
-msgid "Synchronise with NaN channel ordering (experimental)"
+msgid ""
 msgstr ""
 
 msgctxt "#30878"
@@ -797,10 +807,6 @@ msgctxt "#30892"
 msgid "Updated Channels"
 msgstr ""
 
-msgctxt "#30893"
-msgid "messageID"
-msgstr ""
-
 msgctxt "#30894"
 msgid "login"
 msgstr ""
@@ -810,7 +816,7 @@ msgid "Add SF folders channels even if I have no EPG data scanned"
 msgstr ""
 
 msgctxt "#30896"
-msgid "Open Direct into social share folder - Disables channel surfing ability"
+msgid "Open Direct into SF folder - Disables channel surfing ability"
 msgstr ""
 
 msgctxt "#30897"
@@ -826,15 +832,15 @@ msgid "Give the option of watching live or catchup"
 msgstr ""
 
 msgctxt "#30900"
-msgid "[COLOR=gold]Use latest test version (donators only)[/COLOR]"
+msgid ""
 msgstr ""
 
 msgctxt "#30901"
-msgid "Check Login Details"
+msgid ""
 msgstr ""
 
 msgctxt "#30902"
-msgid "Please double check your login credentials, once entered correctly try running the add-on to activate the test version then come back and try again."
+msgid ""
 msgstr ""
 
 msgctxt "#30903"
@@ -846,7 +852,7 @@ msgid "Enable Debug Mode (enable if asking for help on forum)"
 msgstr ""
 
 msgctxt "#30905"
-msgid "Always skip Kodi.old.log (log from previous run)"
+msgid "Always skip old.log (log from previous run)"
 msgstr ""
 
 msgctxt "#30906"
@@ -894,7 +900,7 @@ msgid "Appearance - set your skin and logo pack"
 msgstr ""
 
 msgctxt "#30917"
-msgid "Choose Skin Style"
+msgid "Choose Skin"
 msgstr ""
 
 msgctxt "#30918"
@@ -918,7 +924,7 @@ msgid "Choose Built-in Logo Pack"
 msgstr ""
 
 msgctxt "#30923"
-msgid "Add a custom IPTV Playlist - easy integration for online and local playlists"
+msgid "IPTV playlist integration"
 msgstr ""
 
 msgctxt "#30924"
@@ -934,7 +940,7 @@ msgid "URL"
 msgstr ""
 
 msgctxt "#30927"
-msgid "Add my own channels - create your own XML file and scan into db here"
+msgid "XML TV Guide data sources"
 msgstr ""
 
 msgctxt "#30928"
@@ -942,7 +948,7 @@ msgid "TVXML 1 Type"
 msgstr ""
 
 msgctxt "#30929"
-msgid "Choose Local File for XML 1"
+msgid "Choose file location for XML 1"
 msgstr ""
 
 msgctxt "#30930"
@@ -958,7 +964,7 @@ msgid "Choose Country"
 msgstr ""
 
 msgctxt "#30933"
-msgid "-- Open Test Settings"
+msgid ""
 msgstr ""
 
 msgctxt "#30934"
@@ -970,7 +976,7 @@ msgid "TVXML 2 Type"
 msgstr ""
 
 msgctxt "#30936"
-msgid "Choose Local File for XML 2"
+msgid "Choose file location for XML 2"
 msgstr ""
 
 msgctxt "#30937"
@@ -982,7 +988,7 @@ msgid "TVXML 3 Type"
 msgstr ""
 
 msgctxt "#30939"
-msgid "Choose Local File for XML 3"
+msgid "Choose file location for XML 3"
 msgstr ""
 
 msgctxt "#30940"
@@ -994,7 +1000,7 @@ msgid "TVXML 4 Type"
 msgstr ""
 
 msgctxt "#30942"
-msgid "Choose Local File for XML 4"
+msgid "Choose file location for XML 4"
 msgstr ""
 
 msgctxt "#30943"
@@ -1006,7 +1012,7 @@ msgid "TVXML 5 Type"
 msgstr ""
 
 msgctxt "#30945"
-msgid "Choose Local File for XML 5"
+msgid "Choose file location for XML 5"
 msgstr ""
 
 msgctxt "#30946"
@@ -1018,7 +1024,7 @@ msgid "TVXML 6 Type"
 msgstr ""
 
 msgctxt "#30948"
-msgid "Choose Local File for XML 6"
+msgid "Choose file location for XML 6"
 msgstr ""
 
 msgctxt "#30949"
@@ -1030,7 +1036,7 @@ msgid "TVXML 7 Type"
 msgstr ""
 
 msgctxt "#30951"
-msgid "Choose Local File for XML 7"
+msgid "Choose file location for XML 7"
 msgstr ""
 
 msgctxt "#30952"
@@ -1042,7 +1048,7 @@ msgid "TVXML 8 Type"
 msgstr ""
 
 msgctxt "#30954"
-msgid "Choose Local File for XML 8"
+msgid "Choose file location for XML 8"
 msgstr ""
 
 msgctxt "#30955"
@@ -1054,7 +1060,7 @@ msgid "TVXML 9 Type"
 msgstr ""
 
 msgctxt "#30957"
-msgid "Choose Local File for XML 9"
+msgid "Choose file location for XML 9"
 msgstr ""
 
 msgctxt "#30958"
@@ -1066,7 +1072,7 @@ msgid "TVXML 10 Type"
 msgstr ""
 
 msgctxt "#30960"
-msgid "Choose Local File for XML 10"
+msgid "Choose file location for XML 10"
 msgstr ""
 
 msgctxt "#30961"
@@ -1074,15 +1080,15 @@ msgid "Enter URL Location for XML 10"
 msgstr ""
 
 msgctxt "#30962"
-msgid "You need to enable the login option to use the test version. This feature is only available to members who have donated towards the noobsandnerds development fund. You can disable this option to continue using the standard version."
+msgid ""
 msgstr ""
 
 msgctxt "#30963"
-msgid "No test version available"
+msgid ""
 msgstr ""
 
 msgctxt "#30964"
-msgid "There is no test version available for this add-on at this time."
+msgid ""
 msgstr ""
 
 msgctxt "#30965"
@@ -1090,19 +1096,19 @@ msgid "Error"
 msgstr ""
 
 msgctxt "#30966"
-msgid "Sorry there was an error trying to retrieve the latest test version, the developer may be working on pushing a new update."
+msgid ""
 msgstr ""
 
 msgctxt "#30967"
-msgid "Use SF MetalliQ links"
+msgid "Use SF MetalliQ links - EXPERIMENTAL"
 msgstr ""
 
 msgctxt "#30968"
-msgid "Use Community XML Files"
+msgid ""
 msgstr ""
 
 msgctxt "#30969"
-msgid "[COLOR=gold]Scan in XML File - this can take a long time![/COLOR]"
+msgid "[COLOR=gold]Scan in XML files[/COLOR]"
 msgstr ""
 
 msgctxt "#30970"
@@ -1122,5 +1128,81 @@ msgid "Enable All MetalliQ Players"
 msgstr ""
 
 msgctxt "#30974"
+msgid "CATCH-UP OR LIVE?"
+msgstr ""
+
+msgctxt "#30975"
+msgid "Watch this channel LIVE"
+msgstr ""
+
+msgctxt "#30976"
+msgid "Watch with no adverts"
+msgstr ""
+
+msgctxt "#30977"
+msgid "Watch previous episodes"
+msgstr ""
+
+msgctxt "#30978"
+msgid "MOVIE OR TV SHOW?"
+msgstr ""
+
+msgctxt "#30979"
+msgid "Is this a movie or a tv show?"
+msgstr ""
+
+msgctxt "#30980"
+msgid "MOVIE"
+msgstr ""
+
+msgctxt "#30981"
+msgid "TV SHOW"
+msgstr ""
+
+msgctxt "#30982"
 msgid "Enable Social Share Add/Remove Channel"
+msgstr ""
+
+msgctxt "#30983"
+msgid "Only show channels with EPG data"
+msgstr ""
+
+msgctxt "#30984"
+msgid "UPDATING LISTINGS"
+msgstr ""
+
+msgctxt "#30985"
+msgid "PLAYBACK FAILED"
+msgstr ""
+
+msgctxt "#30986"
+msgid "If no progress dialog box appears when you press OK please try a different source. If none work you might want to consider updating your links."
+msgstr ""
+
+msgctxt "#30987"
+msgid "Update links every 12hrs"
+msgstr ""
+
+msgctxt "#30988"
+msgid "Run the ini creator every 12hrs to regenerate the links"
+msgstr ""
+
+msgctxt "#30989"
+msgid "Only show channels that have valid streams available"
+msgstr ""
+
+msgctxt "#30990"
+msgid "Channels only with valid ini entries"
+msgstr ""
+
+msgctxt "#30991"
+msgid "Remove streams on unsuccessful playback"
+msgstr ""
+
+msgctxt "#30992"
+msgid "Remove from ini files if unplayable"
+msgstr ""
+
+msgctxt "#30993"
+msgid "[COLOR=gold]TV GUIDE[/COLOR]"
 msgstr ""

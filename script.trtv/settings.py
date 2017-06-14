@@ -32,20 +32,6 @@ ADDON = dixie.ADDONID
 ORIGINAL = 'settings.xml'
 BACKUP   = 'settings.bak'
 
-
-def validate():
-    if checkSettings():
-        backupSettings()
-    else:
-        restoreSettings()
-        
-
-def checkSettings():
-    validator = dixie.GetSetting('validator')
-
-    return validator != '0'
-
-
 def backupSettings():
     udata = xbmc.translatePath('special://profile/')
     path  = dixie.PROFILE

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.trtv" name="TV Guide" version="1.3.3" provider-name="TotalRevolution">
+<addon id="script.trtv" name="TV Guide" version="1.4.4" provider-name="TotalRevolution">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0"/>
 		<import addon="script.module.requests" version="2.9.1"/>
@@ -8,11 +8,12 @@
 		<import addon="repository.spartacus" version="1.3"/>
 		<import addon="plugin.program.super.favourites" version="1.0.43"/>
 		<import addon="plugin.video.metalliq" version="1.1.5"/>
+		<import addon="script.module.python.koding.aio" version="0.5"/>
 	</requires>
 	<extension point="xbmc.python.pluginsource" library="addon.py">
-	<extension point="xbmc.service" library="service.py" start="login" />
 		<provides>executable</provides>
 	</extension>
+	<extension point="xbmc.service" library="service.py" start="login|startup" />
 	<extension point="kodi.context.item" library="osd.py">
 		<item>
 			<label>TV Mini Guide</label>
@@ -26,6 +27,5 @@
 		<language></language>
 		<license>GPLv2</license>
 		<disclaimer>To be able to stream from your cable/satellite/antenna you will require extra hardware. This option is not for anyone who struggles with technology - setting up a PVR system can be quite complex!</disclaimer>
-		<ref>a8fb1a1917f6c1c706ff4e8ef0fe0a93</ref>
 	</extension>
 </addon>

@@ -28,6 +28,7 @@ import xbmc, xbmcaddon, xbmcgui, os
 import dixie, shutil, extract
 import threading
 import requests
+import createDB
 
 AddonID          =  'script.trtv'
 ADDON            =  xbmcaddon.Addon(id=AddonID)
@@ -291,4 +292,3 @@ if cont:
             xbmc.log('### No metalliq ini file to remove')
 
     xbmc.executebuiltin('RunScript(special://home/addons/script.trtv/launch.py)')
-

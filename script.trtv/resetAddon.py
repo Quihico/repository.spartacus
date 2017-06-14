@@ -32,7 +32,6 @@ hotkey   = xbmc.translatePath('special://profile/keymaps/ottv_hot.xml')
 
 def resetAddon():
     deleteFiles()
-    dixie.SetSetting('epg.date', '2000-01-01')
     dixie.CloseBusy()
 
 

@@ -57,7 +57,6 @@ def deleteDB():
         return False
 
 def delete_file(filename):
-    dixie.SetSetting('epg.date', '2000-01-01')
     tries = 10
     while os.path.exists(filename) and tries > 0:
         settings.set('ChannelsUpdated', 0, settingsFile)
@@ -85,6 +84,24 @@ try:
         else:
             dixie.CloseBusy()
             d = xbmcgui.Dialog()
-            dixie.DialogOK('Failed to reset EPG.', 'Database may be locked,', 'please restart Kodi and try again')
+            dixie.DialogOK('Failed to reset EPG.', 'Database may be locked,', 'please restart your system and try again')
+
+    if sys.argv[1] == 'wipeEPG':
+        dixie.ShowBusy()
+        
+        if deleteDB():
+            silent = False
+            dixie.CloseBusy()
+            xbmc.executebuiltin('RunScript(special://home/addons/script.trtv/resetChannels.py,wipeEPG)')
+            if len(sys.argv) >= 2:
+                if sys.argv[2] == 'silent':
+                    silent = True
+            if not silent:
+                dixie.DialogOK('EPG successfully reset.', 'It will be re-created next time', 'you start the guide')    
+        
+        else:
+            dixie.CloseBusy()
+            d = xbmcgui.Dialog()
+            dixie.DialogOK('Failed to reset EPG.', 'Database may be locked,', 'please restart your system and try again')
 except:
     pass

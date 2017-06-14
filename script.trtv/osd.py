@@ -74,6 +74,7 @@ XML  = 'script-tvguide-changer.xml'
 AddonID        = 'script.trtv'
 ADDON          = xbmcaddon.Addon(id=AddonID)
 showSFchannels = ADDON.getSetting('showSFchannels')
+show_social    = ADDON.getSetting('show_social')
 SF_CHANNELS    = ADDON.getSetting('SF_CHANNELS')
 OTT_CHANNELS   = os.path.join(dixie.GetChannelFolder(), 'channels')
 IGNORESTRM     = dixie.GetSetting('ignore.stream') == 'true'
@@ -525,12 +526,17 @@ class OSD(xbmcgui.WindowXMLDialog):
         SFchannelarray = []
         try:
             current, dirs, files = sfile.walk(OTT_CHANNELS)
+
         except Exception, e:
             dixie.log('### Failed to scan master channel list: %s' % str(e))
             return channelarray
     
         for file in files:
-            channelarray.append(file)
+            if show_social == 'false' and file == '-_ADD_OR_REMOVE_CHANNELS':
+                pass
+
+            else:
+                channelarray.append(file)
 
 # Allows user to only show channels they have SF folders setup for
         if showSFchannels == 'true':

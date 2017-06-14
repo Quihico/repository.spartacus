@@ -25,6 +25,7 @@ import sfile
 
 import dixie
 
+showdialogs = True
 
 def resetChannels():
     AddonID =  'script.trtv'
@@ -46,20 +47,31 @@ def resetChannels():
         xbmc.executebuiltin('Dialog.Close(busydialog)')
         success = 1
 
-    if success == 1:
+    if success == 1 and showdialogs:
         dialog.ok('TRTV - Reset Channels', 'TRTV Channels successfully reset.', 'They will be re-created next time', 'you start the guide')
 
-    if success == 0:
+    if success == 0 and showdialogs:
         dialog.ok('TRTV - Reset Channels', 'There was nothing to reset, please try running the add-on again so it can repopulate your channels.')
 
     if os.path.exists(catsxml):
-        choice = dialog.yesno('Do You Need To Reset Categories?','It\'s highly unlikely you\'ll need to use this but if your main categories list has become corrupt it can cause problems. Would you like to reset the categories to the defaults?')
+        if showdialogs:
+            choice = dialog.yesno('Do You Need To Reset Categories?','It\'s highly unlikely you\'ll need to use this but if your main categories list has become corrupt it can cause problems. Would you like to reset the categories to the defaults?')
+        else:
+            choice = 1
         if choice == 1:
             try:
                 os.remove(catsxml)
-                dialog.ok('TRTV - Reset Categories', 'TRTV Categories successfully reset to addon defaults. Any customisations you previously had are now lost.')
+                if showdialogs:
+                    dialog.ok('TRTV - Reset Categories', 'TRTV Categories successfully reset to addon defaults. Any customisations you previously had are now lost.')
             except:
-                dialog.ok('TRTV - Reset Categories', 'There was nothing to reset, please try running the add-on again so it can repopulate your categories.')
+                if showdialogs:
+                    dialog.ok('TRTV - Reset Categories', 'There was nothing to reset, please try running the add-on again so it can repopulate your categories.')
                 dixie.log("### IMPORTANT ### Unable to remove the cats.xml file in your addon_data folder. Please manually delete")
 if __name__ == '__main__':
+    try:
+        if sys.argv[1] == 'wipeEPG':
+            showdialogs = False
+    except:
+        showdialogs = True
+
     resetChannels()

@@ -69,9 +69,10 @@ class StreamAddonDialog(xbmcgui.WindowXMLDialog):
             
         except:
             SF_ICON   = ''
-
+        xbmc.log('self.addons: %s' % self.addons)
         items = list()
         for id, label, url in self.addons:
+            xbmc.log('### id: %s | label: %s | url: %s' % (id, label, url))
             try:
                 if '-metalliq' in id:
                     icon        = xbmcaddon.Addon(id='plugin.video.metalliq').getAddonInfo('icon')
@@ -107,17 +108,29 @@ class StreamAddonDialog(xbmcgui.WindowXMLDialog):
                     name = label
                 if not icon:
                     icon = ''
-                
-                item = xbmcgui.ListItem(label, name, icon)
-                item.setProperty('stream', url)
-                items.append(item)
+
+                try:                
+                    item = xbmcgui.ListItem(label, name, icon)
+                    try:
+                        item.setProperty('stream', url)
+
+                        items.append(item)
+                    except:
+                        try:
+                            item.setProperty('stream', url[0])
+                            items.append(item)
+                        except Exception as e:
+                            xbmc.log('Failed to set stream for %s | %s' % (label, name))
+                except Exception as e:
+                    xbmc.log('stream: %s | Url: %s | Error: %s' % (label, url, e))
 
             except:
-                pass
-
-                item = xbmcgui.ListItem(label, '', id)
-                item.setProperty('stream', url)
-                items.append(item)        
+                try:
+                    item = xbmcgui.ListItem(label, '', id)
+                    item.setProperty('stream', url)
+                    items.append(item)
+                except Exception as e:
+                    xbmc.log('stream: %s | Url: %s | Error: %s' % (label, url, e))
 
         listControl = self.getControl(StreamAddonDialog.C_SELECTION_LIST)
         listControl.addItems(items)

@@ -328,22 +328,6 @@ def validTime(setting, maxAge):
     return nSeconds <= maxAge
 
 
-def validToRun(silent=False):
-    setting      = 'LOGIN_TIME'
-    previousTime = getPreviousTime(setting)
-    now          = datetime.datetime.today()
-    delta        = now - previousTime
-    nSeconds     = (delta.days * 86400) + delta.seconds
-    
-    if nSeconds > 45 * 60:        
-        if not doLogin(silent):
-            return False
-
-        SetSetting('LOGIN_TIME', str(now))
-        
-    return True
-
-
 def GetUser():
     username = GetSetting('username')
     return username
@@ -521,7 +505,6 @@ def SF_Folder_Count(foldermode):
                 log("Special characters in directory, skipping: "+dir)
 
         if debug == 'true':
-            log("FINAL CHANNELARRAY:")
             log(str(SFchannelarray))
 
 # Add dummy channels to chan.xml and cats.xml

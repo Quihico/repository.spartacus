@@ -9,6 +9,7 @@ import os
 import dixie
 import download
 import extract
+import koding
 
 ADDON           = xbmcaddon.Addon(id = 'script.trtv')
 HOME            = ADDON.getAddonInfo('path')
@@ -17,6 +18,7 @@ ICON            = xbmc.translatePath(ICON)
 ADDONS          = xbmc.translatePath('special://home/addons')
 PACKAGES        = os.path.join(ADDONS, 'packages')
 SF_CHANNELS     = ADDON.getSetting('SF_CHANNELS')
+CLEAN_STREAMS   = ADDON.getSetting('clean_streams')
 dialog          = xbmcgui.Dialog()
 dp              = xbmcgui.DialogProgress()
 
@@ -45,6 +47,26 @@ def CheckIdle(maxIdle):
 
     if not dp.iscanceled():
         xbmc.Player().stop()
+#---------------------------------------------------------------------------------------------------
+# Remove failed stream from ini files
+def clean_ini(url):
+    import streaming
+    streamingService = streaming.StreamsService()
+    ini_channel_array = []
+# Grab a list of ini entries
+    inifiles = streamingService.getIniFiles()
+    for inifile in inifiles:
+        xbmc.log('### checking ini file for streams: %s' % inifile)
+
+# Split eaach line into array so we can grab channel names
+        with open(inifile) as f:
+            content = f.readlines()
+
+        writefile = open(inifile, 'w')
+        for line in content:
+            if not url in line:
+                writefile.write(line)
+        writefile.close()
 #---------------------------------------------------------------------------------------------------
 def get_params(p):
     param=[]
@@ -170,19 +192,13 @@ def play(url, windowed, name=None):
 
     dixie.SetSetting('streamURL', url)
  
-    if 'tv/play_by_name_only/' in url or 'movies/play_by_name' in url:
+    if 'tv/play_by_name_only_guide/' in url or 'movies/play_by_name_guide' in url or 'tv/play_by_name_guide/' in url:
         dixie.removeKepmap()
         xbmc.executebuiltin('XBMC.ActivateWindow(10025,%s)' % url)
-#        while not xbmc.Player().isPlaying():
-#            xbmc.sleep(1000)
         CheckIdle(maxIdle)
-#        xbmc.sleep(2000)
-#        wait(maxIdle)
-#        dixie.loadKepmap()
 
     else:
         dixie.loadKepmap()
-    # dixie.ShowBusy()
     
         if url.startswith('HDTV'):
             import hdtv
@@ -225,15 +241,12 @@ def play(url, windowed, name=None):
             if handled:
                 return
 
-
         if not checkForAlternateStreaming(url):
-            playAndWait(url, windowed, maxIdle)
-
-            xbmc.sleep(3000)
-            if not xbmc.Player().isPlaying():
-                # dixie.CloseBusy()
-                xbmc.executebuiltin('XBMC.RunPlugin(%s)' % url)
-                wait(maxIdle)
+            my_playback = koding.Play_Video(url)
+            if not my_playback:
+                if CLEAN_STREAMS == 'true':
+                    clean_ini(url)
+                koding.Notify(title='PLAYBACK FAILED', message='Please try another link', duration=5000)
 #---------------------------------------------------------------------------------------------------
 def playAndWait(url, windowed, maxIdle, delay=0):
     playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
@@ -394,69 +407,21 @@ def metalliq_play(args):
     try:
         addonid         = xbmcaddon.Addon(id=plugin)
         addonname       = addonid.getAddonInfo('name')
-        updateicon      = os.path.join(ADDONS, plugin, 'icon.png')
-        xbmc.executebuiltin("XBMC.Notification(Please Wait...,Searching for  [COLOR=dodgerblue]"+channel+"[/COLOR] ,5000,"+updateicon+")")
-        xbmc.executebuiltin('RunPlugin(plugin://plugin.video.metalliq/live/%s/None/en/%s)' % (channel, playertype))
-        Check_Playback(channel, repository, plugin, playertype, channel_orig, itemname)
-
-# If not check if the relevant repo is installed
+# If not then install the relevant addon
     except:
-        try:
-            repoid          = xbmcaddon.Addon(id=repository)
-            reponame        = repoid.getAddonInfo('name')
-            run             = 1
-
-# If not then install the relevant repo
-        except:
-            if dialog.yesno('Repository Install', 'To install the add-on required you need the following repo:','[COLOR=dodgerblue]%s[/COLOR]' % repository,'Would you like to install?'):
-                dp.create('Downloading','[COLOR=dodgerblue]%s[/COLOR]' % repository,'Please Wait')
-                DOWNLOAD_ZIP = os.path.join(PACKAGES, repository+'.zip')
-                download.download('https://github.com/noobsandnerds/noobsandnerds/blob/master/zips/%s/%s-0.0.0.1.zip?raw=true' % (repository, repository), DOWNLOAD_ZIP, dp)
-                extract.all(DOWNLOAD_ZIP, ADDONS, dp)
-                dp.close()
-                xbmc.executebuiltin('UpdateLocalAddons')
-                xbmc.executebuiltin('UpdateAddonRepos')
-                xbmc.sleep(4000)
-                run = 1
-
-
-# If add-on wasn't installed we install it
-    if run == 1:
-        xbmc.executebuiltin("ActivateWindow(10025,plugin://%s,return)" % plugin)
-        xbmc.sleep(1500)
-        activewindow = True
-        while activewindow:
-            activewindow = xbmc.getCondVisibility('Window.IsActive(yesnodialog)')
-            xbmc.sleep(500)
-        xbmc.sleep(1000)
-        activewindow = True
-        while activewindow:
-            activewindow = xbmc.getCondVisibility('Window.IsActive(progressdialog)')
-            xbmc.sleep(500)
-
+        koding.Addon_Install(addon_id=addonid,confirm=True,silent=0,repo_install=0)
 # Update enabled metalliq players
-        xbmc.executebuiltin('RunPlugin(plugin://plugin.video.metalliq/settings/players/tvportal)')
-#---------------------------------------------------------------------------------------------------
-# Check if playback works
-def Check_Playback(channel, repository, plugin, playertype, channel_orig, itemname):
-    stop       = 0
-    while not stop:
-        okwindow = xbmc.getCondVisibility('Window.IsActive(okdialog)')
-        if okwindow:
-            while okwindow:
-                dixie.log('### OK DIALOG PRESENT')
-                okwindow = xbmc.getCondVisibility('Window.IsActive(okdialog)')
-            stop = 1
-        player   = xbmc.getCondVisibility('Player.Playing')
-        if player:
-            stop = 2
-    if stop == 1:
+        xbmc.executebuiltin('RunPlugin(plugin://plugin.video.metalliq/settings/channelers)')
+
+    updateicon      = Addon_Info('icon')
+    xbmc.executebuiltin("XBMC.Notification(Please Wait...,Searching for  [COLOR=dodgerblue]"+channel+"[/COLOR] ,5000,"+updateicon+")")
+    my_playback     = koding.Play_Video('plugin://plugin.video.metalliq/live_guide/%s/None/en/%s' % (channel, playertype))
+    if not my_playback:
         if dialog.yesno('Edit Search Term?','Would you like to edit the channel name? It may be this add-on has a slightly different spelling of [COLOR=dodgerblue]%s[/COLOR]' % channel):
             Edit_Search(channel, repository, plugin, playertype, channel_orig, itemname)
         else:
             Edit_SF_Name('bad', playertype, channel_orig, itemname)
-    if stop == 2:
-        dixie.log('### PLAYBACK GOOD')
+    else:
         Edit_SF_Name('good', playertype, channel_orig, itemname)
 #---------------------------------------------------------------------------------------------------
 args = sys.argv[1]
@@ -467,5 +432,5 @@ elif __name__ == '__main__':
     name = None
     if len(sys.argv) > 3:
         name = sys.argv[3]
-    
+    xbmc.log('sys[1]: %s | sys[2]: %s | sys[3]: %s' % (sys.argv[1],sys.argv[2],name))
     play(sys.argv[1], sys.argv[2] == 1, name)

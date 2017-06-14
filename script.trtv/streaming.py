@@ -52,15 +52,8 @@ class StreamsService(object):
                 if file not in files:
                     files.append(file)
 
-        files.append(os.path.join(datapath, 'addons.ini'))
-        
-        if LOCAL:
-            files.append(os.path.join(datapath, 'local.ini'))
-
-        if FTVINI == 'UK Links':
-            files.append(os.path.join(datapath, 'uk.ini'))
-        else:
-            files.append(os.path.join(datapath, 'nongeo.ini'))
+        if os.path.exists(os.path.join(datapath,'addons.ini')):
+            files.append(os.path.join(datapath, 'addons.ini'))
 
         return files
         
@@ -209,21 +202,13 @@ class StreamsService(object):
         """
 
         matches = list()
-        catchuplist = ['plugin.video.meta','plugin.video.metalliq']
-        dixie.log('CATCHUP: %s'%catchup)
+        xbmc.log('CATCHUP: %s'%catchup)
 
 # If user chooses to watch via catchup then call meta addons
-        if catchup != '':
-            for item in catchuplist:
-                try:
-                    xbmcaddon.Addon(item)
-                except Exception:
-                    continue # ignore addons that are not installed
-                catchup = catchup.replace(' ','+')
-                for (label, stream) in self.getAddonStreams(item):
-                    stream = str(stream.replace("<channel>",catchup))
-                    addontitle = xbmcaddon.Addon(id=item).getAddonInfo('name')
-                matches.append((item, addontitle, stream))
+        if catchup  != '':
+            catchup = catchup.replace(' ','+')
+            stream  = ('plugin://plugin.video.metalliq/%s' % (catchup))
+            matches.append(('plugin.video.metalliq', 'Catchup', [str(stream)]))
 
 # For a live tv selection grab valid ini files and present options
         else:
@@ -256,11 +241,17 @@ class StreamsService(object):
                 try:
                     xbmcaddon.Addon(id)
                 except Exception:
-                    continue # ignore addons that are not installed
+                    pass # ignore addons that are not installed
 
                 for (label, stream) in self.getAddonStreams(id):
                     label = label.upper()
+                    label_temp = label.replace(' ','').replace('_','').replace('HD','').replace('1','ONE').replace('2','TWO').replace('3','THREE').replace('4','FOUR').replace('5','FIVE').replace('6','SIX').replace('7','SEVEN').replace('8','EIGHT').replace('9','NINE').replace('0','ZERO').replace('SPORTS','SPORT').replace('|','').replace(':','').replace('(','').replace(')','').replace('=','')
+                    if len(label_temp) > 9:
+                        label_temp = label_temp.replace('CINEMA','').replace('MOVIES','')
                     channel.title = channel.title.upper().replace('_',' ')
+                    channel_temp = channel.title.replace(' ','').replace('_','').replace('HD','').replace('1','ONE').replace('2','TWO').replace('3','THREE').replace('4','FOUR').replace('5','FIVE').replace('6','SIX').replace('7','SEVEN').replace('8','EIGHT').replace('9','NINE').replace('0','ZERO').replace('SPORTS','SPORT').replace('|','').replace(':','').replace('(','').replace(')','').replace('=','')
+                    if len(channel_temp) > 9:
+                        channel_temp = channel_temp.replace('CINEMA','').replace('MOVIES','')
 
 # If meta is chosen we clean the name up a bit more
                     if SF_METALLIQ == 'false':
@@ -274,9 +265,27 @@ class StreamsService(object):
                             if chanx.endswith("%20PLUS1"):
                                 chanx = chanx.replace("%20PLUS1","")
                             stream = str(stream.replace("<channel>",'live/%s/None/en'% chanx))
-                            dixie.log('STREAM: %s'%stream)
-                   
-                    if (channel.title in label) or (label in channel.title):
+                            xbmc.log('STREAM: %s'%stream)
+                    if type(stream) is list:
+                        stream = stream[0]
+                    if (channel_temp in label_temp) or (label_temp in channel_temp):
+# Workaround for getting clean id if ini contains badly formatted items
+                        if stream.startswith('plugin://') and not 'plugin.program.super.favourites' in stream:
+                            idtemp = stream.split('plugin://')[1]
+                            xbmc.log('idtemp: %s' % idtemp)
+                            id = idtemp.split('/')[0]
+
+ # Clean up badly formatted labels in the ini files
+                        label = re.sub('[:\\/?\<>|"]', '', label)
+                        label = label.strip()
+                        try:
+                            label = label.encode('ascii', 'ignore')
+                        except:
+                            try:
+                                label = label.decode('utf-8').encode('ascii', 'ignore')
+                            except:
+                                label = label
+
                         matches.append((id, label, stream))
         
 # Get any Kodi Favourites with channel name
@@ -287,9 +296,16 @@ class StreamsService(object):
                 
                 for (label, stream) in kodiFaves:
                     label = label.upper()
+                    label_temp = label.replace(' ','').replace('_','').replace('HD','').replace('1','ONE').replace('2','TWO').replace('3','THREE').replace('4','FOUR').replace('5','FIVE').replace('6','SIX').replace('7','SEVEN').replace('8','EIGHT').replace('9','NINE').replace('0','ZERO').replace('SPORTS','SPORT').replace('|','').replace(':','').replace('(','').replace(')','').replace('=','')
+                    if len(label_temp) > 9:
+                        label_temp = label_temp.replace('CINEMA','').replace('MOVIES','')
+                    
                     channel.title = channel.title.upper()
+                    channel_temp = channel.title.replace(' ','').replace('_','').replace('HD','').replace('1','ONE').replace('2','TWO').replace('3','THREE').replace('4','FOUR').replace('5','FIVE').replace('6','SIX').replace('7','SEVEN').replace('8','EIGHT').replace('9','NINE').replace('0','ZERO').replace('SPORTS','SPORT').replace('|','').replace(':','').replace('(','').replace(')','').replace('=','')
+                    if len(channel_temp) > 9:
+                        channel_temp = channel_temp.replace('CINEMA','').replace('MOVIES','')
 
-                    if (channel.title in label) or (label in channel.title):
+                    if (channel_temp in label_temp) or (label_temp in channel_temp):
                         matches.append((id, label, stream))
                     
 # Get any Playlist entries with channel name
@@ -300,9 +316,16 @@ class StreamsService(object):
             
                 for (label, stream) in iptvPlaylist:
                     label = label.upper()
-                    channel.title = channel.title.upper()
+                    label_temp = label.replace(' ','').replace('_','').replace('HD','').replace('1','ONE').replace('2','TWO').replace('3','THREE').replace('4','FOUR').replace('5','FIVE').replace('6','SIX').replace('7','SEVEN').replace('8','EIGHT').replace('9','NINE').replace('0','ZERO').replace('SPORTS','SPORT').replace('|','').replace(':','').replace('(','').replace(')','').replace('=','')
+                    if len(label_temp) > 9:
+                        label_temp = label_temp.replace('CINEMA','').replace('MOVIES','')
 
-                    if (channel.title in label) or (label in channel.title):
+                    channel.title = channel.title.upper()
+                    channel_temp = channel.title.replace(' ','').replace('_','').replace('HD','').replace('1','ONE').replace('2','TWO').replace('3','THREE').replace('4','FOUR').replace('5','FIVE').replace('6','SIX').replace('7','SEVEN').replace('8','EIGHT').replace('9','NINE').replace('0','ZERO').replace('SPORTS','SPORT').replace('|','').replace(':','').replace('(','').replace(')','').replace('=','')
+                    if len(channel_temp) > 9:
+                        channel_temp = channel_temp.replace('CINEMA','').replace('MOVIES','')
+
+                    if (channel_temp in label_temp) or (label_temp in channel_temp):
                         matches.append((id, label, stream))
 
 # Get entries from PVRchannels with channel name    
@@ -314,16 +337,24 @@ class StreamsService(object):
                 
                 for (label, stream) in PVRchannels:
                     label = label.upper()
-                    channel.title = channel.title.upper()
+                    label_temp = label.replace(' ','').replace('_','').replace('HD','').replace('1','ONE').replace('2','TWO').replace('3','THREE').replace('4','FOUR').replace('5','FIVE').replace('6','SIX').replace('7','SEVEN').replace('8','EIGHT').replace('9','NINE').replace('0','ZERO').replace('SPORTS','SPORT').replace('|','').replace(':','').replace('(','').replace(')','').replace('=','')
+                    if len(label_temp) > 9:
+                        label_temp = label_temp.replace('CINEMA','').replace('MOVIES','')
 
-                    if (channel.title in label) or (label in channel.title):
+                    channel.title = channel.title.upper()
+                    channel_temp = channel.title.replace(' ','').replace('_','').replace('HD','').replace('1','ONE').replace('2','TWO').replace('3','THREE').replace('4','FOUR').replace('5','FIVE').replace('6','SIX').replace('7','SEVEN').replace('8','EIGHT').replace('9','NINE').replace('0','ZERO').replace('SPORTS','SPORT').replace('|','').replace(':','').replace('(','').replace(')','').replace('=','')
+                    if len(channel_temp) > 9:
+                        channel_temp = channel_temp.replace('CINEMA','').replace('MOVIES','')
+
+                    if (channel_temp in label_temp) or (label_temp in channel_temp):
                         matches.append((id, label, stream))
             
 
-        if len(matches) == 1:
-            return matches[0][2]
-        else:
-            return matches
+        xbmc.log('### matches length: %s' % len(matches))
+        # if len(matches) == 1:
+        #     return [matches[0][0],matches[0][1],str(matches[0][2])]
+        # else:
+        return matches
 
 
 class OrderedDict(dict):
