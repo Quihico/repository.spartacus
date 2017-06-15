@@ -29,7 +29,11 @@ Return a dictionary of add-ons which match a specific genre.
 If you'd like to hook into this please take a look at the following URL:
 https://raw.githubusercontent.com/noobsandnerds/noobsandnerds/master/repository.nanaddons/README.txt
 
-	CODE: Addon_Genre([genre])
+Please Note: Although this hooks into the NaN framework to pull genres you can use this without
+having to hook into their framework if you have a custom url which returns results in the same format.
+Your url must return a dictionary of items in this format: {"addon_name":"addon_id","addon_name_2":"addon_id_2"}
+
+	CODE: Addon_Genre([genre,custom_url])
 
 	AVAILABLE PARAMS:
 	    
@@ -41,6 +45,9 @@ https://raw.githubusercontent.com/noobsandnerds/noobsandnerds/master/repository.
 	    "Dev Tools" you'll see the url shows as 'devtools' and that's what you'd
 	    send through to this function if you only wanted those to show.
 	    http://noobsandnerds.com/addons/category/genres/
+
+	    custom_url  -  If you have your own custom url which returns genres
+    	you can enter it here and use that rather than rely on NaN categorisation.
 
 	EXAMPLE CODE:
 		space_addons = Addon_Genre(genre='space')
@@ -244,6 +251,20 @@ By default this will open the current add-on settings but if you pass through an
 		    koding.Open_Settings(addon_id='plugin.video.youtube',focus='2.3',click=True,stop_script=True)
 		else:
 		    dialog.ok('YOUTUBE NOT INSTALLED','We cannot run this example as it uses the YouTube add-on which has not been found on your system.')
+
+------------------------------------------------------------------------------------------
+
+ADULT TOGGLE:
+Remove/Enable a list of add-ons, these are put into a containment area until enabled again.
+
+CODE: Adult_Toggle(adult_list, [disable])
+
+AVAILABLE PARAMS:
+            
+    (*) adult_list  -  A list containing all the add-ons you want to be disabled.
+
+    disable  -  By default this is set to true so any add-ons in the list sent
+    through will be disabled. Set to False if you want to enable the hidden add-ons.
 
 ------------------------------------------------------------------------------------------
 

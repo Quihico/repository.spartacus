@@ -1,3 +1,6 @@
+v.2.9.9.6:
+- Fixed adult/genre filter
+
 v.2.9.9.5:
 - Fixed keyword and social tv menus
 

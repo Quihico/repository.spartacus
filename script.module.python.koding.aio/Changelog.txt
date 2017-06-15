@@ -1,3 +1,7 @@
+v.0.9.4:
+- Added new Adult_Toggle function
+- Improved Adult_Genre so it can take a custom url, no longer NaN dependant.
+
 v.0.9.3.1:
 - Fixed indentation error in database module
 

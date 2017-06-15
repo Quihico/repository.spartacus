@@ -1,39 +1,24 @@
-import urllib, urllib2, re, xbmcplugin, xbmcgui, xbmc, xbmcaddon, os, sys
+# -*- coding: utf-8 -*-
 
-dialog         =  xbmcgui.Dialog()
+# plugin.program.tbs
+# Total Revolution Maintenance (c) by whufclee (info@totalrevolution.tv)
 
-def Open_URL(url):
-    req      = urllib2.Request(url)
-    req.add_header('User-Agent','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
-    response = urllib2.urlopen(req)
-    link     = response.read()
-    response.close()
-    
-    return link.replace('\r','').replace('\n','').replace('\t','')
-    
+# Total Revolution Maintenance is licensed under a
+# Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+
+# You should have received a copy of the license along with this
+# work. If not, see http://creativecommons.org/licenses/by-nc-nd/4.0.
+
+import requests
+import koding
+
+from koding import Network_Settings, Sleep_If_Playback_Active, String, YesNo_Dialog
+
 isplaying = xbmc.Player().isPlaying()
-if isplaying == 0:
-    try:
-        Open_URL('http://google.com')
-    except:
-        try:
-            Open_URL('http://google.com')
-        except:
-            try:
-                Open_URL('http://google.com')
-            except:
-                try:
-                    Open_URL('http://google.cn')
-                except:
-                    try:
-                        Open_URL('http://google.cn')
-                    except:
-                        try:
-                            Open_URL('http://google.cn')
-                        except:
-                            dialog.ok("NOT CONNECTED",'This device is not connected to the internet','Please check your Wi-Fi settings or make sure','the ethernet cable is plugged in.')
-                            
-                            try:
-                                xbmc.executebuiltin('RunAddon(service.openelec.settings)')
-                            except:
-                                pass
+Sleep_If_Playback_Active()
+try:
+    r    = requests.get('http://google.com')
+    code = r.status_code
+except:
+    if YesNo_Dialog(String(30332),String(30333)):
+        Network_Settings()

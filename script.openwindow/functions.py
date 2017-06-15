@@ -178,7 +178,7 @@ def CPU_Check():
 #-----------------------------------------------------------------------------
 # Enable/disable the visibility of adult add-ons (use true or false)
 def Enable_Addons(updaterepos = True):
-    mylist = Addon_Genre()
+    mylist = Addon_Genre(custom_url=BASE+'boxer/masterscripts/addon_list.php&g=adult')
     xbmc.executebuiltin('UpdateLocalAddons')
     dolog('UPDATED LOCAL ADDONS')
     if updaterepos:
