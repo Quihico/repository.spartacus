@@ -185,7 +185,7 @@ def showlist(usenan = False):
     id_array         = []
 
     if usenan:
-        addon_list = koding.Addon_Genre(mymenu,BASE+'boxer/masterscripts/addon_list.php?g=%s'%my_menu)
+        addon_list = koding.Addon_Genre(mymenu,BASE+'boxer/masterscripts/addon_list.php?g=%s'%mymenu)
         for item in addon_list.items():
             name = koding.Cleanup_String(item[0])
             genre_array.append('addon~'+name+'~'+item[1])

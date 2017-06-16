@@ -755,6 +755,16 @@ def Firmware_Update(url):
     os.system('mkdir -p /tmp/cache/recovery')
     os.system('echo -e "--update_package=/cache/update.zip\n--wipe_cache" > /tmp/cache/recovery/command || exit 1\numount /tmp/cache\nreboot recovery')
 #---------------------------------------------------------------------------------------------------
+# Remove the downloaded zip info and re-do social update
+@route(mode='force_update')
+def Force_Update():
+    dolog('FORCE UPDATE')
+    zip_path = os.path.join(TBSDATA,'zipcheck')
+    dolog('zip_path: %s'%zip_path)
+    if os.path.exists(zip_path):
+        os.remove(zip_path)
+    Get_Updates()
+#---------------------------------------------------------------------------------------------------
 # Clean up all known cache files
 def Friend_Options(my_array=[]):
     username  = encryptme("e",Addon_Setting("username"))
@@ -936,6 +946,15 @@ def Get_Mac(protocol):
 
     return str(mac)
 #---------------------------------------------------------------------------------------------------
+# Run the social update command and optionally show a busy working symbol until finished
+@route(mode='get_updates', args=['url'])
+def Get_Updates(url=True):
+    if url:
+        Show_Busy(True)
+    Sleep_If_Function_Active( Grab_Updates, [BASE+'boxer/comm_live.php?multi&z=c&x=','ignoreplayer'] )
+    # if url:
+    #     Show_Busy(False)
+#---------------------------------------------------------------------------------------------------
 # Grab current playing video details
 @route(mode='get_video')
 def Get_Video():
@@ -1017,7 +1036,6 @@ def Grab_Updates(url, runtype = ''):
             Notify(String(30059),String(30007),'1000',os.path.join(ADDONS,'script.openwindow','resources','images','update_software.png'))
             url=url.replace('update&','')
         url,params = url.split('?')
-        xbmc.executebuiltin("ActivateWindow(busydialog)")
         while mysuccess != 1 and failed != 1:
 
             try:
@@ -1136,10 +1154,6 @@ def Grab_Updates(url, runtype = ''):
             except:
                 dolog("### Failed with update command: "+Last_Error())
                 failed = 1
-        try:
-            xbmc.executebuiltin("Dialog.Close(busydialog)")
-        except:
-            pass
 
         if changetimer == 1:
             dolog('### TBS GRAB UPDATES - TIMER CHANGED, STOPPING/RUNNING SERVICE')
@@ -1153,11 +1167,15 @@ def Grab_Updates(url, runtype = ''):
         xbmc.executebuiltin('RunScript(special://xbmc/addons/script.openwindow/functions.py)')
     Sync_Settings()
     Remove_Files()
+    dolog('### TBS_RUNNING: %s'%xbmcgui.Window(10000).getProperty('TBS_Running'))
     if runtype != 'silent':
-        updates_running = xbmcgui.Window(10000).getProperty('TBS_Running')
+        counter = 2
+        updates_running = 'true'
         while updates_running == 'true':
-            xbmc.sleep(1000)
+            xbmc.sleep(2000)
             updates_running = xbmcgui.Window(10000).getProperty('TBS_Running')
+            dolog('### TBS_RUNNING: %ss'%counter)
+            counter += 2
         Notify(String(30330),String(30331),'1000',os.path.join(ADDONS,'plugin.program.tbs','resources','tick.png'))
 #---------------------------------------------------------------------------------------------------
 # Hide passwords in addon settings
@@ -1244,7 +1262,7 @@ def Install_Shares(function, menutype, menu, choices, contentarray = '', imagear
             del shares_contenturl[:]
             del match[:]
         xbmc.executebuiltin('ActivateWindow(HOME)')
-        Grab_Updates(BASE+'boxer/comm_live.php?multi&z=c&x=','ignoreplayer')
+        Get_Updates()
 #---------------------------------------------------------------------------------------------------
 # Menu to install content via the TR add-on
 @route(mode='install_content')
@@ -1253,7 +1271,7 @@ def Install_Content():
         Add_Dir(String(30098),'','disable_master',False,'','','')
     if Addon_Setting('userid') != '':
         Add_Dir(String(30099) % encryptme('d',userid),'','change_id',False,'','','')
-    Add_Dir(String(30100),'{"url":"'+BASE+'boxer/comm_live.php?z=c&x=","runtype":"ignoreplayer"}', 'grab_updates',False,'','','')
+    Add_Dir(String(30100),'', 'get_updates',False,'','','')
     Add_Dir(String(30101),'','keywords',False,'Keywords.png','','')
     Add_Dir(String(30102),'','install_from_zip',False,'','','')
     Add_Dir(String(30103),'','browse_repos',False,'','','')
@@ -1769,7 +1787,8 @@ def My_Details():
         choice = Select_Dialog(String(30349)%userid,my_array)
         if choice >= 0:
             if choice == 0:
-                Grab_Updates(BASE+'boxer/comm_live.php?z=c&x=')
+                Get_Updates()
+                # Grab_Updates(BASE+'boxer/comm_live.php?z=c&x=')
             if choice == 1 and username == String(30348):
                 Run_Code(url="boxer/User_Registration.php")
             elif choice == 1:
@@ -1952,7 +1971,7 @@ def Open_Link(url):
     response = Open_URL(post_type='post',url=url)
     dolog("### "+response)
     if "record" in response:
-        Grab_Updates(BASE+'boxer/comm_live.php?z=c&x=','ignoreplayer')
+        Get_Updates()
         xbmc.executebuiltin('Container.Refresh')
     else:
         OK_Dialog(String(30131),String(30132))
@@ -2253,7 +2272,7 @@ def Remove_Menu(function, menutype = ''):
                 dolog('### URL TO REMOVE: %s' % item)
                 Open_URL(post_type='post',url=item)
 
-        Grab_Updates(BASE+'boxer/comm_live.php?multi&z=c&x=','ignoreplayer')
+        Get_Updates()
     elif menutype == '':
         OK_Dialog(String(30089),String(30090))
 #---------------------------------------------------------------------------------------------------
@@ -2786,6 +2805,7 @@ def Tools_Misc():
     Add_Dir(String(30219),'none','log',False,'','','')
     Add_Dir(String(30217),'{"value":"false","loadtype":""}','adult_filter',False,'','','')
     Add_Dir(String(30220),'{"value":"true","loadtype":""}','adult_filter',False,'','','')
+    Add_Dir(String(30501),'','force_update',False,'','','')
 #---------------------------------------------------------------------------------------------------
 # Unhide passwords in addon settings - THANKS TO MIKEY1234 FOR THIS CODE (taken from Xunity Maintenance)
 @route(mode='unhide_passwords')

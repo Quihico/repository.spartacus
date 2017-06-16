@@ -1,3 +1,6 @@
+v.0.9.5:
+- Fixed bug in sleep_if_function_active, was closing dialog busy
+
 v.0.9.4:
 - Added new Adult_Toggle function
 - Improved Adult_Genre so it can take a custom url, no longer NaN dependant.

@@ -1,3 +1,7 @@
+v.4.3.0:
+- Fixed typo causing genre lookup to fail
+- Added option to force a re-check of all social update items
+
 v.4.2.9:
 - Fixed enable/disable xxx in maintenance
 - Fixed genre/adult filter so no longer relies fully on NaN

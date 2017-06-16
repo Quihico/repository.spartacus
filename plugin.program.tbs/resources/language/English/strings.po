@@ -2013,3 +2013,7 @@ msgstr ""
 msgctxt "#30500"
 msgid "You have no custom settings associated with these add-ons.\nYour keyword will be created when you click OK."
 msgstr ""
+
+msgctxt "#30501"
+msgid "FORCE UPDATES"
+msgstr ""
