@@ -19,7 +19,7 @@ import xbmcgui
 import xbmcplugin
 
 from koding     import dolog, Addon_Setting, Text_File
-from default    import Sync_Settings
+from default    import Sync_Settings, Adult_Filter
 #---------------------------------------------------------------------------------------------------
 AddonID          = 'plugin.program.tbs'
 HOME             =  xbmc.translatePath('special://home/')
@@ -35,7 +35,7 @@ runwizard        =  os.path.join(ADDON_DATA,'script.openwindow','RUN_WIZARD')
 install_complete =  os.path.join(ADDON_DATA,'script.openwindow','INSTALL_COMPLETE')
 #---------------------------------------------------------------------------------------------------
 dolog('### SERVICE - running sync settings')
-# Adult_Filter('false','startup')
+Adult_Filter('false','startup')
 Sync_Settings()
 # Make sure this doesn't interfere with startup wizard
 if not os.path.exists(runwizard) and os.path.exists(install_complete):
