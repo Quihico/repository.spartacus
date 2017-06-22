@@ -2017,3 +2017,11 @@ msgstr ""
 msgctxt "#30501"
 msgid "FORCE UPDATES"
 msgstr ""
+
+msgctxt "#30502"
+msgid "EPG Tools"
+msgstr ""
+
+msgctxt "#30503"
+msgid "Installing Keyword"
+msgstr ""
