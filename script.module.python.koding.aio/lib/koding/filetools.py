@@ -806,6 +806,44 @@ koding.Text_Box('ADDON FOLDERS','Below is a list of folders found in the addons 
                     else:
                         final_list.append(dirname)
     return final_list
+#---------------------------------------------------------------------------------------------------
+# TUTORIAL #
+def Highest_Version(content=[],start_point='',end_point=''):
+    """
+Send through a list of strings which all have a common naming structure,
+the one with the highest version number will be returned.
+
+CODE: Highest_Version(content,[start_point,end_point])
+
+AVAILABLE PARAMS:
+
+    (*) content  -  This is the list of filenames you want to check.
+
+    start_point  -  If your filenames have a common character/string immediately
+    before the version number enter that here. For example if you're looking at
+    online repository/add-on files you would use '-' as the start_point. The version
+    numbers always appear after the final '-' with add-ons residing on repo's.
+
+    end_point  -  If your version number is followed by a common string (e.g. '.zip')
+    then enter it in here.
+
+EXAMPLE CODE:
+mylist = ['plugin.test-1.0.zip','plugin.test-0.7.zip','plugin.test-1.1.zip','plugin.test-0.9.zip']
+dialog.ok('[COLOR=gold]OUR LIST OF FILES[/COLOR]', '[COLOR=dodgerblue]%s[/COLOR]\n[COLOR=powderblue]%s[/COLOR]\n[COLOR=dodgerblue]%s[/COLOR]\n[COLOR=powderblue]%s[/COLOR]'%(mylist[0],mylist[1],mylist[2],mylist[3]))
+
+highest = Highest_Version(content=mylist,start_point='-',end_point='.zip')
+dialog.ok('HIGHEST VERSION', 'The highest version number of your files is:','[COLOR=dodgerblue]%s[/COLOR]'%highest)
+~"""
+    highest      = 0
+    highest_ver  = ''
+    for item in content:
+        version = item.replace(end_point,'')
+        version = version.split(start_point)
+        version = version[len(version)-1]
+        if version > highest:
+            highest      = version
+            highest_ver  = item
+    return highest_ver
 #----------------------------------------------------------------
 # TUTORIAL #
 def md5_check(src,string=False):

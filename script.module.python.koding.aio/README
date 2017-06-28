@@ -104,64 +104,9 @@ such as path, version, name etc.
 ------------------------------------------------------------------------------------------
 
 ADD-ON INSTALL:
-Install an add-on and all dependencies matching the version of Kodi you're currently running. If the add-on
-install takes a while to kick in (spinning wheel) it just means that particular add-on hasn't yet been
-cached in the db, the next time someone hits that add-on it will be instant.
-
-* THIS IS A PREMIUM FEATURE FOR ADDONS EXCLUSIVELY SUPPORTED AT NOOBSANDNERDS
-If you'd like to hook into this please take a look at the following URL:
-https://raw.githubusercontent.com/noobsandnerds/noobsandnerds/master/repository.nanaddons/README.txt
-
-	CODE: Addon_Install(addon_id, [confirm, silent, repo_install])
-
-	AVAILABLE PARAMS:
-	    
-	    addon_id  -  This is the add-on id you want to install.
-	    The Add-on Portal will be scanned for an add-on and all the
-	    dependencies will also be scanned. A list of possible download
-	    locations are then populated server side and the best ones which
-	    match your needs are installed (matching dependencies with your
-	    current running version of Kodi to make sure bad modules aren't
-	    installed).
-
-	    confirm  -  By default this is set to True which means the user
-	    will get a choice of whether to install the add-on or not. Set to
-	    false if you want to force this add-on without any dialogs.
-
-	    silent  -  By default this is set to False which means there will
-	    always be a dialog appear showing the install process. Set this to
-	    True if you'd prefer to silently auto install the content.
-	        
-	    repo_install  -  This will allow you to automatically install the
-	    relevant repo, offer to install the repo or do not install the repo.
-	    See the available values below.
-	    
-	    The team at NaN take great care to try and make sure the relevant
-	    add-ons are matched against the official developers repo and the
-	    daily script which scans repositories also does a lot of clever
-	    assignment processes. However due to the sheer amount of
-	    "developers" re-uploading others content there's always a chance
-	    an add-on may get marked up against the wrong repo. If you notice
-	    an add-on is marked against the wrong repo please consider updating
-	    the details via the Add-on Portal (EDIT ADDON button) or notifying
-	    a member of the team at the nooobsandnerds forum and they can
-	    manually get it rectified. Thank you.
-
-	    AVAILABLE VALUES:
-
-	        0 - This will not install the repo the add-on was found on.
-
-	        1 - This will automatically install the repo the add-on is found on.
-	        If you don't send through a value this will be used as the default.
-	        
-	        2 - This will ask user if they want to install the repo the add-on was found on.
-
-	EXAMPLE CODE:
-		dialog.ok('INSTALL NAN TUTORIALS','We will now attempt to install NaN Tutorials add-on.')
-		if os.path.exists(xbmc.translatePath('special://home/addons/plugin.video.nantus')):
-		    dialog.ok('ALREADY INSTALLED','We cannot install NaN Tutorials as it\'s already installed!')
-		else:
-		    koding.Addon_Install(addon_id='plugin.video.nantuts',confirm=True,silent=0,repo_install=1)
+Sorry due to large amounts of traffic to the NaN site this function has now been removed.
+It is currently unclear on whether or not it will return. If you've used this in previous
+code please remove, although it will just silently fail and print to the log.
 
 ------------------------------------------------------------------------------------------
 
@@ -1470,6 +1415,33 @@ Return a list of either files or folders in a given path.
 
 ------------------------------------------------------------------------------------------
 
+HIGHEST VERSION:
+Send through a list of strings which all have a common naming structure,
+the one with the highest version number will be returned.
+
+	CODE: Highest_Version(content,[start_point,end_point])
+
+	AVAILABLE PARAMS:
+
+	    (*) content  -  This is the list of filenames you want to check.
+
+	    start_point  -  If your filenames have a common character/string immediately
+	    before the version number enter that here. For example if you're looking at
+	    online repository/add-on files you would use '-' as the start_point. The version
+	    numbers always appear after the final '-' with add-ons residing on repo's.
+
+	    end_point  -  If your version number is followed by a common string (e.g. '.zip')
+	    then enter it in here.
+
+	EXAMPLE CODE:
+		mylist = ['plugin.test-1.0.zip','plugin.test-0.7.zip','plugin.test-1.1.zip','plugin.test-0.9.zip']
+		dialog.ok('[COLOR=gold]OUR LIST OF FILES[/COLOR]', '[COLOR=dodgerblue]%s[/COLOR]\n[COLOR=powderblue]%s[/COLOR]\n[COLOR=dodgerblue]%s[/COLOR]\n[COLOR=powderblue]%s[/COLOR]'%(mylist[0],mylist[1],mylist[2],mylist[3]))
+
+		highest = Highest_Version(content=mylist,start_point='-',end_point='.zip')
+		dialog.ok('HIGHEST VERSION', 'The highest version number of your files is:','[COLOR=dodgerblue]%s[/COLOR]'%highest)
+
+------------------------------------------------------------------------------------------
+
 MOVE A DIRECTORY:
 Move a directory including all sub-directories to a new location.
 This will automatically create the new location if it doesn't already
@@ -1785,6 +1757,26 @@ This will generate a random string made up of uppercase & lowercase ASCII charac
 
 ------------------------------------------------------------------------------------------
 
+GET USER ID & GROUP ID:
+A simple function to set user id and group id to the current running App for system commands. For example if you're
+using the subprocess command you could send through the preexec_fn paramater as koding.Run_As_Kodi. This function
+will also return the uid and gid in form of a dictionary.
+
+CODE: Get_ID([setid])
+
+AVAILABLE PARAMS:
+    
+    (*) setid  -  By default this is set to False but if set to True it
+    will set the ids (to be used for subprocess commands)
+
+EXAMPLE CODE:
+ids = Get_ID(setid=False)
+uid = ids['uid']
+gid = ids['gid']
+dialog.ok('USER & GROUP ID','User ID: %s'%uid, 'Group ID: %s'%gid)
+
+------------------------------------------------------------------------------------------
+
 GRAB LOG:
 This will grab the log file contents, works on all systems even forked kodi.
 
@@ -1903,23 +1895,23 @@ the order you want them to be executed.
 
 ------------------------------------------------------------------------------------------
 
-GET USER ID & GROUP ID:
-A simple function to set user id and group id to the current running App for system commands. For example if you're
-using the subprocess command you could send through the preexec_fn paramater as koding.Run_As_Kodi. This function
-will also return the uid and gid in form of a dictionary.
+REQUIREMENTS:
+Return the min and max versions of built-in kodi dependencies required by
+the running version of Kodi (xbmc.gui, xbmc.python etc.), The return will
+be a dictionary with the keys 'min' and 'max'.
 
-CODE: Get_ID([setid])
+	CODE: Requirements(dependency)
 
-AVAILABLE PARAMS:
-    
-    (*) setid  -  By default this is set to False but if set to True it
-    will set the ids (to be used for subprocess commands)
+	AVAILABLE PARAMS:
 
-EXAMPLE CODE:
-ids = Get_ID(setid=False)
-uid = ids['uid']
-gid = ids['gid']
-dialog.ok('USER & GROUP ID','User ID: %s'%uid, 'Group ID: %s'%gid)
+	    (*) dependency  -  This is the dependency you want to check.
+	    You can check any built-in dependency which has backwards-compatibility
+	    but the most commonly used are xbmc.gui and xbmc.python.
+
+	EXAMPLE CODE:
+		xbmc_gui = Requirements('xbmc.gui')
+		xbmc_python = Requirements('xbmc.python')
+		dialog.ok('DEPENDENCIES','[COLOR=dodgerblue]xbmc.gui[/COLOR]  Min: %s  Max: %s'%(xbmc_gui['min'],xbmc_gui['max']),'[COLOR=dodgerblue]xbmc.python[/COLOR]  Min: %s  Max: %s'%(xbmc_python['min'],xbmc_python['max']))
 
 ------------------------------------------------------------------------------------------
 

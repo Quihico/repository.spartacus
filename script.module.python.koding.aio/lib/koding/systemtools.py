@@ -651,6 +651,34 @@ koding.Refresh(r_mode=['addons~3000', 'repos~2000', 'profile'], profile_name='de
             xbmc.sleep(sleeper)
 #----------------------------------------------------------------
 # TUTORIAL #
+def Requirements(dependency):
+    """
+Return the min and max versions of built-in kodi dependencies required by
+the running version of Kodi (xbmc.gui, xbmc.python etc.), The return will
+be a dictionary with the keys 'min' and 'max'.
+
+CODE: Requirements(dependency)
+
+AVAILABLE PARAMS:
+
+    (*) dependency  -  This is the dependency you want to check.
+    You can check any built-in dependency which has backwards-compatibility
+    but the most commonly used are xbmc.gui and xbmc.python.
+
+EXAMPLE CODE:
+xbmc_gui = Requirements('xbmc.gui')
+xbmc_python = Requirements('xbmc.python')
+dialog.ok('DEPENDENCIES','[COLOR=dodgerblue]xbmc.gui[/COLOR]  Min: %s  Max: %s'%(xbmc_gui['min'],xbmc_gui['max']),'[COLOR=dodgerblue]xbmc.python[/COLOR]  Min: %s  Max: %s'%(xbmc_python['min'],xbmc_python['max']))
+~"""
+    from filetools import Text_File, Find_In_Text
+    root     = xbmc.translatePath('special://xbmc/addons')
+    dep_path = os.path.join(root,dependency,'addon.xml')
+    content  = Text_File(dep_path,'r')
+    max_ver  = Find_In_Text(content=content,start='version="',end='"')[1]
+    min_ver  = Find_In_Text(content=content,start='abi="',end='"')[0]
+    return {'min':min_ver,"max":max_ver}
+#----------------------------------------------------------------
+# TUTORIAL #
 def Running_App():
     """
 Return the Kodi app name you're running, useful for fork compatibility

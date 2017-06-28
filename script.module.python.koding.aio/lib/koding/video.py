@@ -156,7 +156,7 @@ else:
         return True
 #----------------------------------------------------------------    
 # TUTORIAL #
-def Play_Video(video,showbusy=True,content='video',ignore_dp=False,timeout=10):
+def Play_Video(video,showbusy=True,content='video',ignore_dp=False,timeout=10, item=None):
     """
 This will attempt to play a video and return True or False on
 whether or not playback was successful. This function is similar
@@ -210,24 +210,26 @@ else:
     try:    import simplejson as json
     except: import json
 
-    meta = {}
-    for i in ['title', 'originaltitle', 'tvshowtitle', 'year', 'season', 'episode', 'genre', 'rating', 'votes',
-              'director', 'writer', 'plot', 'tagline']:
-        try:
-            meta[i] = xbmc.getInfoLabel('listitem.%s' % i)
-        except:
-            pass
-    meta = dict((k, v) for k, v in meta.iteritems() if not v == '')
-    if 'title' not in meta:
-        meta['title'] = xbmc.getInfoLabel('listitem.label')
-    icon = xbmc.getInfoLabel('listitem.icon')
-    icon = xbmc.getInfoLabel('listitem.icon')
-    item = xbmcgui.ListItem(path=video, iconImage=icon, thumbnailImage=icon)
-    if content == "music":
-        try:
-            meta['artist'] = xbmc.getInfoLabel('listitem.artist')
-            item.setInfo(type='Music', infoLabels={'title': meta['title'], 'artist': meta['artist']})
-        except:
+    if not item:
+        meta = {}
+        for i in ['title', 'originaltitle', 'tvshowtitle', 'year', 'season', 'episode', 'genre', 'rating', 'votes',
+                  'director', 'writer', 'plot', 'tagline']:
+            try:
+                meta[i] = xbmc.getInfoLabel('listitem.%s' % i)
+            except:
+                pass
+        meta = dict((k, v) for k, v in meta.iteritems() if not v == '')
+        if 'title' not in meta:
+            meta['title'] = xbmc.getInfoLabel('listitem.label')
+        icon = xbmc.getInfoLabel('listitem.icon')
+        item = xbmcgui.ListItem(path=video, iconImage =icon, thumbnailImage=icon)
+        if content == "music":
+            try:
+                meta['artist'] = xbmc.getInfoLabel('listitem.artist')
+                item.setInfo(type='Music', infoLabels={'title': meta['title'], 'artist': meta['artist']})
+            except:
+                item.setInfo(type='Video', infoLabels=meta)
+        else:
             item.setInfo(type='Video', infoLabels=meta)
 
     else:

@@ -150,82 +150,10 @@ dialog.ok('NAME AND VERSION','[COLOR=dodgerblue]Add-on Name:[/COLOR] %s' % name,
     else:
         return ADDON.getAddonInfo(id=id)
 #----------------------------------------------------------------
-# TUTORIAL #
 def Addon_Install(addon_id,confirm=True,silent=0,repo_install=1):
-    """
-[COLOR=gold]PREMIUM FEATURE FOR ADDONS EXCLUSIVELY SUPPORTED AT NOOBSANDNERDS[/COLOR]
-If you'd like to hook into this please take a look at the README.
-
-Install an add-on and all dependencies matching the version of Kodi
-you're currently running. If the add-on install takes a while to kick
-in (spinning wheel) it just means that particular add-on hasn't yet
-been cached in the db, the next time someone hits that add-on it will be instant.
-
-CODE: Addon_Install(addon_id, [confirm, silent, repo_install])
-
-AVAILABLE PARAMS:
-    
-    addon_id  -  This is the add-on id you want to install.
-    The Add-on Portal will be scanned for an add-on and all the
-    dependencies will also be scanned. A list of possible download
-    locations are then populated server side and the best ones which
-    match your needs are installed (matching dependencies with your
-    current running version of Kodi to make sure bad modules aren't
-    installed).
-
-    confirm  -  By default this is set to True which means the user
-    will get a choice of whether to install the add-on or not. Set to
-    false if you want to force this add-on without any dialogs.
-
-    silent  -  By default this is set to False which means there will
-    always be a dialog appear showing the install process. Set this to
-    True if you'd prefer to silently auto install the content.
-        
-    repo_install  -  This will allow you to automatically install the
-    relevant repo, offer to install the repo or do not install the repo.
-    See the available values below.
-    
-    The team at NaN take great care to try and make sure the relevant
-    add-ons are matched against the official developers repo and the
-    daily script which scans repositories also does a lot of clever
-    assignment processes. However due to the sheer amount of
-    "developers" re-uploading others content there's always a chance
-    an add-on may get marked up against the wrong repo. If you notice
-    an add-on is marked against the wrong repo please consider updating
-    the details via the Add-on Portal (EDIT ADDON button) or notifying
-    a member of the team at the nooobsandnerds forum and they can
-    manually get it rectified. Thank you.
-
-    AVAILABLE VALUES:
-
-        0 - This will not install the repo the add-on was found on.
-
-        1 - This will automatically install the repo the add-on is found on.
-        If you don't send through a value this will be used as the default.
-        
-        2 - This will ask user if they want to install the repo the add-on was found on.
-
-EXAMPLE CODE:
-dialog.ok('INSTALL NAN TUTORIALS','We will now attempt to install NaN Tutorials add-on.')
-if os.path.exists(xbmc.translatePath('special://home/addons/plugin.video.nantus')):
-    dialog.ok('ALREADY INSTALLED','We cannot install NaN Tutorials as it\'s already installed!')
-else:
-    koding.Addon_Install(addon_id='plugin.video.nantuts',confirm=True,silent=0,repo_install=1)
-~"""
-    from __init__ import Main
-    if silent == True:
-        silent = 1
-    elif silent == False:
-        silent = 0
-
-    if confirm == True:
-        confirm = 2
-    else:
-        confirm = 0
-
-    kodi_version = str(xbmc.getInfoLabel("System.BuildVersion")[:2])
-    Main('addoninstall|id:%s~version:%s~repo:%s~silent:%s~installtype:%s' % (addon_id, kodi_version, repo_install, silent, confirm))
-
+    xbmc.log('### DUE TO SERVER PROBLEMS AT NAN THE ADDON INSTALL FUNCTION YOU\'VE ATTEMPTED TO CALL IS CURRENTLY DISABLED. PLEASE REMOVE FROM YOUR CODE.',2)
+    xbmc.log('### AT THIS MOMENT IN TIME IT\'S UNSURE WHETHER OR NOT THIS FUNCTION WILL BE GETTING ADDED BACK TO PYTHON KODING OR NOT - SORRY FOR ANY INCONVENIENCE.',2)
+    pass
 #----------------------------------------------------------------
 # TUTORIAL #
 def Addon_List(enabled=True, inc_new=False):
@@ -340,6 +268,7 @@ AVAILABLE PARAMS:
     from filetools   import Move_Tree
     from systemtools import End_Path
 
+    ADDONS = xbmc.translatePath('special://home/addons')
     adult_store = xbmc.translatePath("special://profile/addon_data/script.module.python.koding.aio/adult_store")
     if not os.path.exists(adult_store):
         os.makedirs(adult_store)
@@ -352,7 +281,7 @@ AVAILABLE PARAMS:
                     try:
                         addon_path = xbmcaddon.Addon(id=item).getAddonInfo("path")
                     except:
-                        addon_path = os.path.join(addon_dir,item)
+                        addon_path = os.path.join(ADDONS,item)
                     Toggle_Addons(addon=item, enable=False, safe_mode=False, refresh=True)
                     path_id = End_Path(addon_path)
                     if os.path.exists(addon_path):
