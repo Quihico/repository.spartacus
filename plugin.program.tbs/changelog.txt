@@ -1,3 +1,6 @@
+v.4.3.6.6:
+- Added sleep and busy dialog to addon install
+
 v.4.3.6.5:
 - Added option to enable all disabled add-ons
 - New method of installing SF Shares added. System now downloads current
