@@ -1357,8 +1357,8 @@ def Install_Addons(url):
             OK_Dialog('FAILED TO INSTALL %s ITEMS'%len(failed_array), failed_list)
         
         dolog('### ENABLING ADDONS')
-        Sleep_If_Function_Active(function=Toggle_Addons,show_busy=False)
-        # Toggle_Addons()
+        # Sleep_If_Function_Active(function=Toggle_Addons,show_busy=False)
+        Toggle_Addons()
         Show_Busy(False)
         # Adult_Toggle(adult_list=adult_addons,disable=True)
     else:

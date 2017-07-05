@@ -1,3 +1,6 @@
+v.4.3.6.7:
+- Reverted last change, not sure if it's that or python koding causing problem on Android
+
 v.4.3.6.6:
 - Added sleep and busy dialog to addon install
 
