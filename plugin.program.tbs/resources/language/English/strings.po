@@ -11,7 +11,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgctxt "#30000"
-msgid "INCORRECT PASSWORD"
+msgid "[COLOR=gold]INCORRECT PASSWORD[/COLOR]"
 msgstr ""
 
 msgctxt "#30001"
@@ -19,7 +19,7 @@ msgid "Wrong password entered!"
 msgstr ""
 
 msgctxt "#30002"
-msgid "ENTER PASSWORD"
+msgid "[COLOR=gold]ENTER PASSWORD[/COLOR]"
 msgstr ""
 
 msgctxt "#30003"
@@ -435,11 +435,11 @@ msgid "It was not possible to contact the relevant website to check your details
 msgstr ""
 
 msgctxt "#30106"
-msgid "KEYWORD SUCCESS"
+msgid "[COLOR=lime]KEYWORD SUCCESS[/COLOR]"
 msgstr ""
 
 msgctxt "#30107"
-msgid "Congratulations, your Keyword has been accepted. Please wait for the "working" notification to finish and then click ok to continue. Any changes will have made with immediate effect."
+msgid "Congratulations, your Keyword backup has now been restored."
 msgstr ""
 
 msgctxt "#30108"
@@ -463,7 +463,7 @@ msgid "KEYWORD ERROR"
 msgstr ""
 
 msgctxt "#30113"
-msgid "The keyword you typed could not be installed. Please check the spelling and if you continue to receive','this message it probably means that keyword is no longer available."
+msgid "The keyword you typed could not be installed. Please check the spelling, if you continue to receive this message it probably means that keyword is no longer available."
 msgstr ""
 
 msgctxt "#30114"
@@ -535,7 +535,7 @@ msgid "There was a problem trying to access the server, please try again later."
 msgstr ""
 
 msgctxt "#30131"
-msgid "PROBLEM DETECTED"
+msgid "[COLOR=gold]PROBLEM DETECTED[/COLOR]"
 msgstr ""
 
 msgctxt "#30132"
@@ -1207,7 +1207,7 @@ msgid "Run custom command"
 msgstr ""
 
 msgctxt "#30299"
-msgid "Factory defaults"
+msgid "[COLOR=red]RESET TO FACTORY DEFAULTS[/COLOR]"
 msgstr ""
 
 msgctxt "#30300"
@@ -1363,7 +1363,7 @@ msgid "The path you\'ve chosen cannot be written to. Please click OK and choose 
 msgstr ""
 
 msgctxt "#30338"
-msgid "RESET SUCCESSFUL"
+msgid "[COLOR=lime]RESET SUCCESSFUL[/COLOR]"
 msgstr ""
 
 msgctxt "#30339"
@@ -1383,7 +1383,7 @@ msgid "FRESH INSTALL RECOMMENDED"
 msgstr ""
 
 msgctxt "#30343"
-msgid "Your add-on has now been reset to defaults. If you previously had login information entered in the settings don\'t forget to add the details back again."
+msgid "We recommend a full wipe. Are you happy to do a full wipe? This will revert your box back to a factory default state."
 msgstr ""
 
 msgctxt "#30344"
@@ -1495,7 +1495,7 @@ msgid "Please correct your email address.\n[COLOR=dodgerblue]%s[/COLOR] is not a
 msgstr ""
 
 msgctxt "#30371"
-msgid "INVALID PASSWORD"
+msgid "[COLOR=gold]INVALID PASSWORD[/COLOR]"
 msgstr ""
 
 msgctxt "#30372"
@@ -1503,7 +1503,7 @@ msgid "Please correct your password, this must be a minimum of 8 characters and 
 msgstr ""
 
 msgctxt "#30373"
-msgid "ENTER PASSWORD"
+msgid "[COLOR=gold]ENTER PASSWORD[/COLOR]"
 msgstr ""
 
 msgctxt "#30374"
@@ -1531,7 +1531,7 @@ msgid "UPDATE EMAIL ADDRESS"
 msgstr ""
 
 msgctxt "#30380"
-msgid "NOT REGISTERED"
+msgid "[COLOR=gold]NOT REGISTERED[/COLOR]"
 msgstr ""
 
 msgctxt "#30381"
@@ -2024,4 +2024,184 @@ msgstr ""
 
 msgctxt "#30503"
 msgid "Installing Keyword"
+msgstr ""
+
+msgctxt "#30504"
+msgid "[COLOR=red]RESET ALL TO FACTORY DEFAULTS[/COLOR]"
+msgstr ""
+
+msgctxt "#30505"
+msgid "Are you sure you want to reset all %s menus to their default settings?"
+msgstr ""
+
+msgctxt "#30506"
+msgid "[COLOR=red]RESET ALL MENUS TO DEFAULTS[/COLOR]"
+msgstr ""
+
+msgctxt "#30507"
+msgid "[COLOR=gold]ADD CONTENT TO MENU[/COLOR]"
+msgstr ""
+
+msgctxt "#30508"
+msgid "Would you like to add content to this menu which already exists on your system or would you prefer to install a new add-on by entering the add-on id?"
+msgstr ""
+
+msgctxt "#30509"
+msgid "EXISTING"
+msgstr ""
+
+msgctxt "#30510"
+msgid "INSTALL NEW"
+msgstr ""
+
+msgctxt "#30511"
+msgid "ENTER ADD-ON ID TO SEARCH FOR"
+msgstr ""
+
+msgctxt "#30512"
+msgid "Congratulations the add-on id [COLOR=dodgerblue]%s[/COLOR] has been found online and is now installed."
+msgstr ""
+
+msgctxt "#30513"
+msgid "[COLOR=gold]ADD-ON ID NOT FOUND[/COLOR]"
+msgstr ""
+
+msgctxt "#30514"
+msgid "Unfortunately a search on the internet found no results for the add-on:\n[COLOR=dodgerblue]%s[/COLOR]\nPlease check you have the correct ID and try again."
+msgstr ""
+
+msgctxt "#30515"
+msgid "Congratulations your keyword backup has now been created. You can use this keyword to restore your setup on any of your devices running this software.\nKEYWORD: [COLOR=dodgerblue]%s[/COLOR]"
+msgstr ""
+
+msgctxt "#30516"
+msgid "Unfortunately there was a problem creating your keyword backup, please try again. If you continue to receive this error please upload a log and contact support with your Device ID number."
+msgstr ""
+
+msgctxt "#30517"
+msgid "ENTER YOUR KEYWORD"
+msgstr ""
+
+msgctxt "#30518"
+msgid "Sorry this keyword is already in use.\nPlease try a different keyword."
+msgstr ""
+
+msgctxt "#30519"
+msgid "[COLOR=gold]KEYWORD IN USE[/COLOR]"
+msgstr ""
+
+msgctxt "#30520"
+msgid "The credentials you\'ve provided do not match what\'s stored on our system. Please check your login details and try again."
+msgstr ""
+
+msgctxt "#30521"
+msgid "[COLOR=gold]LOGIN ERROR[/COLOR]"
+msgstr ""
+
+msgctxt "#30522"
+msgid "[COLOR=gold]ADD PASSWORD LOCK[/COLOR]"
+msgstr ""
+
+msgctxt "#30523"
+msgid "Do you want to lock this keyword with a password? If you have any sensitive login credentials in your setup we would recommend adding this extra layer of security."
+msgstr ""
+
+msgctxt "#30524"
+msgid "[COLOR=gold]LOCK TO USERNAME[/COLOR]"
+msgstr ""
+
+msgctxt "#30525"
+msgid "Do you want to lock this keyword so only devices logged in as [COLOR=dodgerblue]%s[/COLOR] can install?"
+msgstr ""
+
+msgctxt "#30526"
+msgid "On the following screen please enter a keyword you would like to associate with this backup.\nPress OK to continue."
+msgstr ""
+
+msgctxt "#30527"
+msgid "The passwords do not match, please try again."
+msgstr ""
+
+msgctxt "#30528"
+msgid "UPDATING ADD-ONS"
+msgstr ""
+
+msgctxt "#30529"
+msgid "Enabling keyword content, please wait..."
+msgstr ""
+
+msgctxt "#30530"
+msgid "DELETE THIS ACCOUNT"
+msgstr ""
+
+msgctxt "#30531"
+msgid "This will completely delete this account and all content.\nThis includes ALL your keyword backups and messages.\nAre you certain you want to fully delete this account?"
+msgstr ""
+
+msgctxt "#30532"
+msgid "VERY LAST CHANCE!"
+msgstr ""
+
+msgctxt "#30533"
+msgid "The following account will be deleted:\nUsername: [COLOR=dodgerblue]%s[/COLOR]\nEmail: [COLOR=dodgerblue]%s[/COLOR]"
+msgstr ""
+
+msgctxt "#30534"
+msgid "The account for [COLOR=dodgerblue]%s[/COLOR] has now been fully removed.\nAll custom data has been wiped from the servers."
+msgstr ""
+
+msgctxt "#30535"
+msgid "Would you like to browse through your previously created keyword backups? Choosing NO will allow you to manually enter a keyword."
+msgstr ""
+
+msgctxt "#30536"
+msgid "[COLOR=gold]MY KEYWORDS[/COLOR]"
+msgstr ""
+
+msgctxt "#30537"
+msgid "[COLOR=gold]NO KEYWORDS CREATED[/COLOR]"
+msgstr ""
+
+msgctxt "#30538"
+msgid "You currently have no keyword backups.\nIf you\'d like to create a backup please use the [COLOR=dodgerblue]CREATE KEYWORD BACKUP[/COLOR] option in the Social TV menu."
+msgstr ""
+
+msgctxt "#30539"
+msgid "[COLOR=gold]EMAIL IN USE[/COLOR]"
+msgstr ""
+
+msgctxt "#30540"
+msgid "This email address is already associated to a different username.\nYou can only have one username linked to each email address."
+msgstr ""
+
+msgctxt "#30541"
+msgid "This keyword contains a guisettings.xml file. This contains details of all the system settings inc. screen resolution, subtitle, language info etc. Do you want to install this and overwrite your own settings?"
+msgstr ""
+
+msgctxt "#30542"
+msgid "This keyword contains a sources.xml file. This contains details of all the paths added into filemanager. Do you want to install this and overwrite your own sources?"
+msgstr ""
+
+msgctxt "#30543"
+msgid "This keyword contains a favourites.xml file. This contains details of all the favourites saved on the system. Do you want to install this and overwrite your own favourites?"
+msgstr ""
+
+msgctxt "#30544"
+msgid "This will completely erase all updates and attempt to re-install. Are you certain this is the action you want to take? There is no way to rollback to a previous state after this!"
+msgstr ""
+
+msgctxt "#30545"
+msgid "[COLOR=gold]CANCELLED[/COLOR]"
+msgstr ""
+
+msgctxt "#30546"
+msgid "The registration process has been cancelled."
+msgstr ""
+
+msgctxt "#30547"
+msgid "[COLOR=gold]ENABLE ALL ADD-ONS[/COLOR]"
+msgstr ""
+
+msgctxt "#30548"
+msgid "This will enable ALL your installed add-ons including any you may have previously disabled. Are you sure you want to continue?"
 msgstr ""

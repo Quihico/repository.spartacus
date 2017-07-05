@@ -27,6 +27,10 @@ import xbmcgui
 
 import filetools
 
+ADDONS      = xbmc.translatePath('special://home/addons')
+kodi_ver    = int(float(xbmc.getInfoLabel("System.BuildVersion")[:2]))
+dialog      = xbmcgui.Dialog()
+
 #----------------------------------------------------------------
 # TUTORIAL #
 def Addon_Genre(genre='adult',custom_url=''):
@@ -73,7 +77,6 @@ if space_addons:
     from systemtools    import Timestamp
     from web            import Open_URL
     
-    dialog      = xbmcgui.Dialog()
     local_path  = binascii.hexlify(genre)
     cookie_path = xbmc.translatePath("special://profile/addon_data/script.module.python.koding.aio/cookies/")
     final_path  = os.path.join(cookie_path,local_path)
@@ -202,7 +205,6 @@ Text_Box('ADDON STATUS',my_return)
             disabled_list.append(item["addonID"])
 
     if inc_new:
-        ADDONS    = xbmc.translatePath('special://home/addons')
         my_addons = Get_Contents(path=ADDONS, exclude_list=['packages','temp'])
         for item in my_addons:
             addon_id = Get_Addon_ID(item)
@@ -268,7 +270,6 @@ AVAILABLE PARAMS:
     from filetools   import Move_Tree
     from systemtools import End_Path
 
-    ADDONS = xbmc.translatePath('special://home/addons')
     adult_store = xbmc.translatePath("special://profile/addon_data/script.module.python.koding.aio/adult_store")
     if not os.path.exists(adult_store):
         os.makedirs(adult_store)
@@ -288,7 +289,6 @@ AVAILABLE PARAMS:
                         Move_Tree(addon_path,os.path.join(adult_store,path_id))
     else:
         KODI_VER    = int(float(xbmc.getInfoLabel("System.BuildVersion")[:2]))
-        ADDONS      = xbmc.translatePath('special://home/addons')
         addon_vault = []
         if os.path.exists(adult_store):
             for item in os.listdir(adult_store):
@@ -385,6 +385,71 @@ def Check_Deps(addon_path, depfiles = []):
     return depfiles
 #----------------------------------------------------------------
 # TUTORIAL #
+def Check_Repo(repo,show_busy=True):
+    """
+This will check the status of repo and return True if the repo is online or False
+if it contains paths that are no longer accessible online.
+
+IMPORTANT: If you're running an old version of Kodi which uses the old Python 2.6
+(OSX and Android lower than Kodi 17 or a linux install with old Python installed on system)
+you will get a return of True on https links regardless of their real status. This is due
+to the fact Python 2.6 cannot access secure links. Any still using standard http links
+will return the correct results.
+
+CODE:  Check_Repo(repo, [show_busy])
+
+AVAILABLE PARAMS:
+
+    (*) repo  -  This is the name of the folder the repository resides in.
+    You can either use the full path or just the folder name which in 99.99%
+    of cases is the add-on id. If only using the folder name DOUBLE check first as
+    there are a handful which have used a different folder name to the actual add-on id!
+
+    show_busy - By default this is set to True and a busy dialog will show during the check
+
+EXAMPLE CODE:
+repo_status = Check_Repo('repository.noobsandnerds')
+if repo_status:
+    dialog.ok('REPO STATUS','The repository modules4all is: [COLOR=lime]ONLINE[/COLOR]')
+else:
+    dialog.ok('REPO STATUS','The repository modules4all is: [COLOR=red]OFFLINE[/COLOR]')
+~"""
+    import re
+
+    from __init__  import dolog
+    from filetools import Text_File
+    from guitools  import Show_Busy
+    from web       import Validate_Link
+
+    status = True
+    if show_busy:
+        Show_Busy()
+    if repo.startswith('special://'):
+        repo_path = xbmc.translatePath(repo)
+    if not ADDONS in repo:
+        repo_path = os.path.join(ADDONS,repo)
+    repo_path = os.path.join(repo_path,'addon.xml')
+    dolog(repo_path)
+    if os.path.exists(repo_path):
+        content  = Text_File(repo_path,'r')
+        md5_urls = re.findall(r'<checksum>(.+?)</checksum>', content, re.DOTALL)
+        for item in md5_urls:
+            if (item.startswith('https') and (kodi_ver >= 17)) or (item.startswith('http')):
+                link_status = Validate_Link(item)
+                dolog(item)
+                dolog('STATUS: %s'%link_status)
+                if link_status < 200 or link_status >= 400:
+                    status = False
+                    break
+        if show_busy:
+            Show_Busy(False)
+        return status
+    else:
+        if show_busy:
+            Show_Busy(False)
+        return False
+#----------------------------------------------------------------
+# TUTORIAL #
 def Default_Setting(setting='',addon_id='',reset=False):
     """
 This will return the DEFAULT value for a setting (as set in resources/settings.xml)
@@ -469,7 +534,6 @@ koding.Text_Box('Modules required for %s'%current_id,clean_text)
     import xbmcaddon
     import re
     from filetools import Text_File
-    ADDONS       = xbmc.translatePath('special://home/addons')
     depfiles     = []
 
     if addon_id == 'all':
@@ -521,7 +585,6 @@ dialog.ok('ADDON ID','The add-on id found is:','[COLOR=dodgerblue]%s[/COLOR]'%my
 ~"""
     from filetools import Text_File
     import re
-    ADDONS = xbmc.translatePath('special://home/addons')
     xmlpath = os.path.join(ADDONS, folder, 'addon.xml')
     if os.path.exists(xmlpath):
         contents = Text_File(xmlpath,'r')
@@ -696,8 +759,8 @@ koding.Refresh('container')
     from filetools      import DB_Path_Check, Get_Contents
     from database       import DB_Query
     from systemtools    import Data_Type, Last_Error, Refresh, Set_Setting, Timestamp
+    from web            import Validate_Link
 
-    kodi_ver        = int(float(xbmc.getInfoLabel("System.BuildVersion")[:2]))
     addons_db       = DB_Path_Check('addons')
     data_type       = Data_Type(addon)
     state           = int(bool(enable))
@@ -720,7 +783,6 @@ koding.Refresh('container')
 # Grab all the add-on ids from addons folder
     if addon == 'all':
         addon     = []
-        ADDONS    = xbmc.translatePath('special://home/addons')
         my_addons = Get_Contents(path=ADDONS, exclude_list=['packages','temp'])
         for item in my_addons:
             addon_id = Get_Addon_ID(item)
@@ -731,13 +793,25 @@ koding.Refresh('container')
     for addon_id in addon:
         if not addon_id in exclude_list and addon_id != '':
             dolog('CHECKING: %s'%addon_id)
+
+# Check ALL addons and not just newly extracted not yet in db
             if addon_id in disabled_list and not new_only and enable:
+                dolog('[1] Adding to temp list: %s'%addon_id)
                 temp_list.append(addon_id)
+
+# Check addons not in our disabled list and also aren't in the enabled list
             elif addon_id not in disabled_list and addon_id not in enabled_list:
+                dolog('[2] Adding to temp list: %s'%addon_id)
                 temp_list.append(addon_id)
+
+# Check addons that are already enabled, get ready to disable
             elif addon_id in enabled_list and not enable:
+                dolog('[3] Adding to temp list: %s'%addon_id)
                 temp_list.append(addon_id)
+
+# Check addons which are disabled get ready to enable (same as first if function??)
             elif addon_id in disabled_list and enable:
+                dolog('[4] Adding to temp list: %s'%addon_id)
                 temp_list.append(addon_id)
     addon = temp_list
 
@@ -758,6 +832,8 @@ koding.Refresh('container')
 
 # Using the safe_mode (JSON-RPC)
     else:
+        Refresh('addons')
+        xbmc.sleep(1000)
         final_enabled = []
         if state:
             my_value = 'true'
@@ -772,6 +848,7 @@ koding.Refresh('container')
             if state:
                 dolog('Checking dependencies for : %s'%my_addon)
                 dependencies = Dependency_Check(addon_id=my_addon, recursive=True)
+                dolog('Dependencies: %s'%dependencies)
 
 # traverse through the dependencies in reverse order attempting to enable
                 for item in reversed(dependencies):
@@ -785,11 +862,27 @@ koding.Refresh('container')
                             final_enabled.append(item)
 
 # Now the dependencies are enabled we need to enable the actual main add-on
+        bad_repo = []
+        for my_addon in addon:
             if not my_addon in final_enabled:
-                addon_set = Set_Setting(setting_type='addon_enable', setting=my_addon, value = my_value)
+                ok = True
+                if 'repo' in my_addon:
+                    ok = Check_Repo(my_addon)
+                    if not ok:
+                        dolog('BAD REPO: %s IS NOT RESOLVING SO WE ARE NOT INSTALLING'%my_addon)
+                        bad_repo.append(my_addon)
+                        addon_set = False
+                    else:
+                        addon_set = Set_Setting(setting_type='addon_enable', setting=my_addon, value = my_value)
             if addon_set:
                 dolog('%s now %s' % (my_addon, log_value))
                 final_enabled.append(addon)
+        if len(bad_repo) > 0:
+            final_list = 'The following repostitories are not resolving so have not been installed: '
+            for item in bad_repo:
+                final_list += item+','
+            final_list = final_list[:-1]
+            dialog.ok('[COLOR=gold]BAD REPOSITORIES FOUND[/COLOR]',final_list)
     if refresh:
-        Refresh(['addons','container'])
-#----------------------------------------------------------------
+        Refresh('container')
+# ----------------------------------------------------------------

@@ -65,7 +65,7 @@ class Generator:
             for fn in filenames:
                 if fn.lower().endswith('pyo') or fn.lower().endswith('pyc'):
                     compiled = os.path.join(parent, fn)
-                    py_file  = compiled.replace('.pyo','py').replace('pyc','py')
+                    py_file  = compiled.replace('.pyo','.py').replace('.pyc','.py')
                     if os.path.exists(py_file):
                         try:
                             os.remove(compiled)

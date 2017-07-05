@@ -80,6 +80,7 @@ black            =  os.path.join(artpath,'black.png')
 db_social        =  xbmc.translatePath('special://profile/addon_data/plugin.program.tbs/database.db')
 usercheck_file   =  os.path.join(ADDON_DATA,AddonID,'usercheck')
 adult_list       =  Addon_Genre(custom_url=BASE+'boxer/masterscripts/addon_list.php?g=adult').items()
+adult_store      =  xbmc.translatePath("special://profile/addon_data/script.module.python.koding.aio/adult_store")
 pos              =  0
 listicon         =  ''
 my_dialog        = True
@@ -173,7 +174,7 @@ def Addon_Removal_Menu(removal_types='all'):
 @route(mode='addon_browser', args=['browser_type','header','skiparray','addons'])
 def Addon_Browser(browser_type='list',header='',skiparray=[],addons=[]):
     if browser_type == 'keyword':
-        skiparray = ['plugin.program.tbs','script.openwindow']
+        skiparray = ['plugin.program.tbs','script.openwindow',skin]
     if header == '':
         header = String(30043)
 
@@ -189,7 +190,8 @@ def Addon_Browser(browser_type='list',header='',skiparray=[],addons=[]):
         Installed_Addons(content='video', properties='name,description,thumbnail'),
         Installed_Addons(content='audio', properties='name,description,thumbnail'),
         Installed_Addons(content='image', properties='name,description,thumbnail'),
-        Installed_Addons(content='executable', properties='name,path,description,thumbnail')]
+        Installed_Addons(content='executable', properties='name,path,description,thumbnail'),
+        Installed_Addons(types='xbmc.gui.skin', properties='name,path,description,thumbnail')]
 
     for mylist in my_addons_full:
         for item in mylist:
@@ -509,7 +511,7 @@ def Clean_HTML(data):
 # Function to clear all known cache files
 @route(mode='clear_cache')
 def Clear_Cache():
-    choice = YesNo_Dialog(String(30039), String(30040), nolabel=String(30041),yeslabel=String(30042))
+    choice = YesNo_Dialog(String(30039), String(30040), no=String(30041),yes=String(30042))
     if choice == 1:
         Wipe_Cache()
         Remove_Textures_Dialog()
@@ -520,7 +522,7 @@ def Clear_User_Cookie():
     Run_Code( url='boxer/User_Info.php',payload={"x":urlparams,"r":"2"} )
 #---------------------------------------------------------------------------------------------------
 # Function to disassociate device from username
-def Clear_User_Data():
+def Clear_User_Data(silent=False):
     Default_Setting(setting='email',reset=True)
     Default_Setting(setting='username',reset=True)
     Default_Setting(setting='userid',reset=True)
@@ -539,8 +541,11 @@ def CPU_Check():
 def Create_Keyword():
     addon_settings = []
     settings_list  = []
-    addon_list     = []
+    addon_list     = [skin]
     data_list      = []
+    email          = encryptme( 'e',Addon_Setting('email') )
+    username       = Addon_Setting('username')
+    password       = Addon_Setting('password')
     keyword_backup = os.path.join(TBSDATA,'keyword_backup.txt')
 
 # Enable adult addons
@@ -569,22 +574,58 @@ def Create_Keyword():
                 settings_choice = Addon_Browser(addons=data_list)
                 for item in settings_choice:
                     addon_list.append(item[1])
-                addon_settings  = Create_Keyword_Addon_Data(addons=addon_list)
-
             else:
                 OK_Dialog( String(30146),String(30500) )
+
+            addon_settings  = Create_Keyword_Addon_Data(addons=addon_list)
 
 # If we have some settings we add to an array
         if len(addon_settings) > 0:
             for item in addon_settings:
-                if item[0] in addons or item[0]=='plugin.program.tbs':
+                if item[0] in addons or item[0]=='plugin.program.tbs' or item[0]==skin:
                     settings_list.append([item[0],item[1]])
         my_addons += '\nmy_settings=%s'%settings_list
-    Text_File(keyword_backup,'w',my_addons)
+        my_addons += '\nskin_shortcuts=%s'%Create_Skin_Shortcut_Data()
+        extras     = File_Contents(['special://profile/guisettings.xml','special://profile/favourites.xml','special://profile/sources.xml'])
+        my_addons += '\nmy_extras=%s'%extras
+
     Adult_Toggle(adult_list=adult_addons,disable=True)
+    success   = False
+    lock_user = False
+# Optionally lock to username
+    if YesNo_Dialog( String(30524),String(30525)%username ):
+        lock_user = True
+    
+# Optionally add a password
+    if YesNo_Dialog( String(30522),String(30523) ):
+        mypass = ''
+        while mypass == '':
+            mypass      = Update_Password(header=String(30002),text=String(30375),retry_header=String(30371),retry_msg=String(30372),return_pass=True)
+        mypass      = md5_check(src=mypass,string=True)
+        start_code  =  "pass_md5='%s'\n"%mypass
+        start_code  += "mypass=md5_check(Keyboard(String(30373)),True)\n"
+        start_code  += "if pass_md5!=mypass:\n"
+        start_code  += "    OK_Dialog(String(30000),String(30001))\n"
+        start_code  += "    sys.exit()\n"
+        my_addons   = start_code+my_addons
+
+# Upload the keyword
+    OK_Dialog('[COLOR=gold]%s[/COLOR]'%String(30189),String(30526))
+    while not success:
+        keyword_name = Keyboard(String(30517))
+        if lock_user:
+            keyword_name = username+'~split~'+keyword_name
+
+        url          = BASE+'boxer/Create_Keyword.php'
+        params       = {"x":encryptme('e',URL_Params()),"b":encryptme('e',my_addons),"n":encryptme('e',username),"p":password,"c":encryptme('e',keyword_name),"e":email}
+        response     = Open_URL(url=url,payload=params,post_type='post')
+        try:
+            exec( encryptme('d',response) )
+        except:
+            OK_Dialog(String(30131),String(30132))
 #---------------------------------------------------------------------------------------------------
 # Return paths of selected addon_data folders
-def Create_Keyword_Addon_Data(addons=[]):
+def Create_Keyword_Addon_Data(addons=[skin]):
     tbs_raw = Text_File(os.path.join(TBSDATA,'settings.xml'),'r')
     tbs_data = '<settings>'
     for line in tbs_raw.splitlines():
@@ -596,12 +637,41 @@ def Create_Keyword_Addon_Data(addons=[]):
     folders = Get_Contents(path=ADDON_DATA,exclude_list=exclude)
     for item in folders:
         addon_name = os.path.basename(item)
-        if (len(addons)>0 and addon_name in addons) or (len(addons)==0):
+        if addon_name in addons:
             item = os.path.join(item,'settings.xml')
             if os.path.exists(item):
-                contents   = Text_File(item,'r')
+                contents = Text_File(item,'r')
                 settings_array.append([addon_name,contents])
     return settings_array
+#---------------------------------------------------------------------------------------------------
+# Return paths of selected addon_data folders
+def Create_Skin_Shortcut_Data():
+    settings_array = []
+    exclude        = ['plugin.program.tbs','script.openwindow']
+    shortcuts_path = os.path.join(ADDON_DATA,'script.skinshortcuts')
+    folders        = Get_Contents(path=shortcuts_path,folders=False,full_path=True)
+
+    for item in folders:
+        if item.endswith('DATA.xml'):
+            shortcut = End_Path(item)
+            contents = Text_File(item,'r')
+            settings_array.append([shortcut,contents])
+    return settings_array
+#---------------------------------------------------------------------------------------------------
+# Fully remove an account from the server
+def Delete_Account():
+    email          = Addon_Setting('email')
+    username       = Addon_Setting('username')
+    password       = Addon_Setting('password')
+    if YesNo_Dialog( '[COLOR=gold]%s[/COLOR]'%String(30530),String(30531) ):
+        if YesNo_Dialog( '[COLOR=gold]%s[/COLOR]'%String(30532),String(30533)%(username,email),yes=String(30042),no=String(30041) ):
+            url        = BASE+'boxer/Delete_Account.php'
+            params     = {"x":encryptme('e',URL_Params()),"n":encryptme('e',username),"p":password,"e":encryptme('e',email)}
+            response   = Open_URL(url=url,payload=params,post_type='post')
+            try:
+                exec( encryptme('d',response) )
+            except:
+                OK_Dialog(String(30131),String(30132))
 #---------------------------------------------------------------------------------------------------
 # Function to delete the userdata/addon_data folder
 def Delete_Userdata():
@@ -681,6 +751,12 @@ def DLE(command,repo_link,repo_id):
             pass
 #---------------------------------------------------------------------------------------------------
 # Enables/disables the social sharing
+@route(mode='enable_all_addons')
+def Enable_All_Addons():
+    if YesNo_Dialog(String(30547),String(30548)):
+        Toggle_Addons(new_only=False)
+#---------------------------------------------------------------------------------------------------
+# Enables/disables the social sharing
 @route(mode='enable_shares', args=['share_mode'])
 def Enable_Shares(share_mode):
     choice = 1
@@ -742,9 +818,19 @@ def Exec_XBMC(command):
     xbmc.executebuiltin(command)
     xbmc.executebuiltin('Container.Refresh')
 #---------------------------------------------------------------------------------------------------
-# Extract function used for threading
-def Extract_Function(local_path, ADDONS, dpmode):
-    Extract(local_path, ADDONS, dpmode)
+# Reads contents from a list of special paths and returns in form of a list
+def File_Contents(paths=['special://profile/guisettings.xml']):
+    settings_array = []
+    for item in paths:
+        xml_raw = Text_File(xbmc.translatePath(item),'r')
+        xml_data = ''
+        if xml_raw:
+            for line in xml_raw.splitlines():
+                xml_data += '\n'+line.rstrip()
+            if xml_data.startswith('\n'):
+                xml_data = xml_data[2:]
+            settings_array.append( [item,xml_data] )
+    return settings_array
 #---------------------------------------------------------------------------------------------------
 # Firmware update
 def Firmware_Update(url):
@@ -759,11 +845,12 @@ def Firmware_Update(url):
 @route(mode='force_update')
 def Force_Update():
     dolog('FORCE UPDATE')
-    zip_path = os.path.join(TBSDATA,'zipcheck')
-    dolog('zip_path: %s'%zip_path)
-    if os.path.exists(zip_path):
-        os.remove(zip_path)
-    Get_Updates()
+    if YesNo_Dialog('[COLOR=gold]%s[/COLOR]'%String(30501),String(30544)):
+        zip_path = os.path.join(TBSDATA,'zipcheck')
+        dolog('zip_path: %s'%zip_path)
+        if os.path.exists(zip_path):
+            os.remove(zip_path)
+        Get_Updates()
 #---------------------------------------------------------------------------------------------------
 # Clean up all known cache files
 def Friend_Options(my_array=[]):
@@ -844,7 +931,7 @@ def Full_Clean():
             shutil.rmtree(PACKAGES)
         except:
             pass
-        choice = YesNo_Dialog(String(30055),String(30056),yeslabel=String(30057),nolabel=String(30058))
+        choice = YesNo_Dialog(String(30055),String(30056),yes=String(30057),no=String(30058))
         if choice == 1:
             Remove_Textures()
             Delete_Folders(THUMBNAILS)
@@ -1199,6 +1286,165 @@ def Hide_Passwords():
                                     pass
         OK_Dialog(String(30096), String(30097)) 
 #---------------------------------------------------------------------------------------------------
+# Loop through a list of add-ons and install them
+def Install_Addons(url):
+    failed_array = []
+    repo_list    = {}
+    xbmc_gui     = Requirements('xbmc.gui')
+    xbmc_python  = Requirements('xbmc.python')
+    gui_min      = encryptme('e',xbmc_gui['min'])
+    gui_max      = encryptme('e',xbmc_gui['max'])
+    python_min   = encryptme('e',xbmc_python['min'])
+    python_max   = encryptme('e',xbmc_python['max'])
+
+    mycode       = Open_URL(url=BASE+'boxer/masterscripts/addoninstall_wip.php',post_type='post',payload={"a":url,"v":encryptme('e',XBMC_VERSION),'guimin':gui_min,'guimax':gui_max,'pymin':python_min,'pymax':python_max,'ignore':'false'})
+    my_download  = ''
+    url_clean    = encryptme('d',url)
+    exec(mycode)
+    if len(repo_list) > 0 and not ',' in url_clean:
+        my_download = download_array[url_clean]
+    if len(my_download) > 0 or ',' in url_clean:
+        Show_Busy()
+        for key in repo_list:
+
+# If the addon does not already exist on system or is in adult_store then try to install
+            if not (xbmc.getCondVisibility('System.HasAddon(%s)'%key)) and (not os.path.exists(os.path.join(adult_store,key))):
+                dolog('INSTALLING ADDON: %s'%key)
+                temp_zip = os.path.join(PACKAGES,key+'.zip')
+                official_repo = repo_list[key]
+                downloads     = download_array[key]
+                try:
+                    Sleep_If_Function_Active(function=Download,args=[downloads[official_repo],temp_zip],show_busy=False,kill_time=180)
+                    repoexists = True
+                except:
+                    dolog('Failed to download from official repo')
+                    repoexists = False
+                if os.path.exists(temp_zip) and zipfile.is_zipfile(temp_zip) and repoexists:
+                    dolog('%s Download Complete: %s'%(key,downloads[official_repo]))
+
+# If download from official repo failed we try alternative sources (highest versions first)
+                else:
+                    success  = False
+                    backup   = downloads.items()
+                    new_list = []
+                    for item in backup:
+                        new_list.append(item[1])
+                    while not success and len(new_list) != 0:
+                        highest_repo = Highest_Version(new_list,'-','.zip')
+                        if highest_repo != '':
+                            try:
+                                Sleep_If_Function_Active(function=Download,args=[highest_repo,temp_zip],show_busy=False,kill_time=180)
+                            except:
+                                dolog('Failed to download from: %s'%highest_repo)
+                            if os.path.exists(temp_zip) and zipfile.is_zipfile(temp_zip):
+                                dolog('%s Download Complete: %s'%(key,highest_repo))
+                                success = True
+                            else:
+                                new_list.remove(highest_repo)
+                    if not success and len(new_list) == 0:
+                        failed_array.append(key)
+                if os.path.exists(temp_zip) and zipfile.is_zipfile(temp_zip):
+                    Sleep_If_Function_Active(function=Extract,args=[temp_zip,ADDONS],show_busy=False,kill_time=180)
+        if len(failed_array)>0:
+            failed_list = 'FAILED: '
+            counter = 1
+            for item in failed_array:
+                failed_list += item
+                if counter != len(failed_list):
+                    failed_list += ','
+                counter += 1
+
+            OK_Dialog('FAILED TO INSTALL %s ITEMS'%len(failed_array), failed_list)
+        
+        dolog('### ENABLING ADDONS')
+        # Sleep_If_Function_Active(function=Toggle_Addons,show_busy=False)
+        Toggle_Addons()
+        Show_Busy(False)
+        # Adult_Toggle(adult_list=adult_addons,disable=True)
+    else:
+        OK_Dialog(String(30513),String(30514)%encryptme('d',url))
+    if len(failed_array) == 0:
+        return True
+    else:
+        return False
+#---------------------------------------------------------------------------------------------------
+# Menu to install content via the TR add-on
+@route(mode='install_content')
+def Install_Content():
+    if Addon_Setting('master') == 'true':
+        Add_Dir(String(30098),'','disable_master',False,'','','')
+    if Addon_Setting('userid') != '':
+        Add_Dir(String(30099) % encryptme('d',userid),'','change_id',False,'','','')
+    Add_Dir(String(30100),'', 'get_updates',False,'','','')
+    Add_Dir(String(30101),'','keywords',False,'Keywords.png','','')
+    Add_Dir(String(30102),'','install_from_zip',False,'','','')
+    Add_Dir(String(30103),'','browse_repos',False,'','','')
+#---------------------------------------------------------------------------------------------------
+# Browse pre-installed repo's via the kodi add-on browser
+@route(mode='install_from_zip')
+def Install_From_Zip():
+    xbmc.executebuiltin('ActivateWindow(10040,"addons://install/",return)')
+#---------------------------------------------------------------------------------------------------
+# Install a keyword
+@route(mode='keywords')
+def Install_Keyword():
+    email       = encryptme( 'e',Addon_Setting('email') )
+    username    = Addon_Setting('username')
+    password    = Addon_Setting('password')
+    choice      = False
+    if username != '':
+        choice = YesNo_Dialog('[COLOR=gold]%s[/COLOR]'%String(30101),String(30535))
+
+# List all previously created keywords
+    if choice:
+        url   = BASE+'boxer/My_Keywords.php'
+        params    = {"x":encryptme('e',URL_Params()),"n":encryptme('e',username),"p":password,"e":email}
+        response  = Open_URL(url=url,payload=params,post_type='post')
+        try:
+            exec( encryptme('d',response) )
+        except:
+            dolog(Last_Error())
+            OK_Dialog(String(30131),String(30132))   
+
+# Allow custom keyword to be entered
+    else:
+        keyword_name   = Keyboard('[COLOR=gold]%s[/COLOR]'%String(30517))
+    
+    username = encryptme('e',username)
+    if keyword_name != '':
+        url            = BASE+'boxer/Install_Keyword.php'
+        params         = {"x":encryptme('e',URL_Params()),"n":username,"p":password,"c":encryptme('e',keyword_name),"e":email}
+        response       = Open_URL(url=url,payload=params,post_type='post')
+        try:
+            exec( encryptme('d',response) )
+        except:
+            dolog(Last_Error())
+            OK_Dialog(String(30131),String(30132))
+#---------------------------------------------------------------------------------------------------
+# Show final results for installing (if multiple shares of same name order by popularity)
+def Install_Repos(to_install):
+    email       = encryptme( 'e',Addon_Setting('email') )
+    username    = encryptme( 'e',Addon_Setting('username') )
+    password    = Addon_Setting('password')
+    addon_list  = ''
+
+# Check addons 
+    for item in to_install:
+        addon_installed = xbmc.getCondVisibility('System.HasAddon(%s)'%item)
+        adult_exists    = os.path.exists( os.path.join(adult_store,item) )
+        path_exists     = os.path.exists( os.path.join(ADDONS,item) )
+        if not addon_installed and not path_exists and not adult_exists:
+            addon_list += item+','
+    if addon_list != '':
+        url       = BASE+'boxer/Install_Repos.php'
+        params    = {"x":encryptme('e',URL_Params()),"n":username,"p":password,"c":encryptme('e',addon_list),"e":email}
+        response  = Open_URL(url=url,payload=params,post_type='post')
+        try:
+            exec( encryptme('d',response) )
+        except:
+            dolog(Last_Error())
+            OK_Dialog(String(30131),String(30132))
+#---------------------------------------------------------------------------------------------------
 # Show final results for installing (if multiple shares of same name order by popularity)
 def Install_Shares(function, menutype, menu, choices, contentarray = '', imagearray = '', descarray = ''):
         shares_contentarray = []
@@ -1263,23 +1509,6 @@ def Install_Shares(function, menutype, menu, choices, contentarray = '', imagear
             del match[:]
         xbmc.executebuiltin('ActivateWindow(HOME)')
         Get_Updates()
-#---------------------------------------------------------------------------------------------------
-# Menu to install content via the TR add-on
-@route(mode='install_content')
-def Install_Content():
-    if Addon_Setting('master') == 'true':
-        Add_Dir(String(30098),'','disable_master',False,'','','')
-    if Addon_Setting('userid') != '':
-        Add_Dir(String(30099) % encryptme('d',userid),'','change_id',False,'','','')
-    Add_Dir(String(30100),'', 'get_updates',False,'','','')
-    Add_Dir(String(30101),'','keywords',False,'Keywords.png','','')
-    Add_Dir(String(30102),'','install_from_zip',False,'','','')
-    Add_Dir(String(30103),'','browse_repos',False,'','','')
-#---------------------------------------------------------------------------------------------------
-# Browse pre-installed repo's via the kodi add-on browser
-@route(mode='install_from_zip')
-def Install_From_Zip():
-    xbmc.executebuiltin('ActivateWindow(10040,"addons://install/",return)')
 #---------------------------------------------------------------------------------------------------
 # Function to grab the main sub-categories 
 @route(mode='install_venz_menu', args=['url'])
@@ -1369,6 +1598,7 @@ def IP_Check():
         OK_Dialog(String(30104), String(30105))
 #---------------------------------------------------------------------------------------------------
 # Return details of a full keyword backup (addons,addon_data,faves,sources,guisettings)
+@route(mode='kw_full')
 def Keyword_Full_Backup():
     skiparray = ['plugin.program.super.favourites','plugin.program.tbs','script.openwindow','script.trtv','script.qlickplay','plugin.video.metalliq']
     id_array  = []
@@ -1384,119 +1614,12 @@ def Keyword_Full_Backup():
         if not item in skiparray and not item in id_array:
             id_array.append(item)
 
-    my_addons   = 'my_addons=%s\n'%id_array
-    my_addons  += '\nmy_settings=%s'%Create_Keyword_Addon_Data()
-    guisettings = Text_File(GUI,'r')
-    favourites  = Text_File(FAVS,'r')
-    sources     = Text_File(SOURCE,'r')
-    my_addons += '\nmy_guisettings=[\'%s\']'%guisettings
-    if favourites:
-        my_addons += '\nmy_favourites=[\'%s\']'%favourites
-    else:
-        my_addons += '\nmy_favourites=[]'
-    my_addons += '\nmy_sources=[\'%s\']'%sources
+    my_addons      = 'my_addons=%s\n'%id_array
+    my_addons     += '\nmy_settings=%s'%Create_Keyword_Addon_Data()
+    my_addons     += '\nskin_shortcuts=%s'%Create_Skin_Shortcut_Data()
+    extras         = File_Contents(['special://profile/guisettings.xml','special://profile/favourites.xml','special://profile/sources.xml'])
+    my_addons     += '\nmy_extras=%s'%extras
     return my_addons
-#---------------------------------------------------------------------------------------------------
-# Install a keyword
-@route(mode='keywords')
-def Keyword_Search():
-    if not os.path.exists(PACKAGES):
-        os.makedirs(PACKAGES)
-    restore_dir =  '/storage/.restore/'
-    counter     = 0
-    success     = 0
-    downloadurl = ''
-    title       = 'Enter Keyword'
-    keyword     = Keyboard(title)
-    if keyword == 'masteron':
-        Addon_Setting('master','true')
-        xbmc.executebuiltin('Container.Refresh')
-        return
-    if keyword == 'masteroff':
-        Addon_Setting('master','false')
-        xbmc.executebuiltin('Container.Refresh')
-        return
-    if keyword.startswith('uid'):
-        idsetting = keyword.replace('uid','')
-        Addon_Setting('userid', encryptme('e',idsetting))
-        xbmc.executebuiltin('Container.Refresh')
-        return
-    elif keyword:
-        url='http://urlshortbot.com/totalrevolution'
-        if os.path.exists(KEYWORD_FILE):
-            url  = Text_File(KEYWORD_FILE,'r')
-        downloadurl = url+keyword
-        lib         = os.path.join(PACKAGES, keyword+'.zip')
-        urlparams   = URL_Params()
-        if urlparams != 'Unknown':
-            dp.create('Contacting Server','Attempt: 1', '', 'Please wait...')
-            while counter <3 and success == 0:
-                counter += 1
-                dp.update(0,'Attempt: '+str(counter), '', 'Please wait...')
-            if keyword.startswith('switchme'):
-                keywordoem = keyword.replace('switchme','')
-                try:
-                    link = Open_URL(post_type='post',url=BASE+'boxer/add_to_oem_live.php?x='+encryptme('e',urlparams)+'&o='+encryptme('e',keywordoem))
-                except:
-                    link = 'fail'
-            else:
-                try:
-                    link = Open_URL(post_type='post',url=BASE+'boxer/keyword.php?x='+encryptme('e',urlparams)+'k='+encryptme('e',keyword))
-                except:
-                    link = 'fail'
-            if 'Success' in link:
-                success = 1
-                dp.close()
-                if os.path.exists(xbmc.translatePath('special://home/addons/script.openwindow/functions.py')):
-                    xbmc.executebuiltin('RunScript(special://home/addons/script.openwindow/functions.py)')
-                elif os.path.exists(xbmc.translatePath('special://xbmc/addons/script.openwindow/functions.py')):
-                    xbmc.executebuiltin('RunScript(special://xbmc/addons/script.openwindow/functions.py)')
-                OK_Dialog(String(30106),String(30107))
-        if success == 0:
-            try:
-                dolog("Attempting download "+downloadurl+" to "+lib)
-                dp.create(String(30108),String(30109),'', String(30048))
-                Download(downloadurl,lib)
-                dolog("### Keyword "+keyword+" Successfully downloaded")
-            
-                if zipfile.is_zipfile(lib):
-                
-                    try:
-                        Sleep_If_Function_Active(Extract_Function, [lib, HOME, dp])
-                        dolog('## %s EXTRACTED SUCCESSFULLY' % keyword)
-                        
-                        if os.path.exists(xbmc.translatePath('special://home/addons/script.openwindow/functions.py')):
-                            xbmc.executebuiltin('RunScript(special://home/addons/script.openwindow/functions.py,dp)')
-                        elif os.path.exists(xbmc.translatePath('special://xbmc/addons/script.openwindow/functions.py')):
-                            xbmc.executebuiltin('RunScript(special://xbmc/addons/script.openwindow/functions.py,dp)')
-                            
-                        kw_temp = xbmc.translatePath('special://profile/addon_data/script.openwindow/keyword_installed')
-                        keyword_installed = os.path.exists(kw_temp)
-                        while not keyword_installed:
-                            xbmc.sleep(1000)
-                            keyword_installed = os.path.exists(kw_temp)
-                        OK_Dialog(String(30108), "",String(30110))
-                        shutil.rmtree(kw_temp)
-                        dp.close()
-                    except Exception as e:
-                        dolog("### Unable to install keyword (%s): %s" % (keyword, e))
-            
-                else:
-                    try:
-                        if os.path.getsize(lib) > 100000 and 'venztech' in url:
-                            dp.create("Restoring Backup","Copying Files...",'', 'Please Wait')
-                            os.rename(lib,restore_dir+'20150815123607.tar')
-                            dp.update(0,"", String(30111))
-                            xbmc.executebuiltin('reboot')
-                        else: OK_Dialog(String(30112),String(30113))
-                    except:
-                        OK_Dialog(String(30114),String(30115))
-                        dolog("### UNABLE TO INSTALL BACKUP - IT IS NOT A ZIP")                
-            except:
-                OK_Dialog(String(30116),String(30117))
-
-        if os.path.exists(lib):
-            os.remove(lib)
 #---------------------------------------------------------------------------------------------------
 # Run the force close command
 @route(mode='kill_xbmc')
@@ -1509,7 +1632,7 @@ def Log_Viewer():
     logpath = xbmc.translatePath('special://logpath')
     valid_logfile = Get_Contents(path=logpath,folders=False,filter='.log')
     if len(valid_logfile) >= 1:
-        if YesNo_Dialog(String(30118),String(30119),yeslabel=String(30120),nolabel=String(30121)):
+        if YesNo_Dialog(String(30118),String(30119),yes=String(30120),no=String(30121)):
             Upload_Log()
         else:
             viewer = [String(30122),String(30123),String(30124),String(30125),String(30126)]
@@ -1542,9 +1665,23 @@ def Main_Menu_Defaults():
     dolog('menu options: '+repr(menu_options) )
     if os.path.exists(MY_HOME_MENUS):
         custom_list = Text_File(MY_HOME_MENUS,'r')
+        dolog('### custom_list: %s'%custom_list)
+
+# Enable/disable default main menu items
     for item in menu_options:
+        dolog('### checking: %s'%item)
         if menu_list[item] not in custom_list:
+            dolog( '### NOT in custom list - setting: %s'%menu_list[item] )
             xbmc.executebuiltin( 'Skin.SetString(%s,)' % menu_list[item] )
+
+# Enable/disable the custom home menu items
+    if custom_list != '':
+        dolog('### CHECKING CUSTOM LIST ITEMS')
+        for item in custom_list.splitlines():
+            dolog('# setting: %s'%item)
+            dolog('# IN custom list - setting: %s'%item)
+            xbmc.executebuiltin(item)
+    dolog('### SETTING OF MAIN MENUS COMPLETE')
 #---------------------------------------------------------------------------------------------------
 # Function to enable/disable the main menu items - added due to glitch on server
 @route(mode='main_menu_install', args=['url'])
@@ -1778,8 +1915,8 @@ def My_Details():
         if username != '':
             username = String(30350)%username
 # Enable this one when keyword creator is completed
-            # my_array = [String(30100),username,String(30354),String(30189)]
-            my_array = [String(30100),username,String(30354)]
+            my_array = [String(30100),username,String(30354),String(30189)]
+            # my_array = [String(30100),username,String(30354)]
         else:
             username = String(30348)
             my_array = [String(30100),username,String(30354)]
@@ -1877,7 +2014,7 @@ def My_Profile():
     # my_array = [String(30376),String(30377),String(30389),String(30404),String(30379),String(30385),'[COLOR=red]%s[/COLOR]'%String(30382)]
 
 
-    my_array = [String(30376),String(30389),String(30404),String(30379),String(30385),'[COLOR=red]%s[/COLOR]'%String(30382)]
+    my_array = [String(30376),String(30389),String(30404),String(30379),String(30385),'[COLOR=orange]%s[/COLOR]'%String(30382),'[COLOR=red]%s[/COLOR]'%String(30530)]
     choice = Select_Dialog('[COLOR=cyan]%s[/COLOR]'%username,my_array)
     if choice >= 0:
         if choice == 0:
@@ -1901,6 +2038,8 @@ def My_Profile():
             Clear_User_Cookie()
         if choice == 5:
             Clear_User_Data()
+        if choice == 6:
+            Delete_Account()
     else:
         My_Details()
 #---------------------------------------------------------------------------------------------------
@@ -2199,7 +2338,7 @@ def Remove_Addons(url):
         else:
             addontype = String(30147)
             dialog_text = String(30145)
-        if YesNo_Dialog(String(30148) % addontype, String(30149)% dialog_text,'[COLOR=dodgerblue]%s[/COLOR]'% item[0]):
+        if YesNo_Dialog(String(30148) % addontype, String(30149)% dialog_text+'[COLOR=dodgerblue]%s[/COLOR]'% item[0]):
             addon_id = Get_Addon_ID(item[1])
             Set_Setting(setting_type='addon_enable',setting=addon_id, value='false')
             Delete_Folders(item[1])
@@ -2213,9 +2352,9 @@ def Remove_Addons(url):
 # Function to clear the packages folder
 @route(mode='remove_crash_logs')
 def Remove_Crash_Logs():
-    if YesNo_Dialog(String(30153), String(30154), nolabel=String(30041),yeslabel=String(30042)):
+    if YesNo_Dialog(String(30153),String(30154),no=String(30041),yes=String(30042)):
         Delete_Crashlogs()
-        OK_Dialog(String(30155), '', String(30156))
+        OK_Dialog(String(30155),String(30156))
 #-----------------------------------------------------------------------------
 # Remove a path, whether folder or file it will be deleted
 def Remove_Files():
@@ -2279,18 +2418,19 @@ def Remove_Menu(function, menutype = ''):
 # Function to clear the packages folder
 @route(mode='remove_packages', args=['url'])
 def Remove_Packages(url=''):
-    if YesNo_Dialog(String(30157), String(30158), nolabel=String(30041),yeslabel=String(30042)):
+    if YesNo_Dialog(String(30157), String(30158), no=String(30041),yes=String(30042)):
         Delete_Folders(PACKAGES)
     if url == '':
         OK_Dialog(String(30155), '', String(30159))
 #---------------------------------------------------------------------------------------------------
 # Function to clear the packages folder
+@route(mode='remove_textures_dialog')
 def Remove_Textures_Dialog():
     if YesNo_Dialog(String(30160),String(30161)):
         Remove_Textures()
         Delete_Folders(THUMBNAILS)
     
-        if YesNo_Dialog(String(30162), String(30163),'', nolabel=String(30164),yeslabel=String(30165)):
+        if YesNo_Dialog(String(30162), String(30163), no=String(30164),yes=String(30165)):
             System('quit')
 #---------------------------------------------------------------------------------------------------
 # Function to remove textures13.db
@@ -2442,6 +2582,7 @@ def Run_Code(url='',payload={}):
         runcode = Open_URL(url=BASE+url,payload=payload,post_type='post')
         exec( encryptme('d',runcode) )
     except:
+        dolog(encryptme('d',runcode))
         dolog( Last_Error() )
 #---------------------------------------------------------------------------------------------------
 # Function to populate the text file containing apk details
@@ -2778,6 +2919,7 @@ def Tools_Addon_Removal():
 # Add-on based tools
 @route(mode='tools_addons')
 def Tools_Addons():
+    Add_Dir(String(30547),'','enable_all_addons',False,'','','')
     Add_Dir(String(30203),'','tools_addon_removal',True,'','','')
     Add_Dir(String(30204),'url','remove_addon_data',False,'','','')
     Add_Dir(String(30205),'none','hide_passwords',False,'','','')
@@ -2789,7 +2931,7 @@ def Tools_Addons():
 def Tools_Clean():
     Add_Dir(String(30208),'','full_clean',False,'','','')
     Add_Dir(String(30209),'url','clear_cache',False,'','','')
-    Add_Dir(String(30210), 'none', 'remove_textures',False,'','','')
+    Add_Dir(String(30210), 'none', 'remove_textures_dialog',False,'','','')
     Add_Dir(String(30211),'url','remove_packages',False,'','','')
     Add_Dir(String(30153),'url','remove_crash_logs',False,'','','')
     Add_Dir(String(30212), '', 'wipe_xbmc',False,'','','')
@@ -2797,7 +2939,7 @@ def Tools_Clean():
 # Advanced Maintenance section
 @route(mode='tools_misc')
 def Tools_Misc():
-    Add_Dir(String(30213), 'none','ipcheck',False,'','','')
+    Add_Dir(String(30213), 'none','ip_check',False,'','','')
     Add_Dir(String(30214),'none','xbmcversion',False,'','','')
     # Add_Dir(String(30215),HOME,'fix_special',False,'','','')
     # Add_Dir(String(30216),'','ASCII_Check',False,'','','')
@@ -2838,7 +2980,7 @@ def Update_Messages(show_dialog=True):
         Run_Code( url="boxer/User_Update_Check.php",payload={"x":urlparams,"n":username,"e":email,"p":password} )
 #---------------------------------------------------------------------------------------------------
 # Bring up keyboard to enter new username
-def Update_Password(header=String(30371),text=String(30372),return_pass=False):
+def Update_Password(header=String(30371),text=String(30372),retry_header=String(30423),retry_msg=(String(30424)),return_pass=False):
     password = ''
     newpass  = ''
     pwsuccess=False
@@ -2848,16 +2990,22 @@ def Update_Password(header=String(30371),text=String(30372),return_pass=False):
         password = Keyboard(heading=String(30373))
         if password == '':
             break
+
+# Make sure it contains only normal characters and no spaces
         if re.match("^[A-Za-z0-9_-]*$", password) and (len(password)>=8):
             newpass = md5_check(src=password,string=True)
             OK_Dialog(String(30444),String(30445))
             confirmpassword = Keyboard(heading=String(30373))
             if password == confirmpassword:
                 pwsuccess = True
+            else:
+                OK_Dialog(String(30000),String(30527))
+                password = 'test'
+                pwsuccess = False
         else:
-            OK_Dialog(String(30423),String(30424))
+            OK_Dialog(retry_header,retry_msg)
             password = 'test'
-    if not return_pass:
+    if not return_pass and password != '':
         Addon_Setting(setting='password',value=newpass)
     else:
         return password
@@ -3151,7 +3299,7 @@ def Wipe_Cache():
 @route(mode='wipe_xbmc')
 def Wipe_Kodi():
     stop = 0
-    if YesNo_Dialog(String(30137), String(30228), yeslabel=String(30229),nolabel=String(30230)):
+    if YesNo_Dialog(String(30137), String(30228), yes=String(30229),no=String(30230)):
         if not Fresh_Install():
 # Check Confluence is running before doing a wipe
             if skin!="skin.confluence" and skin!="skin.estuary":
@@ -3181,7 +3329,7 @@ def Wipe_Kodi():
                         message_header = String(30228)
                         Archive_Tree(sourcefile=HOME, destfile=backup_zip, exclude_dirs=exclude_dirs_full, exclude_files=exclude_files_full,message_header=message_header)
                 if not stop:
-                    keeprepos = YesNo_Dialog(String(30229),String(30240), yeslabel=String(30241), nolabel=String(30242))
+                    keeprepos = YesNo_Dialog(String(30229),String(30240), yes=String(30241), no=String(30242))
                     EXCLUDES  = ['firstrun','plugin.program.tbs','plugin.program.totalinstaller','addons','addon_data','userdata','sources.xml','favourites.xml']
                     Wipe_Home(EXCLUDES)
                     Force_Close()
@@ -3202,7 +3350,7 @@ def XBMC_Version():
     version             = version.strip()
     compiled            = compiled.strip()
     kodi_type           = Running_App() 
-    OK_Dialog(String(30243), String(30244) % kodi_type, String(30245) % compiled, String(30246) % version)
+    OK_Dialog(String(30243), '%s\n%s\n%s'%(String(30244)%kodi_type,String(30245)%compiled,String(30246)%version))
 #---------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
     Run(default='start')

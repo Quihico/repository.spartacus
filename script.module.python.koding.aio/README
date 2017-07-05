@@ -253,6 +253,36 @@ a number of add-ons/scripts you can grab a list of paths that have been called.
 
 ------------------------------------------------------------------------------------------
 
+CHECK REPO AVAILABILITY STATUS:
+This will check the status of repo and return True if the repo is online or False
+if it contains paths that are no longer accessible online.
+
+IMPORTANT: If you're running an old version of Kodi which uses the old Python 2.6
+(OSX and Android lower than Kodi 17 or a linux install with old Python installed on system)
+you will get a return of True on https links regardless of their real status. This is due
+to the fact Python 2.6 cannot access secure links. Any still using standard http links
+will return the correct results.
+
+	CODE:  Check_Repo(repo, [show_busy])
+
+	AVAILABLE PARAMS:
+
+	    (*) repo  -  This is the name of the folder the repository resides in.
+	    You can either use the full path or just the folder name which in 99.99%
+	    of cases is the add-on id. If only using the folder name DOUBLE check first as
+	    there are a handful which have used a different folder name to the actual add-on id!
+
+	    show_busy - By default this is set to True and a busy dialog will show during the check
+
+	EXAMPLE CODE:
+	repo_status = Check_Repo('repository.modules4all')
+	if repo_status:
+	    dialog.ok('REPO STATUS','The repository modules4all is: [COLOR=lime]ONLINE[/COLOR])
+	else:
+	    dialog.ok('REPO STATUS','The repository modules4all is: [COLOR=red]OFFLINE[/COLOR])
+
+------------------------------------------------------------------------------------------
+
 DEFAULT SETTING:
 This will return the DEFAULT value for a setting (as set in resources/settings.xml)
 and optionally reset the current value back to this default. If you pass through
@@ -802,45 +832,59 @@ This will show/hide a "working" symbol.
 		koding.Show_Busy(status=False)
 
 ------------------------------------------------------------------------------------------
-SELECTION DIALOG
-This will bring up a selection of options to choose from. The options are
-sent through as a list and only one can be selected - this is not a multi-select dialog.
 
-	CODE: Select_Dialog(title,options,[key])
+KEYBOARD:
+Show an on-screen keyboard and return the string
 
-	AVAILABLE PARAMS:
-
-	    (*) title  -  This is title which appears in the header of the window.
-
-	    (*) options  -  This is a list of the options you want the user to be able to choose from.
-
-	    key  -  By default this is set to True so you'll get a return of the item number. For example
-	    if the user picks "option 2" and that is the second item in the list you'll receive a return of
-	    1 (0 would be the first item in list and 1 is the second). If set to False you'll recieve a return
-	    of the actual string associated with that key, in this example the return would be "option 2".
-
-	EXAMPLE CODE:
-		my_options = ['Option 1','Option 2','Option 3','Option 4','Option 5']
-		mychoice = koding.Select_Dialog(title='TEST DIALOG',options=my_options,key=False)
-		koding.OK_Dialog(title='SELECTED ITEM',message='You selected: [COLOR=dodgerblue]%s[/COLOR]\nNow let\'s try again - this time we will return a key...'%mychoice)
-		mychoice = koding.Select_Dialog(title='TEST DIALOG',options=my_options,key=True)
-		koding.OK_Dialog(title='SELECTED ITEM',message='The item you selected was position number [COLOR=dodgerblue]%s[/COLOR] in the list'%mychoice)
-
-------------------------------------------------------------------------------------------
-
-SHOW TEXT IN A LARGE WINDOW:
-This will allow you to open a blank window and fill it with some text.
-
-	CODE: koding.Text_Box(header, message)
+	CODE: koding.Keyboard([default, heading, hidden, return_false, autoclose, kb_type])
 
 	AVAILABLE PARAMS:
-		header 	-  As the name suggests this is a string to be used for the header/title of the window
 
-		message -  Yes you've probably already gussed it, this is the main message text
+	    heading  -  Optionally enter a heading for the text box.
+
+	    default  -  This is optional, if set this will act as the default text shown in the text box
+
+	    hidden   -  Boolean, if set to True the text will appear as hidden (starred out)
+
+	    return_false - By default this is set to False and when escaping out of the keyboard
+	    the default text is returned (or an empty string if not set). If set to True then
+	    you'll receive a return of False.
+
+	    autoclose - By default this is set to False but if you want the keyboard to auto-close
+	    after a period of time you can send through an integer. The value sent through needs to
+	    be milliseconds, so for example if you want it to close after 3 seconds you'd send through
+	    3000. The autoclose function only works with standard alphanumeric keyboard types.
+
+	    kb_type  -  This is the type of keyboard you want to show, by default it's set to alphanum.
+	    A list of available values are listed below:
+
+	        'alphanum'  - A standard on-screen keyboard containing alphanumeric characters.
+	        'numeric'   - An on-screen numerical pad.
+	        'date'      - An on-screen numerical pad formatted only for a date.
+	        'time'      - An on-screen numerical pad formatted only for a time.
+	        'ipaddress' - An on-screen numerical pad formatted only for an IP Address.
+	        'password'  - A standard keyboard but returns value as md5 hash. When typing
+	        the text is starred out, once you've entered the password you'll get another
+	        keyboard pop up asking you to verify. If the 2 match then your md5 has is returned.
 
 
 	EXAMPLE CODE:
-		koding.Text_Box('TEST HEADER','Just some random text[CR][CR]Use kodi tags for new lines, colours etc.')
+		mytext = koding.Keyboard(heading='Type in the text you want returned',default='test text')
+		dialog.ok('TEXT RETURNED','You typed in:', '', '[COLOR=dodgerblue]%s[/COLOR]'%mytext)
+		dialog.ok('AUTOCLOSE ENABLED','This following example we\'ve set the autoclose to 3000. That\'s milliseconds which converts to 3 seconds.')
+		mytext = koding.Keyboard(heading='Type in the text you want returned',default='this will close in 3s',autoclose=3000)
+		dialog.ok('TEXT RETURNED','You typed in:', '', '[COLOR=dodgerblue]%s[/COLOR]'%mytext)
+		mytext = koding.Keyboard(heading='Enter a number',kb_type='numeric')
+		dialog.ok('NUMBER RETURNED','You typed in:', '', '[COLOR=dodgerblue]%s[/COLOR]'%mytext)
+		dialog.ok('RETURN FALSE ENABLED','All of the following examples have "return_false" enabled. This means if you escape out of the keyboard the return will be False.')
+		mytext = koding.Keyboard(heading='Enter a date',return_false=True,kb_type='date')
+		dialog.ok('DATE RETURNED','You typed in:', '', '[COLOR=dodgerblue]%s[/COLOR]'%mytext)
+		mytext = koding.Keyboard(heading='Enter a time',return_false=True,kb_type='time')
+		dialog.ok('TIME RETURNED','You typed in:', '', '[COLOR=dodgerblue]%s[/COLOR]'%mytext)
+		mytext = koding.Keyboard(heading='IP Address',return_false=True,kb_type='ipaddress',autoclose=5)
+		dialog.ok('IP RETURNED','You typed in:', '', '[COLOR=dodgerblue]%s[/COLOR]'%mytext)
+		mytext = koding.Keyboard(heading='Password',kb_type='password')
+		dialog.ok('MD5 RETURN','The md5 for this password is:', '', '[COLOR=dodgerblue]%s[/COLOR]'%mytext)
 
 ------------------------------------------------------------------------------------------
 
@@ -877,6 +921,48 @@ This will bring up a short text message in a dialog.ok window.
 
 	EXAMPLE CODE:
 		koding.OK_Dialog(title='TEST DIALOG',message='This is a test dialog ok box. Click OK to quit.')
+
+------------------------------------------------------------------------------------------
+
+SELECTION DIALOG
+This will bring up a selection of options to choose from. The options are
+sent through as a list and only one can be selected - this is not a multi-select dialog.
+
+	CODE: Select_Dialog(title,options,[key])
+
+	AVAILABLE PARAMS:
+
+	    (*) title  -  This is title which appears in the header of the window.
+
+	    (*) options  -  This is a list of the options you want the user to be able to choose from.
+
+	    key  -  By default this is set to True so you'll get a return of the item number. For example
+	    if the user picks "option 2" and that is the second item in the list you'll receive a return of
+	    1 (0 would be the first item in list and 1 is the second). If set to False you'll recieve a return
+	    of the actual string associated with that key, in this example the return would be "option 2".
+
+	EXAMPLE CODE:
+		my_options = ['Option 1','Option 2','Option 3','Option 4','Option 5']
+		mychoice = koding.Select_Dialog(title='TEST DIALOG',options=my_options,key=False)
+		koding.OK_Dialog(title='SELECTED ITEM',message='You selected: [COLOR=dodgerblue]%s[/COLOR]\nNow let\'s try again - this time we will return a key...'%mychoice)
+		mychoice = koding.Select_Dialog(title='TEST DIALOG',options=my_options,key=True)
+		koding.OK_Dialog(title='SELECTED ITEM',message='The item you selected was position number [COLOR=dodgerblue]%s[/COLOR] in the list'%mychoice)
+
+------------------------------------------------------------------------------------------
+
+TEXT BOX (LARGE WINDOW OF TEXT):
+This will allow you to open a blank window and fill it with some text.
+
+	CODE: koding.Text_Box(header, message)
+
+	AVAILABLE PARAMS:
+		header 	-  As the name suggests this is a string to be used for the header/title of the window
+
+		message -  Yes you've probably already gussed it, this is the main message text
+
+
+	EXAMPLE CODE:
+		koding.Text_Box('TEST HEADER','Just some random text[CR][CR]Use kodi tags for new lines, colours etc.')
 
 ------------------------------------------------------------------------------------------
 
@@ -1572,6 +1658,37 @@ This will return the timestamp in various formats. By default it returns as "int
 	    'epoch'   -  Unix Epoch format (calculated in seconds passed since 12:00 1st Jan 1970).
 
 	    'clean'   -  A clean user friendly time format: Tue Jan 13 10:17:09 2009
+
+------------------------------------------------------------------------------------------
+
+DATA TYPE:
+This will return whether the item received is a dictionary, list, string, integer etc.
+
+	CODE:  Data_Type(data)
+
+	    AVAILABLE PARAMS:
+	        
+	        (*) data  -  This is the variable you want to check.
+
+	    RETURN VALUES:
+	    	list, dict, str, int, float, bool
+
+	EXAMPLE CODE:
+		test1 = ['this','is','a','list']
+		test2 = {"a" : "1", "b" : "2", "c" : 3}
+		test3 = 'this is a test string'
+		test4 = 12
+		test5 = 4.3
+		test6 = True
+
+		my_return = 'test1 type : %s\n' % koding.Data_Type(test1)
+		my_return += 'test2 type : %s\n' % koding.Data_Type(test2)
+		my_return += 'test3 type : %s\n' % koding.Data_Type(test3)
+		my_return += 'test4 type : %s\n' % koding.Data_Type(test4)
+		my_return += 'test5 type : %s\n' % koding.Data_Type(test5)
+		my_return += 'test6 type : %s\n' % koding.Data_Type(test6)
+
+		koding.Text_Box('TEST RESULTS', my_return)
 
 ------------------------------------------------------------------------------------------
 

@@ -18,7 +18,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
-from koding import converthex, Addon_Setting, String, Text_File
+from koding import dolog, converthex, Addon_Setting, Keyboard, String, Text_File
 
 if os.path.exists(xbmc.translatePath('special://home/userdata/addon_data/script.trtv/skip.txt')):
     tvgskip = 1
@@ -72,6 +72,7 @@ elif os.path.exists(legacy_path):
     runcode = Text_File(legacy_path,'r').replace('\r','')
 
 cleanname = sys.argv[1].replace("HOME_",'').replace('SUBMENU_','').replace('_DIALOG_USER','').replace('_DIALOG_PLUS_USER','').replace('_EXEC_USER','')
+cleanname = cleanname.replace('DIALOG','')
 cleanname = cleanname.lower()
 mymenu    = cleanname.replace('_','').replace(' ','')
 if mymenu == 'xxx':
@@ -89,19 +90,28 @@ if mymenu == 'fitness':
 folderpath = xbmc.translatePath(os.path.join('special://profile/addon_data/plugin.program.super.favourites/Super Favourites/', settings_clean.replace('SUBMENU_','HOME_')))
 #---------------------------------------------------------------------------------------------------
 def Add_Content(id_array):
-    from default import Addon_Browser
+    from default import encryptme, Addon_Browser, Install_Addons, Sleep_If_Function_Active, Toggle_Addons
 
     choice = dialog.select(String(30314),[String(30170),String(30313),String(30323)])
     if choice >= 0:
         my_text = Text_File(redirect_file,'r')
         if choice == 0:
-            include_list = Addon_Browser(function='list', header=String(30306), skiparray=id_array)
-            for item in include_list:
-                if not my_text.endswith('\n'):
-                    my_text += '\n'
-                my_text += 'addon~%s~%s\n'%(item[0],item[1])
+            if dialog.yesno(String(30507),String(30508),yeslabel=String(30510),nolabel=String(30509)):
+                addon_id = Keyboard(String(30511))
+                dolog('SEARCHING ONLINE FOR: %s'%addon_id)
+                Sleep_If_Function_Active(function=Install_Addons,args=[encryptme('e',addon_id)],show_busy=False,kill_time=120)
+                # xbmc.executebuiltin('UpdateLocalAddons')
+                Toggle_Addons(addon=addon_id)
+                if xbmc.getCondVisibility('System.HasAddon(%s)'%addon_id):
+                    dialog.ok(String(30334),String(30512)%addon_id)
+            else:
+                include_list = Addon_Browser(browser_type='list', header=String(30306), skiparray=id_array)
+                dolog('include_list: %s'% include_list)
+                for item in include_list:
+                    if not my_text.endswith('\n'):
+                        my_text += '\n'
+                    my_text += 'addon~%s~%s\n'%(item[0],item[1])
         elif choice == 1:
-
 # List of QP modes
             full_array = [String(30318),String(30315),String(30319),String(30316),String(30320),String(30321),String(30317),String(30322)]
             qp_dict    = {
@@ -119,7 +129,7 @@ def Add_Content(id_array):
 
 # Populate the list of QP items but don't show ones already installed
             for item in full_array:
-                xbmc.log('full_array: '+repr(item),2)
+                dolog('full_array: '+repr(item))
                 if not item in my_text:
                     my_array.append(item)
             
@@ -144,9 +154,10 @@ def Favourite_Select(installed_content=''):
         contents = Text_File(favourites_path,'r')
         match = re.compile('<favourite name="(.+?)".+?>(.+?)<\/favourite>', re.DOTALL).findall(contents)
         for name, command in match:
-            if '-fav~%s~%s\n'%(String(30326)%name,html_parser.unescape(command)) not in installed_content:
-                final_array.append('-fav~%s~%s\n'%(String(30326)%name,html_parser.unescape(command)))
-                dialog_array.append(name)
+
+            if '-fav~%s~%s\n'%(String(30326)%html_parser.unescape(name),html_parser.unescape(command)) not in installed_content:
+                final_array.append('-fav~%s~%s\n'%(String(30326)%html_parser.unescape(name),html_parser.unescape(command)))
+                dialog_array.append(html_parser.unescape(name))
         choice = dialog.select(String(30323),dialog_array)
         if choice >= 0:
             return final_array[choice]
@@ -169,8 +180,11 @@ def Remove_Content(id_array=[]):
     choice = dialog.select(String(30307), remove_list)
     if choice >= 0:
         remove_line  = '%s~%s~%s\n'%(id_array[choice][0], id_array[choice][1], id_array[choice][2])
-        replace_file = my_text.replace(remove_line,'')
-        Text_File(redirect_file,'w',replace_file)
+        if remove_line in my_text:
+            replace_file = my_text.replace(remove_line,'')
+            Text_File(redirect_file,'w',replace_file)
+        else:
+            dialog.ok('DEFAULT ITEM','It\'s only possible to delete items you\'ve added, you cannot delete default items. If you want to create your own custom list set this menu as a custom list via the main +- button')
 #---------------------------------------------------------------------------------------------------
 def execute(command):
     xbmc.executebuiltin(command)
@@ -208,7 +222,7 @@ def showlist(usenan = False):
             app_id = ''
             for item in raw_split:
                 app_id += item
-            xbmc.log(app_id,2)
+            dolog(app_id,2)
 
 
             if app_type == '-exec':
@@ -325,12 +339,16 @@ if settings_clean.startswith('HOME_XXX') or settings_clean.startswith('SUBMENU_X
 
 if success:
 
-    xbmc.log('redirect_file: %s'%redirect_file,2)
-    xbmc.log('redirect_setting: %s'%redirect_setting,2)
+    dolog('redirect_file: %s'%redirect_file)
+    dolog('redirect_setting: %s'%redirect_setting)
+
+# Support for submenu opening into dialog
+    if redirect_setting.startswith('SUBMENU') and redirect_setting.endswith('DIALOG'):
+        runcode = '# Select List Use NaN'
+
 # If no runcode exists and the item is HOME_SYSTEM
     if sys.argv[1] == 'HOME_SYSTEM' and not os.path.exists(redirect_file):
         xbmc.executebuiltin('ActivateWindow(settings)')
-
 # Legacy support
     elif runcode.startswith('# Select List Use NaN'):
         showlist(True)

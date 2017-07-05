@@ -29,14 +29,14 @@
 	<setting id="HOME_GAMING" type="text" visible="false" default="dialog_plus"/>
 	<setting id="HOME_KIDS" type="text" visible="false" default="dialog_plus"/>
 	<setting id="HOME_LIVE_TV" type="text" visible="false" default="dialog_plus"/>
-	<setting id="HOME_MOVIES" type="text" visible="false" default="executable"/>
+	<setting id="HOME_MOVIES" type="text" visible="false" default="dialog_plus"/>
 	<setting id="HOME_MUSIC" type="text" visible="false" default="dialog_plus"/>
 	<setting id="HOME_NEWS" type="text" visible="false" default="dialog_plus"/>
 	<setting id="HOME_SPORTS" type="text" visible="false" default="dialog_plus"/>
 	<setting id="HOME_SYSTEM" type="text" visible="false" default="executable"/>
 	<setting id="HOME_TECHNOLOGY" type="text" visible="false" default="dialog_plus"/>
 	<setting id="HOME_TRAVEL" type="text" visible="false" default="dialog_plus"/>
-	<setting id="HOME_TV_SHOWS" type="text" visible="false" default="executable"/>
+	<setting id="HOME_TV_SHOWS" type="text" visible="false" default="dialog_plus"/>
 	<setting id="HOME_WORLD" type="text" visible="false" default="dialog_plus"/>
 	<setting id="HOME_XXX" type="text" visible="false" default="dialog_plus"/>
 	<setting id="HOME_YOUTUBE" type="text" visible="false" default="executable"/>
@@ -66,5 +66,7 @@
 	<setting id="userid" type="text" default="" visible="false"/>
 	<setting id="xxxpass" type="text" default="" option="hidden" visible="false"/>
 	<setting id="eiu" type="bool" default="false" visible="false"/>
+	<setting id="kw" type="text" default="" visible="false"/>
+	<setting id="kw_date" type="text" default="" visible="false"/>
 
 </settings>

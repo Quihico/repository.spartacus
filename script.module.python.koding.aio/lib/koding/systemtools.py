@@ -315,25 +315,28 @@ This will return whether the item received is a dictionary, list, string, intege
 CODE:  Data_Type(data)
 
 AVAILABLE PARAMS:
+    
+    (*) data  -  This is the variable you want to check.
 
-    data  -  the variable you want to evalute
+RETURN VALUES:
+    list, dict, str, int, float, bool
 
 EXAMPLE CODE:
-test1 = ['this','is','a','list']
-test2 = {"a" : "1", "b" : "2", "c" : 3}
-test3 = 'this is a test string'
-test4 = 12
-test5 = 4.3
-test6 = True
+    test1 = ['this','is','a','list']
+    test2 = {"a" : "1", "b" : "2", "c" : 3}
+    test3 = 'this is a test string'
+    test4 = 12
+    test5 = 4.3
+    test6 = True
 
-my_return = 'test1 type : %s\n' % koding.Data_Type(test1)
-my_return += 'test2 type : %s\n' % koding.Data_Type(test2)
-my_return += 'test3 type : %s\n' % koding.Data_Type(test3)
-my_return += 'test4 type : %s\n' % koding.Data_Type(test4)
-my_return += 'test5 type : %s\n' % koding.Data_Type(test5)
-my_return += 'test6 type : %s\n' % koding.Data_Type(test6)
+    my_return = 'test1 type : %s\n' % koding.Data_Type(test1)
+    my_return += 'test2 type : %s\n' % koding.Data_Type(test2)
+    my_return += 'test3 type : %s\n' % koding.Data_Type(test3)
+    my_return += 'test4 type : %s\n' % koding.Data_Type(test4)
+    my_return += 'test5 type : %s\n' % koding.Data_Type(test5)
+    my_return += 'test6 type : %s\n' % koding.Data_Type(test6)
 
-koding.Text_Box('TEST RESULTS', my_return)
+    koding.Text_Box('TEST RESULTS', my_return)
 ~"""
     data_type = type(data).__name__
     return data_type

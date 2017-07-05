@@ -1,3 +1,8 @@
+v.0.9.6.1:
+- Added Check_Repo() function to check if the xml links can be resolved
+- Fixed bug in Toggle_Addons, was failing to enable recently unzipped
+- Updated some missing info from the README file
+
 v.0.9.6:
 - Added Requirements function to return min and max requirements for kodi dependencies
 - Added Highest_Version function for returning highest version in a list
