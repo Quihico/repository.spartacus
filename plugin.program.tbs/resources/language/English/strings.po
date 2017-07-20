@@ -415,7 +415,7 @@ msgid "[COLOR=dodgerblue]CHECK FOR UPDATES[/COLOR]"
 msgstr ""
 
 msgctxt "#30101"
-msgid "INSTALL A KEYWORD"
+msgid "INSTALL A KEYWORD BACKUP"
 msgstr ""
 
 msgctxt "#30102"
@@ -2204,4 +2204,28 @@ msgstr ""
 
 msgctxt "#30548"
 msgid "This will enable ALL your installed add-ons including any you may have previously disabled. Are you sure you want to continue?"
+msgstr ""
+
+msgctxt "#30549"
+msgid "[COLOR=gold]Top 50 Right Now[/COLOR]"
+msgstr ""
+
+msgctxt "#30550"
+msgid "DELETE A KEYWORD BACKUP"
+msgstr ""
+
+msgctxt "#30551"
+msgid "Are you sure you want to delete the keyword backup:\n[COLOR=dodgerblue]%s[/COLOR]\nClicking yes will completely wipe this backup from the server and there is no getting it back!"
+msgstr ""
+
+msgctxt "#30552"
+msgid "KEYWORD BACKUPS"
+msgstr ""
+
+msgctxt "#30553"
+msgid "[COLOR=gold]KEYWORD DELETED[/COLOR]"
+msgstr ""
+
+msgctxt "#30554"
+msgid "The following keyword backup has now been deleted and is no longer available:\n[COLOR=dodgerblue]%s[/COLOR]"
 msgstr ""

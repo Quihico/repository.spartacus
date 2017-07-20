@@ -1,3 +1,15 @@
+v.4.3.7:
+- Keyword now does a backup of redirects for main menus too
+- Keyword creation now allows overwrite of existing if owned by the uploader
+- Added ability to delete existing keywords
+- Moved personal keyword functions into Social TV menu
+
+v.4.3.6.9:
+- Added paths for QP Searches via popup dialog select
+
+v.4.3.6.8:
+- Increased the timeout for checking updates
+
 v.4.3.6.7:
 - Reverted last change, not sure if it's that or python koding causing problem on Android
 

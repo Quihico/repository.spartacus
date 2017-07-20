@@ -63,6 +63,7 @@ PROGRESS_TEMP    =  os.path.join(TBSDATA,   'progresstemp')
 SLEEPER          =  os.path.join(ADDON_PATH,'resources','tmr')
 KEYWORD_CREATE   =  os.path.join(TBSDATA,   'keyword_create.txt')
 MY_HOME_MENUS    =  os.path.join(TBSDATA,   'my_home_menus')
+REDIRECTS        =  os.path.join(TBSDATA,   'redirects')
 SF_ROOT          =  os.path.join(ADDON_DATA,'plugin.program.super.favourites', 'Super Favourites')
 NON_REGISTERED   =  os.path.join(ADDON_DATA,'script.openwindow','unregistered')
 XBMC_VERSION     =  xbmc.getInfoLabel("System.BuildVersion")[:2]
@@ -351,6 +352,20 @@ def Backup_Restore():
     Add_Dir(String(30029),'none','backup_option',True,'Backup.png','','')
     Add_Dir(String(30030),'none','restore_option',True,'Restore.png','','')
 #---------------------------------------------------------------------------------------------------
+@route(mode='browse_qp')
+def Browse_QP():
+    options = [String(30549),String(13280,'system'),String(559,'system'),String(19029,'system')]
+    choice  = Select_Dialog(String(1024,'system')+' YouTube',options)
+    if choice >=0:
+        if choice == 0:
+            xbmc.executebuiltin('RunScript(script.qlickplay,info=list,type=playlist,id=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-)')
+        if choice == 1:
+            xbmc.executebuiltin('RunScript(script.qlickplay,info=list,type=video,sort=date)')
+        if choice == 2:
+            xbmc.executebuiltin('RunScript(script.qlickplay,info=list,type=playlist,sort=viewCount)')
+        if choice == 3:
+            xbmc.executebuiltin('RunScript(script.qlickplay,info=list,type=channel,sort=viewCount)')
+#---------------------------------------------------------------------------------------------------
 # Browse pre-installed repo's via the kodi add-on browser
 @route(mode='browse_repos')
 def Browse_Repos():
@@ -542,11 +557,16 @@ def Create_Keyword():
     addon_settings = []
     settings_list  = []
     addon_list     = [skin]
+    content_list   = ['special://profile/guisettings.xml','special://profile/favourites.xml','special://profile/sources.xml']
     data_list      = []
     email          = encryptme( 'e',Addon_Setting('email') )
     username       = Addon_Setting('username')
     password       = Addon_Setting('password')
     keyword_backup = os.path.join(TBSDATA,'keyword_backup.txt')
+
+# Add the redirects to the extras
+    redirect_list  = Get_Contents(path=REDIRECTS,folders=False,full_path=False)
+    content_list  += ['special://profile/addon_data/plugin.program.tbs/redirects/' + s for s in redirect_list]
 
 # Enable adult addons
     Sleep_If_Function_Active(function=Adult_Toggle, args=[adult_addons,False])
@@ -586,7 +606,8 @@ def Create_Keyword():
                     settings_list.append([item[0],item[1]])
         my_addons += '\nmy_settings=%s'%settings_list
         my_addons += '\nskin_shortcuts=%s'%Create_Skin_Shortcut_Data()
-        extras     = File_Contents(['special://profile/guisettings.xml','special://profile/favourites.xml','special://profile/sources.xml'])
+
+        extras     = File_Contents(content_list)
         my_addons += '\nmy_extras=%s'%extras
 
     Adult_Toggle(adult_list=adult_addons,disable=True)
@@ -672,6 +693,34 @@ def Delete_Account():
                 exec( encryptme('d',response) )
             except:
                 OK_Dialog(String(30131),String(30132))
+#---------------------------------------------------------------------------------------------------
+# Delete a keyword from server
+def Delete_Keyword():
+    email        = encryptme( 'e',Addon_Setting('email') )
+    username     = encryptme( 'e',Addon_Setting('username') )
+    password     = Addon_Setting('password')
+    keyword_name = ''
+
+# List all previously created keywords
+    url   = BASE+'boxer/Delete_Keywords.php'
+    params    = {"x":encryptme('e',URL_Params()),"n":username,"p":password,"e":email}
+    response  = Open_URL(url=url,payload=params,post_type='post')
+    try:
+        exec( encryptme('d',response) )
+    except:
+        dolog(Last_Error())
+        OK_Dialog(String(30131),String(30132))   
+
+# Remove the relevant keyword from server
+    if keyword_name != '':
+        url            = BASE+'boxer/Delete_Keyword.php'
+        params         = {"x":encryptme('e',URL_Params()),"n":username,"p":password,"c":encryptme('e',keyword_name),"e":email}
+        response       = Open_URL(url=url,payload=params,post_type='post')
+        try:
+            exec( encryptme('d',response) )
+        except:
+            dolog(Last_Error())
+            OK_Dialog(String(30131),String(30132))
 #---------------------------------------------------------------------------------------------------
 # Function to delete the userdata/addon_data folder
 def Delete_Userdata():
@@ -820,8 +869,10 @@ def Exec_XBMC(command):
 #---------------------------------------------------------------------------------------------------
 # Reads contents from a list of special paths and returns in form of a list
 def File_Contents(paths=['special://profile/guisettings.xml']):
+    xbmc.log('PATHS: %s'%paths,2)
     settings_array = []
     for item in paths:
+        xbmc.log('CHECKING: %s'%item,2)
         xml_raw = Text_File(xbmc.translatePath(item),'r')
         xml_data = ''
         if xml_raw:
@@ -829,7 +880,7 @@ def File_Contents(paths=['special://profile/guisettings.xml']):
                 xml_data += '\n'+line.rstrip()
             if xml_data.startswith('\n'):
                 xml_data = xml_data[2:]
-            settings_array.append( [item,xml_data] )
+        settings_array.append( [item,xml_data] )
     return settings_array
 #---------------------------------------------------------------------------------------------------
 # Firmware update
@@ -1038,7 +1089,7 @@ def Get_Mac(protocol):
 def Get_Updates(url=True):
     if url:
         Show_Busy(True)
-    Sleep_If_Function_Active( Grab_Updates, [BASE+'boxer/comm_live.php?multi&z=c&x=','ignoreplayer'] )
+    Sleep_If_Function_Active( Grab_Updates, [BASE+'boxer/comm_live.php?multi&z=c&x=','ignoreplayer'], kill_time=600)
     # if url:
     #     Show_Busy(False)
 #---------------------------------------------------------------------------------------------------
@@ -1115,6 +1166,7 @@ def Grab_Updates(url, runtype = ''):
     previous    = ''
 
     if urlparams != 'Unknown':
+        dolog('### CHECKING MAIN MENU DEFAULTS')
         Main_Menu_Defaults()
         if url == BASE+'boxer/comm_live.php?multi&z=c&x=':
             multi = 1
@@ -1124,123 +1176,124 @@ def Grab_Updates(url, runtype = ''):
             url=url.replace('update&','')
         url,params = url.split('?')
         while mysuccess != 1 and failed != 1:
+            dolog('### MAIN MENU DEFAULTS RUN MOVING ON')
 
+            # try:
+            dolog("### URL: "+url+'?'+encryptme('e',urlparams))
+            link = Open_URL(url=url,post_type='post',payload={"x":encryptme('e',urlparams),"z":"c"})
+            if link != '' and not 'sleep' in link:
+                link = encryptme('d',link).replace('\n',';').replace('|_|',' ').replace('|!|','\n').replace('http://venztech.com/repo_jpegs/',BASE+'repo_jpegs/')
             try:
-                dolog("### URL: "+url+'?'+encryptme('e',urlparams))
-                link = Open_URL(url=url,post_type='post',payload={"x":encryptme('e',urlparams),"z":"c"})
-                if link != '' and not 'sleep' in link:
-                    link = encryptme('d',link).replace('\n',';').replace('|_|',' ').replace('|!|','\n').replace('http://venztech.com/repo_jpegs/',BASE+'repo_jpegs/')
-                try:
-                    dolog("### Return: "+link)
-                except:
-                    pass
+                dolog("### Return: "+link)
+            except:
+                pass
 
-                if link == '':
-                    dolog("### Blank page returned")
-                    counter += 1
-                    if counter == 3:
-                        failed = 1
+            if link == '':
+                dolog("### Blank page returned")
+                counter += 1
+                if counter == 3:
+                    failed = 1
 
 # Check that no body tag exists, if it does then we know TLBB is offline
-                if not '<body' in link and link != '':
-                    linematch  = re.compile('com(.+?)="').findall(link)
-                    commline   = linematch[0] if (len(linematch) > 0) else ''
-                    commatch   = re.compile('="(.+?)endcom"').findall(link)
-                    command    = commatch[0] if (len(commatch) > 0) else 'End'
-                
-                    SF_match   = re.compile('<favourite[\s\S]*?</favourite>').findall(command)
-                    SF_command = SF_match[0] if (len(SF_match) > 0) else 'None'
+            if not '<body' in link and link != '':
+                linematch  = re.compile('com(.+?)="').findall(link)
+                commline   = linematch[0] if (len(linematch) > 0) else ''
+                commatch   = re.compile('="(.+?)endcom"').findall(link)
+                command    = commatch[0] if (len(commatch) > 0) else 'End'
+            
+                SF_match   = re.compile('<favourite[\s\S]*?</favourite>').findall(command)
+                SF_command = SF_match[0] if (len(SF_match) > 0) else 'None'
 
 # Create array of commands so we can check if the install video needs to be played
-                    previous += command
-                    dolog("### command: "+command)
-                    dolog("### SF_command: "+SF_command)
+                previous += command
+                dolog("### command: "+command)
+                dolog("### SF_command: "+SF_command)
 
-                    Open_URL( post_type='post',url=BASE+'boxer/comm_live.php',payload={"x":encryptme('e',urlparams),"y":commline} )
-                    dolog("### COMMAND *CLEANED: "+command.replace('|#|',';'))
-                    dolog("### LINK *ORIG: "+link)
-                    if SF_command!='None':
-                        Text_File(PROGRESS_TEMP, 'w', SF_command)
+                Open_URL( post_type='post',url=BASE+'boxer/comm_live.php',payload={"x":encryptme('e',urlparams),"y":commline} )
+                dolog("### COMMAND *CLEANED: "+command.replace('|#|',';'))
+                dolog("### LINK *ORIG: "+link)
+                if SF_command!='None':
+                    Text_File(PROGRESS_TEMP, 'w', SF_command)
 
-                    elif command!='End' and not 'sleep' in link:
-                        if ';' in command:
-                            dolog(command)
-                            newcommands = command.split(';')
-                            for item in newcommands:
-                                if 'branding/install.mp4' in item:
-                                    item = ''
+                elif command!='End' and not 'sleep' in link:
+                    if ';' in command:
+                        dolog(command)
+                        newcommands = command.split(';')
+                        for item in newcommands:
+                            if 'branding/install.mp4' in item:
+                                item = ''
 
-                                if 'extract.all' in item:
-                                    try:
-                                        item = item.replace('extract.all','Extract')
-                                        exec item
-                                        if os.path.exists(os.path.join(PACKAGES,'updates.zip')):
-                                            os.remove(os.path.join(PACKAGES,'updates.zip'))
-                                    except:
-                                        dolog(Last_Error())
-                                else:
-                                    try:
-                                        if 'Dialog().ok(' in item:
-                                            xbmc.sleep(1000)
-                                            while xbmc.Player().isPlaying():
-                                                xbmc.sleep(500)
-                                        exec item.replace('|#|',';') # Change to semicolon for user agent otherwise it splits into a new command
-                                        dolog("### RUNNING ITEM: "+item.replace('|#|',';'))
-                                    except:
-                                        dolog("### Failed with item: "+item.replace('|#|',';'))
-                                        dolog(Last_Error())
-                        else:
-                            try:
-                                if 'Dialog().ok(' in command:
-                                    if not multi:
+                            if 'extract.all' in item:
+                                try:
+                                    item = item.replace('extract.all','Extract')
+                                    exec item
+                                    if os.path.exists(os.path.join(PACKAGES,'updates.zip')):
+                                        os.remove(os.path.join(PACKAGES,'updates.zip'))
+                                except:
+                                    dolog(Last_Error())
+                            else:
+                                try:
+                                    if 'Dialog().ok(' in item:
                                         xbmc.sleep(1000)
-                                        dolog("### OK_Dialog in this command, checking if xbmc is playing....")
                                         while xbmc.Player().isPlaying():
                                             xbmc.sleep(500)
-                                    else: command = ''
+                                    exec item.replace('|#|',';') # Change to semicolon for user agent otherwise it splits into a new command
+                                    dolog("### RUNNING ITEM: "+item.replace('|#|',';'))
+                                except:
+                                    dolog("### Failed with item: "+item.replace('|#|',';'))
+                                    dolog(Last_Error())
+                    else:
+                        try:
+                            if 'Dialog().ok(' in command:
+                                if not multi:
+                                    xbmc.sleep(1000)
+                                    dolog("### OK_Dialog in this command, checking if xbmc is playing....")
+                                    while xbmc.Player().isPlaying():
+                                        xbmc.sleep(500)
+                                else: command = ''
 
-                                if 'extract.all' in command:
-                                    try:
-                                        command = command.replace('extract.all','Extract')
-                                        exec command
-                                        if os.path.exists(os.path.join(PACKAGES,'updates.zip')):
-                                            os.remove(os.path.join(PACKAGES,'updates.zip'))
-                                    except:
-                                        dolog("### Failed with command: "+command.replace('|#|',';'))
-                                        dolog(Last_Error())
+                            if 'extract.all' in command:
+                                try:
+                                    command = command.replace('extract.all','Extract')
+                                    exec command
+                                    if os.path.exists(os.path.join(PACKAGES,'updates.zip')):
+                                        os.remove(os.path.join(PACKAGES,'updates.zip'))
+                                except:
+                                    dolog("### Failed with command: "+command.replace('|#|',';'))
+                                    dolog(Last_Error())
 
-                                if 'branding/install.mp4' in command:
-                                    command = ''
+                            if 'branding/install.mp4' in command:
+                                command = ''
 
-                                else:
-                                    exec command.replace('|#|',';') # Change to semicolon for user agent otherwise it splits into a new command
-                                    dolog("### RUNNING COMMAND: "+item.replace('|#|',';'))
-                            except:
-                                dolog("### Failed with command: "+command.replace('|#|',';'))
-                        previous = ''
-                        if os.path.exists(PROGRESS_TEMP):
-                            os.remove(PROGRESS_TEMP)
-                        
-                    elif command=='End':
-                        if 'sleep' in link:
-                            content=Text_File(SLEEPER, 'r')
-                            if content != "sleep=STOPALL":
-                                sleep = str(link[6:])
                             else:
-                                sleep = "23:59:59"
-                                dolog("### SLEEP MODE - SERVER MAINTENANCE")
-                            if str(sleep) != str(content):
-                                Text_File(SLEEPER, 'w',sleep)
-                                dolog("### Changed timer to "+sleep)
-                                changetimer = 1
-                            else:
-                                dolog("### Timer same, no changes required")
-                        if sleep != '23:59:59':
-                            Refresh(['addons','repos'])
-                            mysuccess = 1
-            except:
-                dolog("### Failed with update command: "+Last_Error())
-                failed = 1
+                                exec command.replace('|#|',';') # Change to semicolon for user agent otherwise it splits into a new command
+                                dolog("### RUNNING COMMAND: "+item.replace('|#|',';'))
+                        except:
+                            dolog("### Failed with command: "+command.replace('|#|',';'))
+                    previous = ''
+                    if os.path.exists(PROGRESS_TEMP):
+                        os.remove(PROGRESS_TEMP)
+                    
+                elif command=='End':
+                    if 'sleep' in link:
+                        content=Text_File(SLEEPER, 'r')
+                        if content != "sleep=STOPALL":
+                            sleep = str(link[6:])
+                        else:
+                            sleep = "23:59:59"
+                            dolog("### SLEEP MODE - SERVER MAINTENANCE")
+                        if str(sleep) != str(content):
+                            Text_File(SLEEPER, 'w',sleep)
+                            dolog("### Changed timer to "+sleep)
+                            changetimer = 1
+                        else:
+                            dolog("### Timer same, no changes required")
+                    if sleep != '23:59:59':
+                        Refresh(['addons','repos'])
+                        mysuccess = 1
+            # except:
+            #     dolog("### Failed with update command: "+Last_Error())
+            #     failed = 1
 
         if changetimer == 1:
             dolog('### TBS GRAB UPDATES - TIMER CHANGED, STOPPING/RUNNING SERVICE')
@@ -1600,9 +1653,12 @@ def IP_Check():
 # Return details of a full keyword backup (addons,addon_data,faves,sources,guisettings)
 @route(mode='kw_full')
 def Keyword_Full_Backup():
-    skiparray = ['plugin.program.super.favourites','plugin.program.tbs','script.openwindow','script.trtv','script.qlickplay','plugin.video.metalliq']
-    id_array  = []
-    my_addons = []
+    id_array       = []
+    my_addons      = []
+    skiparray      = ['plugin.program.super.favourites','plugin.program.tbs','script.openwindow','script.trtv','script.qlickplay','plugin.video.metalliq']
+    content_list   = ['special://profile/guisettings.xml','special://profile/favourites.xml','special://profile/sources.xml']
+    redirect_list  = Get_Contents(path=REDIRECTS,folders=False,full_path=False)
+    content_list  += ['special://profile/addon_data/plugin.program.tbs/redirects/' + s for s in redirect_list]
 
     my_addons =  Installed_Addons(content='video')
     my_addons += Installed_Addons(content='audio')
@@ -1617,9 +1673,22 @@ def Keyword_Full_Backup():
     my_addons      = 'my_addons=%s\n'%id_array
     my_addons     += '\nmy_settings=%s'%Create_Keyword_Addon_Data()
     my_addons     += '\nskin_shortcuts=%s'%Create_Skin_Shortcut_Data()
-    extras         = File_Contents(['special://profile/guisettings.xml','special://profile/favourites.xml','special://profile/sources.xml'])
+    extras         = File_Contents(content_list)
     my_addons     += '\nmy_extras=%s'%extras
     return my_addons
+#---------------------------------------------------------------------------------------------------
+# Show the various keyword options (create, install & delete)
+def Keyword_Options():
+    choice = Select_Dialog('[COLOR=gold]%s[/COLOR]'%String(30552),['[COLOR=dodgerblue]%s[/COLOR]'%String(30189),'[COLOR=lime]%s[/COLOR]'%String(30101),'[COLOR=red]%s[/COLOR]'%String(30550)])
+    if choice >= 0:
+        if choice == 0:
+            Create_Keyword()
+        if choice == 1:
+            Install_Keyword()
+        if choice == 2:
+            Delete_Keyword()
+    else:
+        My_Details()
 #---------------------------------------------------------------------------------------------------
 # Run the force close command
 @route(mode='kill_xbmc')
@@ -1914,9 +1983,7 @@ def My_Details():
     if userid != '':
         if username != '':
             username = String(30350)%username
-# Enable this one when keyword creator is completed
-            my_array = [String(30100),username,String(30354),String(30189)]
-            # my_array = [String(30100),username,String(30354)]
+            my_array = [String(30100),username,String(30354),String(30552)]
         else:
             username = String(30348)
             my_array = [String(30100),username,String(30354)]
@@ -1933,7 +2000,7 @@ def My_Details():
             if choice == 2:
                 Social_Shares()
             if choice == 3:
-                Create_Keyword()
+                Keyword_Options()
     else:
         OK_Dialog(String(30380),String(30381))
         xbmc.executebuiltin('RunAddon(script.openwindow)')
@@ -2658,6 +2725,18 @@ def Search_Content(menutype):
 # we need to set the title to our query
     title = urllib.quote_plus(vq)
     Install_Venz_Menu('manualsearch'+title+'>>#'+menutype)
+#---------------------------------------------------------------------------------------------------
+@route(mode='search_qp')
+def Search_QP():
+    options = [String(13280,'system'),String(559,'system'),String(19029,'system')]
+    choice  = Select_Dialog(String(137,'system')+' YouTube',options)
+    if choice >=0:
+        if choice == 0:
+            xbmc.executebuiltin('RunScript(script.qlickplay,info=list,type=video,query=qqqqq)')
+        if choice == 1:
+            xbmc.executebuiltin('RunScript(script.qlickplay,info=list,type=playlist,query=qqqqq)')
+        if choice == 2:
+            xbmc.executebuiltin('RunScript(script.qlickplay,info=list,type=channel,query=qqqqq)')
 #---------------------------------------------------------------------------------------------------
 # Bring up the sharing options
 def Send_To_Friend(friend):
