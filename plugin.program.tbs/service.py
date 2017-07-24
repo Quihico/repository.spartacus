@@ -87,4 +87,4 @@ xbmc.log('### SLEEP: %s'%sleep)
 
 # Set the main timer for regular update checks
 if sleep != '':
-    xbmc.executebuiltin('XBMC.AlarmClock(Notifyloop,XBMC.RunScript(special://home/addons/%s/checknews.py,silent=true),%s,silent,loop)'%(AddonID, sleep))
+    xbmc.executebuiltin('XBMC.AlarmClock(Notifyloop,XBMC.RunScript(special://home/addons/%s/checknews.py,silent),%s,silent,loop)'%(AddonID, sleep))

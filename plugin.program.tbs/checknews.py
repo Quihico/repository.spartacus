@@ -15,6 +15,7 @@ from koding import dolog, converthex, Addon_Setting
 from default import Grab_Updates, Check_My_Shares
 
 start_option    = 'normal'
+BASE            = Addon_Setting(addon_id='script.openwindow',setting='base')
 mastercheck     = Addon_Setting('master')
 
 try:
@@ -29,4 +30,4 @@ if start_option == 'shares':
 
 else:
     dolog('### checknews initiated, checking for updates')
-    Grab_Updates(converthex('687474703a2f2f746c62622e6d652f626f7865722f636f6d6d5f6c6976652e7068703f783d'),'silent')
+    Grab_Updates(BASE+converthex('626f7865722f636f6d6d5f6c6976652e7068703f783d'),'silent')

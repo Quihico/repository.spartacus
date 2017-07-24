@@ -555,9 +555,10 @@ def CPU_Check():
 # Create a list of addons
 def Create_Keyword():
     addon_settings = []
+    redirect_list  = []
     settings_list  = []
     addon_list     = [skin]
-    content_list   = ['special://profile/guisettings.xml','special://profile/favourites.xml','special://profile/sources.xml']
+    content_list   = ['special://profile/guisettings.xml','special://profile/favourites.xml','special://profile/sources.xml','special://profile/addon_data/plugin.video.addons.ini.creator/.storage/folders']
     data_list      = []
     email          = encryptme( 'e',Addon_Setting('email') )
     username       = Addon_Setting('username')
@@ -565,9 +566,11 @@ def Create_Keyword():
     keyword_backup = os.path.join(TBSDATA,'keyword_backup.txt')
 
 # Add the redirects to the extras
-    redirect_list  = Get_Contents(path=REDIRECTS,folders=False,full_path=False)
+    for item in os.listdir(REDIRECTS):
+        if item.startswith('HOME_'):
+            redirect_list.append(item)
     content_list  += ['special://profile/addon_data/plugin.program.tbs/redirects/' + s for s in redirect_list]
-
+    dolog('DOING ADULT TOGGLE')
 # Enable adult addons
     Sleep_If_Function_Active(function=Adult_Toggle, args=[adult_addons,False])
 
@@ -869,17 +872,15 @@ def Exec_XBMC(command):
 #---------------------------------------------------------------------------------------------------
 # Reads contents from a list of special paths and returns in form of a list
 def File_Contents(paths=['special://profile/guisettings.xml']):
-    xbmc.log('PATHS: %s'%paths,2)
     settings_array = []
     for item in paths:
-        xbmc.log('CHECKING: %s'%item,2)
         xml_raw = Text_File(xbmc.translatePath(item),'r')
         xml_data = ''
         if xml_raw:
             for line in xml_raw.splitlines():
                 xml_data += '\n'+line.rstrip()
-            if xml_data.startswith('\n'):
-                xml_data = xml_data[2:]
+            # if xml_data.startswith('\n'):
+            #     xml_data = xml_data[1:]
         settings_array.append( [item,xml_data] )
     return settings_array
 #---------------------------------------------------------------------------------------------------
@@ -1302,9 +1303,9 @@ def Grab_Updates(url, runtype = ''):
 
     dolog('### TBS GRAB UPDATES - RUNNING FUNCTIONS')
     if os.path.exists(xbmc.translatePath('special://home/addons/script.openwindow/functions.py')):
-        xbmc.executebuiltin('RunScript(special://home/addons/script.openwindow/functions.py)')
+        xbmc.executebuiltin('RunScript(special://home/addons/script.openwindow/functions.py,%s)'%runtype)
     elif os.path.exists(xbmc.translatePath('special://xbmc/addons/script.openwindow/functions.py')):
-        xbmc.executebuiltin('RunScript(special://xbmc/addons/script.openwindow/functions.py)')
+        xbmc.executebuiltin('RunScript(special://xbmc/addons/script.openwindow/functions.py,%s)'%runtype)
     Sync_Settings()
     Remove_Files()
     dolog('### TBS_RUNNING: %s'%xbmcgui.Window(10000).getProperty('TBS_Running'))
@@ -1656,7 +1657,7 @@ def Keyword_Full_Backup():
     id_array       = []
     my_addons      = []
     skiparray      = ['plugin.program.super.favourites','plugin.program.tbs','script.openwindow','script.trtv','script.qlickplay','plugin.video.metalliq']
-    content_list   = ['special://profile/guisettings.xml','special://profile/favourites.xml','special://profile/sources.xml']
+    content_list   = ['special://profile/guisettings.xml','special://profile/favourites.xml','special://profile/sources.xml','special://profile/addon_data/plugin.video.addons.ini.creator/.storage/folders']
     redirect_list  = Get_Contents(path=REDIRECTS,folders=False,full_path=False)
     content_list  += ['special://profile/addon_data/plugin.program.tbs/redirects/' + s for s in redirect_list]
 
@@ -1720,37 +1721,8 @@ def Log_Viewer():
 # Set the default main menu items
 @route(mode='main_menu_defaults')
 def Main_Menu_Defaults():
-    custom_list = ''
-    menu_list   = {'comedy':'Custom6HomeItem.Disable','cooking':'Custom3HomeItem.Disable','fitness':'Custom4HomeItem.Disable',
-    'gaming':'Custom5HomeItem.Disable','kids':'FavoritesHomeItem.Disable','livetv':'LiveTVHomeItem.Disable',
-    'movies':'MovieHomeItem.Disable','music':'MusicHomeItem.Disable','news':'ProgramsHomeItem.Disable',
-    'sports':'VideosHomeItem.Disable','technology':'Custom2HomeItem.Disable','travel':'WeatherHomeItem.Disable',
-    'tvshows':'TVShowHomeItem.Disable','world':'PicturesHomeItem.Disable','youtube':'ShutdownHomeItem.Disable',
-    'xxx':'MusicVideoHomeItem.Disable'}
-
     urlparams = URL_Params()
-    menu_options = Open_URL( post_type='post', url=BASE+'boxer/my_details_live.php', payload={"x":encryptme('e', urlparams),"m":"2"} )
-    menu_options = eval( encryptme('d', menu_options) )
-    dolog('menu options: '+repr(menu_options) )
-    if os.path.exists(MY_HOME_MENUS):
-        custom_list = Text_File(MY_HOME_MENUS,'r')
-        dolog('### custom_list: %s'%custom_list)
-
-# Enable/disable default main menu items
-    for item in menu_options:
-        dolog('### checking: %s'%item)
-        if menu_list[item] not in custom_list:
-            dolog( '### NOT in custom list - setting: %s'%menu_list[item] )
-            xbmc.executebuiltin( 'Skin.SetString(%s,)' % menu_list[item] )
-
-# Enable/disable the custom home menu items
-    if custom_list != '':
-        dolog('### CHECKING CUSTOM LIST ITEMS')
-        for item in custom_list.splitlines():
-            dolog('# setting: %s'%item)
-            dolog('# IN custom list - setting: %s'%item)
-            xbmc.executebuiltin(item)
-    dolog('### SETTING OF MAIN MENUS COMPLETE')
+    Run_Code(url='boxer/main_menus.php', payload={"x":encryptme('e', urlparams)} )
 #---------------------------------------------------------------------------------------------------
 # Function to enable/disable the main menu items - added due to glitch on server
 @route(mode='main_menu_install', args=['url'])
@@ -2339,6 +2311,11 @@ def pop(xmlfile):
     popup = SPLASH(xmlfile,ADDON.getAddonInfo('path'),'DefaultSkin',close_time=34)
     popup.doModal()
     del popup
+#---------------------------------------------------------------------------------------------------
+# Called by openwindow for registration
+@route(mode='register_device')
+def Register_Device():
+    Run_Code(url="boxer/User_Registration.php")
 #---------------------------------------------------------------------------------------------------
 # Function to clear the addon_data
 @route(mode='remove_addon_data')

@@ -2163,7 +2163,7 @@ msgid "[COLOR=gold]NO KEYWORDS CREATED[/COLOR]"
 msgstr ""
 
 msgctxt "#30538"
-msgid "You currently have no keyword backups.\nIf you\'d like to create a backup please use the [COLOR=dodgerblue]CREATE KEYWORD BACKUP[/COLOR] option in the Social TV menu."
+msgid "You currently have no keyword backups."
 msgstr ""
 
 msgctxt "#30539"
@@ -2228,4 +2228,12 @@ msgstr ""
 
 msgctxt "#30554"
 msgid "The following keyword backup has now been deleted and is no longer available:\n[COLOR=dodgerblue]%s[/COLOR]"
+msgstr ""
+
+msgctxt "#30555"
+msgid "INVALID KEYWORD"
+msgstr ""
+
+msgctxt "#30556"
+msgid "Keyword names must be a minimum of 5 characters.\nPlease try again and enter a valid name."
 msgstr ""

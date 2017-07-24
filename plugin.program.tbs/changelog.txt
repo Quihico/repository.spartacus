@@ -1,3 +1,14 @@
+v.4.3.7.3:
+- Busy symbol now only showing on startup and not on every update check
+
+v.4.3.7.2:
+- Main menu names can now be set in admin panel by OEM
+
+v.4.3.7.1:
+- Cleaned up some strings
+- Added addons.ini.creator data to keyword backup creation
+- Fixed problem with some chars getting stripped at start of settings when backing up.
+
 v.4.3.7:
 - Keyword now does a backup of redirects for main menus too
 - Keyword creation now allows overwrite of existing if owned by the uploader
