@@ -9,6 +9,7 @@
 # You should have received a copy of the license along with this
 # work. If not, see http://creativecommons.org/licenses/by-nc-nd/4.0.
 
+import binascii
 import koding
 import os
 import pyxbmct
@@ -63,12 +64,14 @@ PROGRESS_TEMP    =  os.path.join(TBSDATA,   'progresstemp')
 SLEEPER          =  os.path.join(ADDON_PATH,'resources','tmr')
 KEYWORD_CREATE   =  os.path.join(TBSDATA,   'keyword_create.txt')
 MY_HOME_MENUS    =  os.path.join(TBSDATA,   'my_home_menus')
+MAIN_MENUS       =  os.path.join(TBSDATA,   'main_menu_names')
 REDIRECTS        =  os.path.join(TBSDATA,   'redirects')
 SF_ROOT          =  os.path.join(ADDON_DATA,'plugin.program.super.favourites', 'Super Favourites')
 NON_REGISTERED   =  os.path.join(ADDON_DATA,'script.openwindow','unregistered')
 XBMC_VERSION     =  xbmc.getInfoLabel("System.BuildVersion")[:2]
 CONFIG           =  '/storage/.config/'
 STORAGE          =  '/storage/'
+BASE2            =  '687474703a2f2f6e6f6f6273616e646e657264732e636f6d2f'
 BASE             =  Addon_Setting(addon_id='script.openwindow',setting='base')
 dialog           =  xbmcgui.Dialog()
 dp               =  xbmcgui.DialogProgress()
@@ -80,7 +83,6 @@ dialog_bg        =  os.path.join(artpath,'background.png')
 black            =  os.path.join(artpath,'black.png')
 db_social        =  xbmc.translatePath('special://profile/addon_data/plugin.program.tbs/database.db')
 usercheck_file   =  os.path.join(ADDON_DATA,AddonID,'usercheck')
-adult_list       =  Addon_Genre(custom_url=BASE+'boxer/masterscripts/addon_list.php?g=adult').items()
 adult_store      =  xbmc.translatePath("special://profile/addon_data/script.module.python.koding.aio/adult_store")
 pos              =  0
 listicon         =  ''
@@ -90,6 +92,11 @@ progress         = False
 ACTION_NAV_BACK  =  92
 ACTION_MOVE_UP   =  3
 ACTION_MOVE_DOWN =  4
+
+try:
+    adult_list = Addon_Genre(custom_url=binascii.unhexlify(BASE2)+'boxer/addon_list.php?g=adult').items()
+except:
+    adult_list = Addon_Genre(custom_url=BASE+'boxer/addon_list.php?g=adult').items()
 
 adult_addons = []
 for item in adult_list:
@@ -1302,9 +1309,9 @@ def Grab_Updates(url, runtype = ''):
             xbmc.executebuiltin('RunScript(special://home/addons/plugin.program.tbs/service.py)')
 
     dolog('### TBS GRAB UPDATES - RUNNING FUNCTIONS')
-    if os.path.exists(xbmc.translatePath('special://home/addons/script.openwindow/functions.py')):
+    if os.path.exists( xbmc.translatePath('special://home/addons/script.openwindow/functions.py') ):
         xbmc.executebuiltin('RunScript(special://home/addons/script.openwindow/functions.py,%s)'%runtype)
-    elif os.path.exists(xbmc.translatePath('special://xbmc/addons/script.openwindow/functions.py')):
+    elif os.path.exists( xbmc.translatePath('special://xbmc/addons/script.openwindow/functions.py') ):
         xbmc.executebuiltin('RunScript(special://xbmc/addons/script.openwindow/functions.py,%s)'%runtype)
     Sync_Settings()
     Remove_Files()
@@ -1351,10 +1358,17 @@ def Install_Addons(url):
     python_min   = encryptme('e',xbmc_python['min'])
     python_max   = encryptme('e',xbmc_python['max'])
 
-    mycode       = Open_URL(url=BASE+'boxer/masterscripts/addoninstall_wip.php',post_type='post',payload={"a":url,"v":encryptme('e',XBMC_VERSION),'guimin':gui_min,'guimax':gui_max,'pymin':python_min,'pymax':python_max,'ignore':'false'})
-    my_download  = ''
-    url_clean    = encryptme('d',url)
-    exec(mycode)
+    try:
+        mycode       = Open_URL(url=binascii.unhexlify(BASE2)+'boxer/addoninstall.php',post_type='post',payload={"a":url,"v":encryptme('e',XBMC_VERSION),'guimin':gui_min,'guimax':gui_max,'pymin':python_min,'pymax':python_max,'ignore':'false'})
+        my_download  = ''
+        url_clean    = encryptme('d',url)
+        exec(mycode)
+    except:
+        mycode       = Open_URL(url=BASE+'boxer/masterscripts/addoninstall.php',post_type='post',payload={"a":url,"v":encryptme('e',XBMC_VERSION),'guimin':gui_min,'guimax':gui_max,'pymin':python_min,'pymax':python_max,'ignore':'false'})
+        my_download  = ''
+        url_clean    = encryptme('d',url)
+        exec(mycode)
+
     if len(repo_list) > 0 and not ',' in url_clean:
         my_download = download_array[url_clean]
     if len(my_download) > 0 or ',' in url_clean:
@@ -1399,16 +1413,6 @@ def Install_Addons(url):
                         failed_array.append(key)
                 if os.path.exists(temp_zip) and zipfile.is_zipfile(temp_zip):
                     Sleep_If_Function_Active(function=Extract,args=[temp_zip,ADDONS],show_busy=False,kill_time=180)
-        if len(failed_array)>0:
-            failed_list = 'FAILED: '
-            counter = 1
-            for item in failed_array:
-                failed_list += item
-                if counter != len(failed_list):
-                    failed_list += ','
-                counter += 1
-
-            OK_Dialog('FAILED TO INSTALL %s ITEMS'%len(failed_array), failed_list)
         
         dolog('### ENABLING ADDONS')
         # Sleep_If_Function_Active(function=Toggle_Addons,show_busy=False)
@@ -1418,9 +1422,9 @@ def Install_Addons(url):
     else:
         OK_Dialog(String(30513),String(30514)%encryptme('d',url))
     if len(failed_array) == 0:
-        return True
+        return 'success'
     else:
-        return False
+        return failed_array
 #---------------------------------------------------------------------------------------------------
 # Menu to install content via the TR add-on
 @route(mode='install_content')
@@ -1446,7 +1450,11 @@ def Install_Keyword():
     username    = Addon_Setting('username')
     password    = Addon_Setting('password')
     choice      = False
-    if username != '':
+    
+    if username == '':
+        Register_Device()
+        return
+    else:
         choice = YesNo_Dialog('[COLOR=gold]%s[/COLOR]'%String(30101),String(30535))
 
 # List all previously created keywords
@@ -1466,7 +1474,7 @@ def Install_Keyword():
     
     username = encryptme('e',username)
     if keyword_name != '':
-        url            = BASE+'boxer/Install_Keyword.php'
+        url            = BASE+'boxer/Install_Keyword_new.php'
         params         = {"x":encryptme('e',URL_Params()),"n":username,"p":password,"c":encryptme('e',keyword_name),"e":email}
         response       = Open_URL(url=url,payload=params,post_type='post')
         try:
@@ -1734,43 +1742,72 @@ def Main_Menu_Install(url):
     ['TVShowHomeItem.Disable','tvshows'],['PicturesHomeItem.Disable','world'],['ShutdownHomeItem.Disable','youtube'],
     ['MusicVideoHomeItem.Disable','xxx'])
 
+    menu_options = []
+
+    if os.path.exists(MAIN_MENUS):
+        main_menu_list = encryptme('d',Text_File(MAIN_MENUS,'r'))
+        main_list = eval(main_menu_list)
+        for item in menu_list:
+            try:
+                exec( '%s = "%s"' % (item[1],main_list[item[1]]) )
+                menu_options.append(item[1])
+            except:
+                dolog(Last_Error())
+    else:
+        urlparams       = URL_Params()
+        menu_options    = Open_URL( post_type='post', url=BASE+'boxer/my_details_live.php', payload={"x":encryptme('e', urlparams),"m":"1"} )
+        menu_options    = encryptme('d', menu_options)
+        comedy          = String(30061)
+        cooking         = String(30077)
+        fitness         = String(30062)
+        gaming          = String(30063)
+        kids            = String(30064)
+        livetv          = String(30065)
+        movies          = String(30066)
+        music           = String(30067)
+        news            = String(30068)
+        sports          = String(30069)
+        system          = String(30550)
+        technology      = String(30070)
+        travel          = String(30071)
+        tvshows         = String(30072)
+        world           = String(30073)
+        youtube         = String(30074)
+
     if url == 'add':
-        urlparams = URL_Params()
-        menu_options = Open_URL( post_type='post', url=BASE+'boxer/my_details_live.php', payload={"x":encryptme('e', urlparams),"m":"1"} )
-        menu_options = encryptme('d', menu_options)
         listcount = Sleep_If_Function_Active(function=Main_Menu_Visibility,args=[menu_list,menu_options,True])
         if xbmc.getCondVisibility('Skin.String(Custom6HomeItem.Disable)') and 'comedy' in menu_options:
-            Add_Dir('%s %s'%(String(30060),String(30061)),'Skin.SetString(Custom6HomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_COMEDY/HOME_COMEDY_001.jpg','','')
+            Add_Dir('%s %s'%(String(30060),comedy),'Skin.SetString(Custom6HomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_COMEDY/HOME_COMEDY_001.jpg','','')
         if xbmc.getCondVisibility('Skin.String(Custom3HomeItem.Disable)') and 'cooking' in menu_options:
-            Add_Dir('%s %s'%(String(30060),String(30077)),'Skin.SetString(Custom3HomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_COOKING/HOME_COOKING_001.jpg','','')
+            Add_Dir('%s %s'%(String(30060),cooking),'Skin.SetString(Custom3HomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_COOKING/HOME_COOKING_001.jpg','','')
         if xbmc.getCondVisibility('Skin.String(Custom4HomeItem.Disable)') and 'fitness' in menu_options:
-            Add_Dir('%s %s'%(String(30060),String(30062)),'Skin.SetString(Custom4HomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_FITNESS/HOME_FITNESS_001.jpg','','')
+            Add_Dir('%s %s'%(String(30060),fitness),'Skin.SetString(Custom4HomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_FITNESS/HOME_FITNESS_001.jpg','','')
         if xbmc.getCondVisibility('Skin.String(Custom5HomeItem.Disable)') and 'gaming' in menu_options:
-            Add_Dir('%s %s'%(String(30060),String(30063)),'Skin.SetString(Custom5HomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_GAMING/HOME_GAMING_001.jpg','','')
+            Add_Dir('%s %s'%(String(30060),gaming),'Skin.SetString(Custom5HomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_GAMING/HOME_GAMING_001.jpg','','')
         if xbmc.getCondVisibility('Skin.String(FavoritesHomeItem.Disable)') and 'kids' in menu_options:
-            Add_Dir('%s %s'%(String(30060),String(30064)),'Skin.SetString(FavoritesHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_KIDS/HOME_KIDS_001.jpg','','')
+            Add_Dir('%s %s'%(String(30060),kids),'Skin.SetString(FavoritesHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_KIDS/HOME_KIDS_001.jpg','','')
         if xbmc.getCondVisibility('Skin.String(LiveTVHomeItem.Disable)') and 'livetv' in menu_options:
-            Add_Dir('%s %s'%(String(30060),String(30065)),'Skin.SetString(LiveTVHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_LIVE_TV/HOME_LIVE_TV_001.jpg','','')
+            Add_Dir('%s %s'%(String(30060),livetv),'Skin.SetString(LiveTVHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_LIVE_TV/HOME_LIVE_TV_001.jpg','','')
         if xbmc.getCondVisibility('Skin.String(MovieHomeItem.Disable)') and 'movies' in menu_options:
-            Add_Dir('%s %s'%(String(30060),String(30066)),'Skin.SetString(MovieHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_MOVIES/HOME_MOVIES_001.jpg','','')
+            Add_Dir('%s %s'%(String(30060),movies),'Skin.SetString(MovieHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_MOVIES/HOME_MOVIES_001.jpg','','')
         if xbmc.getCondVisibility('Skin.String(MusicHomeItem.Disable)') and 'music' in menu_options:
-            Add_Dir('%s %s'%(String(30060),String(30067)),'Skin.SetString(MusicHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_MUSIC/HOME_MUSIC_001.jpg','','')
+            Add_Dir('%s %s'%(String(30060),music),'Skin.SetString(MusicHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_MUSIC/HOME_MUSIC_001.jpg','','')
         if xbmc.getCondVisibility('Skin.String(ProgramsHomeItem.Disable)') and 'news' in menu_options:
-            Add_Dir('%s %s'%(String(30060),String(30068)),'Skin.SetString(ProgramsHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_NEWS/HOME_NEWS_001.jpg','','')
+            Add_Dir('%s %s'%(String(30060),news),'Skin.SetString(ProgramsHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_NEWS/HOME_NEWS_001.jpg','','')
         if xbmc.getCondVisibility('Skin.String(VideosHomeItem.Disable)') and 'sports' in menu_options:
-            Add_Dir('%s %s'%(String(30060),String(30069)),'Skin.SetString(VideosHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_SPORTS/HOME_SPORTS_001.jpg','','')
+            Add_Dir('%s %s'%(String(30060),sports),'Skin.SetString(VideosHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_SPORTS/HOME_SPORTS_001.jpg','','')
         if xbmc.getCondVisibility('Skin.String(Custom2HomeItem.Disable)') and 'technology' in menu_options:
-            Add_Dir('%s %s'%(String(30060),String(30070)),'Skin.SetString(Custom2HomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_TECHNOLOGY/HOME_TECHNOLOGY_001.jpg','','')
+            Add_Dir('%s %s'%(String(30060),technology),'Skin.SetString(Custom2HomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_TECHNOLOGY/HOME_TECHNOLOGY_001.jpg','','')
         if xbmc.getCondVisibility('Skin.String(WeatherHomeItem.Disable)') and 'travel' in menu_options:
-            Add_Dir('%s %s'%(String(30060),String(30071)),'Skin.SetString(WeatherHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_TRAVEL/HOME_TRAVEL_001.jpg','','')
+            Add_Dir('%s %s'%(String(30060),travel),'Skin.SetString(WeatherHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_TRAVEL/HOME_TRAVEL_001.jpg','','')
         if xbmc.getCondVisibility('Skin.String(TVShowHomeItem.Disable)') and 'tvshows' in menu_options:
-            Add_Dir('%s %s'%(String(30060),String(30072)),'Skin.SetString(TVShowHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_TV_SHOWS/HOME_TV_SHOWS_001.jpg','','')
+            Add_Dir('%s %s'%(String(30060),tvshows),'Skin.SetString(TVShowHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_TV_SHOWS/HOME_TV_SHOWS_001.jpg','','')
         if xbmc.getCondVisibility('Skin.String(PicturesHomeItem.Disable)') and 'world' in menu_options:
-            Add_Dir('%s %s'%(String(30060),String(30073)),'Skin.SetString(PicturesHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_WORLD/HOME_WORLD_001.jpg','','')
+            Add_Dir('%s %s'%(String(30060),world),'Skin.SetString(PicturesHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_WORLD/HOME_WORLD_001.jpg','','')
         if xbmc.getCondVisibility('Skin.String(ShutdownHomeItem.Disable)') and 'youtube' in menu_options:
-            Add_Dir('%s %s'%(String(30060),String(30074)),'Skin.SetString(ShutdownHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_YOUTUBE/HOME_YOUTUBE_001.jpg','','')
+            Add_Dir('%s %s'%(String(30060),youtube),'Skin.SetString(ShutdownHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_YOUTUBE/HOME_YOUTUBE_001.jpg','','')
         if xbmc.getCondVisibility('Skin.String(MusicVideoHomeItem.Disable)') and 'xxx' in menu_options:
-            Add_Dir('%s %s'%(String(30060),String(30075)),'Skin.SetString(MusicVideoHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_XXX/HOME_XXX_001.jpg','','')
+            Add_Dir('%s %s'%(String(30060),xxx),'Skin.SetString(MusicVideoHomeItem.Disable,)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_XXX/HOME_XXX_001.jpg','','')
         if listcount > 0:
             OK_Dialog(String(30079),String(30310))
             xbmc.executebuiltin('ActivateWindow(home)')
@@ -1778,37 +1815,37 @@ def Main_Menu_Install(url):
     if url == 'remove':
         listcount = Sleep_If_Function_Active(function=Main_Menu_Visibility,args=[menu_list,'',False])
         if not xbmc.getCondVisibility('Skin.String(Custom6HomeItem.Disable)'):
-            Add_Dir('%s %s'%(String(30076),String(30061)),'Skin.SetString(Custom6HomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_COMEDY/HOME_COMEDY_001.jpg','','')
+            Add_Dir('%s %s'%(String(30076),comedy),'Skin.SetString(Custom6HomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_COMEDY/HOME_COMEDY_001.jpg','','')
         if not xbmc.getCondVisibility('Skin.String(Custom3HomeItem.Disable)'):
-            Add_Dir('%s %s'%(String(30076),String(30077)),'Skin.SetString(Custom3HomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_COOKING/HOME_COOKING_001.jpg','','')
+            Add_Dir('%s %s'%(String(30076),cooking),'Skin.SetString(Custom3HomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_COOKING/HOME_COOKING_001.jpg','','')
         if not xbmc.getCondVisibility('Skin.String(Custom4HomeItem.Disable)'):
-            Add_Dir('%s %s'%(String(30076),String(30062)),'Skin.SetString(Custom4HomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_FITNESS/HOME_FITNESS_001.jpg','','')
+            Add_Dir('%s %s'%(String(30076),fitness),'Skin.SetString(Custom4HomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_FITNESS/HOME_FITNESS_001.jpg','','')
         if not xbmc.getCondVisibility('Skin.String(Custom5HomeItem.Disable)'):
-            Add_Dir('%s %s'%(String(30076),String(30063)),'Skin.SetString(Custom5HomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_GAMING/HOME_GAMING_001.jpg','','')
+            Add_Dir('%s %s'%(String(30076),gaming),'Skin.SetString(Custom5HomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_GAMING/HOME_GAMING_001.jpg','','')
         if not xbmc.getCondVisibility('Skin.String(FavoritesHomeItem.Disable)'):
-            Add_Dir('%s %s'%(String(30076),String(30064)),'Skin.SetString(FavoritesHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_KIDS/HOME_KIDS_001.jpg','','')
+            Add_Dir('%s %s'%(String(30076),kids),'Skin.SetString(FavoritesHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_KIDS/HOME_KIDS_001.jpg','','')
         if not xbmc.getCondVisibility('Skin.String(LiveTVHomeItem.Disable)'):
-            Add_Dir('%s %s'%(String(30076),String(30065)),'Skin.SetString(LiveTVHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_LIVE_TV/HOME_LIVE_TV_001.jpg','','')
+            Add_Dir('%s %s'%(String(30076),livetv),'Skin.SetString(LiveTVHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_LIVE_TV/HOME_LIVE_TV_001.jpg','','')
         if not xbmc.getCondVisibility('Skin.String(MovieHomeItem.Disable)'):
-            Add_Dir('%s %s'%(String(30076),String(30066)),'Skin.SetString(MovieHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_MOVIES/HOME_MOVIES_001.jpg','','')
+            Add_Dir('%s %s'%(String(30076),movies),'Skin.SetString(MovieHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_MOVIES/HOME_MOVIES_001.jpg','','')
         if not xbmc.getCondVisibility('Skin.String(MusicHomeItem.Disable)'):
-            Add_Dir('%s %s'%(String(30076),String(30067)),'Skin.SetString(MusicHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_MUSIC/HOME_MUSIC_001.jpg','','')
+            Add_Dir('%s %s'%(String(30076),music),'Skin.SetString(MusicHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_MUSIC/HOME_MUSIC_001.jpg','','')
         if not xbmc.getCondVisibility('Skin.String(ProgramsHomeItem.Disable)'):
-            Add_Dir('%s %s'%(String(30076),String(30068)),'Skin.SetString(ProgramsHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_NEWS/HOME_NEWS_001.jpg','','')
+            Add_Dir('%s %s'%(String(30076),news),'Skin.SetString(ProgramsHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_NEWS/HOME_NEWS_001.jpg','','')
         if not xbmc.getCondVisibility('Skin.String(VideosHomeItem.Disable)'):
-            Add_Dir('%s %s'%(String(30076),String(30069)),'Skin.SetString(VideosHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_SPORTS/HOME_SPORTS_001.jpg','','')
+            Add_Dir('%s %s'%(String(30076),sports),'Skin.SetString(VideosHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_SPORTS/HOME_SPORTS_001.jpg','','')
         if not xbmc.getCondVisibility('Skin.String(Custom2HomeItem.Disable)'):
-            Add_Dir('%s %s'%(String(30076),String(30070)),'Skin.SetString(Custom2HomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_TECHNOLOGY/HOME_TECHNOLOGY_001.jpg','','')
+            Add_Dir('%s %s'%(String(30076),technology),'Skin.SetString(Custom2HomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_TECHNOLOGY/HOME_TECHNOLOGY_001.jpg','','')
         if not xbmc.getCondVisibility('Skin.String(WeatherHomeItem.Disable)'):
-            Add_Dir('%s %s'%(String(30076),String(30071)),'Skin.SetString(WeatherHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_TRAVEL/HOME_TRAVEL_001.jpg','','')
+            Add_Dir('%s %s'%(String(30076),travel),'Skin.SetString(WeatherHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_TRAVEL/HOME_TRAVEL_001.jpg','','')
         if not xbmc.getCondVisibility('Skin.String(TVShowHomeItem.Disable)'):
-            Add_Dir('%s %s'%(String(30076),String(30072)),'Skin.SetString(TVShowHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_TV_SHOWS/HOME_TV_SHOWS_001.jpg','','')
+            Add_Dir('%s %s'%(String(30076),tvshows),'Skin.SetString(TVShowHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_TV_SHOWS/HOME_TV_SHOWS_001.jpg','','')
         if not xbmc.getCondVisibility('Skin.String(PicturesHomeItem.Disable)'):
-            Add_Dir('%s %s'%(String(30076),String(30073)),'Skin.SetString(PicturesHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_WORLD/HOME_WORLD_001.jpg','','')
+            Add_Dir('%s %s'%(String(30076),world),'Skin.SetString(PicturesHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_WORLD/HOME_WORLD_001.jpg','','')
         if not xbmc.getCondVisibility('Skin.String(ShutdownHomeItem.Disable)'):
-            Add_Dir('%s %s'%(String(30076),String(30074)),'Skin.SetString(ShutdownHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_YOUTUBE/HOME_YOUTUBE_001.jpg','','')
+            Add_Dir('%s %s'%(String(30076),youtube),'Skin.SetString(ShutdownHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_YOUTUBE/HOME_YOUTUBE_001.jpg','','')
         if not xbmc.getCondVisibility('Skin.String(MusicVideoHomeItem.Disable)'):
-            Add_Dir('%s %s'%(String(30076),String(30075)),'Skin.SetString(MusicVideoHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_XXX/HOME_XXX_001.jpg','','')
+            Add_Dir('%s %s'%(String(30076),xxx),'Skin.SetString(MusicVideoHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_XXX/HOME_XXX_001.jpg','','')
         if listcount > 0:
             OK_Dialog(String(30079),String(30311))
             xbmc.executebuiltin('ActivateWindow(home)')
@@ -2929,28 +2966,35 @@ def Sync_Settings():
             res_contents = Text_File(resources,'r')
             res_lines    = res_contents.splitlines()
 
-    # Check each line of new settings and check to see if we need to make changes in resources folder
+        # Check each line of new settings and check to see if we need to make changes in resources folder
             for line in new_content:
                 setting = Find_In_Text(content=line,start='id="',end='"',show_errors=False)
                 setting = setting[0] if (setting != None) else setting
                 value   = Find_In_Text(content=line,start='value="',end='"',show_errors=False)
                 value   = value[0] if (value != None) else value
-                counter = 0
-                for res_line in res_lines:
-                    counter += 1
-                    if 'id="%s"'%setting in res_line:
-                        current_value = Find_In_Text(content=res_line,start='default="',end='"',show_errors=False)
-                        current_value = current_value[0] if (current_value != None) else None
-                        # if (plugin!='script.trtv') and (setting !='SF_CHANNELS'):
-                        if current_value != value:
-                            if current_value != None:
-                                new_line = res_line.replace('default="%s"'%current_value, 'default="%s"'%value)
-                            else:
-                                new_line = res_line.replace(r'/>',' default="%s"'%value+r'/>')
-                            dolog('ORIG: %s'%res_line)  
-                            dolog('NEW: %s'%new_line)  
-                            res_contents = res_contents.replace(res_line,new_line)
-                            break
+                dolog('SETTING:%s~'%setting)
+                dolog('VALUE:%s~'%value)
+                if setting != None:
+                    if plugin == 'plugin.program.tbs':
+                        cur_set = Addon_Setting(setting=setting,addon_id=plugin)
+                        if cur_set.startswith('HOME') and not cur_set.endswith('USER'):
+                            Addon_Setting(setting=setting,value=value,addon_id=plugin)
+                    counter = 0
+                    for res_line in res_lines:
+                        counter += 1
+                        if 'id="%s"'%setting in res_line:
+                            current_value = Find_In_Text(content=res_line,start='default="',end='"',show_errors=False)
+                            current_value = current_value[0] if (current_value != None) else None
+                            # if (plugin!='script.trtv') and (setting !='SF_CHANNELS'):
+                            if current_value != value:
+                                if current_value != None:
+                                    new_line = res_line.replace('default="%s"'%current_value, 'default="%s"'%value)
+                                else:
+                                    new_line = res_line.replace(r'/>',' default="%s"'%value+r'/>')
+                                dolog('ORIG: %s'%res_line)  
+                                dolog('NEW: %s'%new_line)  
+                                res_contents = res_contents.replace(res_line,new_line)
+                                break
             Text_File(resources,'w',res_contents)
 #---------------------------------------------------------------------------------------------------
 # Maintenance section

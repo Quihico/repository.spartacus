@@ -286,8 +286,9 @@ def Select_Language(status = False):
             xbmc.executebuiltin('RunPlugin(plugin://plugin.video.metalliq/setup/silent)')
         except:
             pass
-        xbmc.sleep(2000)
-        Load_Profile()
+        exec(Pages('start'))
+        # xbmc.sleep(2000)
+        # Load_Profile()
     else:
         exec(Pages('start'))
 #-----------------------------------------------------------------------------
@@ -1315,8 +1316,10 @@ def Registration_Details():
 def Reset_Run_Wizard():
     if os.path.exists(STARTUP_WIZARD):
         shutil.rmtree(STARTUP_WIZARD)
-    Load_Profile()
-    # Select_Language()
+    if not os.path.exists(RUN_WIZARD):
+        os.makedirs(RUN_WIZARD)
+    # Load_Profile()
+    Select_Language()
 #-----------------------------------------------------------------------------
 # Bring up the dialog selection for choosing the language
 def Set_Language():

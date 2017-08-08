@@ -46,6 +46,7 @@ RUN_WIZARD          = os.path.join(OPENWINDOW_DATA,'RUN_WIZARD')
 OEM_ID              = os.path.join(OPENWINDOW_DATA,'id')
 KEYWORD_TEMP        = os.path.join(OPENWINDOW_DATA,'keyword_installed')
 XBMC_VERSION        = xbmc.getInfoLabel("System.BuildVersion")[:2]
+BASE2               = '687474703a2f2f6e6f6f6273616e646e657264732e636f6d2f'
 DIALOG              = xbmcgui.Dialog()
 BASE                = Addon_Setting(setting='base')
 DEBUG               = Addon_Setting(setting='debug')
@@ -179,7 +180,10 @@ def CPU_Check():
 #-----------------------------------------------------------------------------
 # Enable/disable the visibility of adult add-ons (use true or false)
 def Enable_Addons(updaterepos = True):
-    mylist = Addon_Genre(custom_url=BASE+'boxer/masterscripts/addon_list.php&g=adult')
+    import binascii
+    mylist = Addon_Genre(custom_url=binascii.unhexlify(BASE2)+'boxer/addon_list.php?g=adult')
+    if not mylist:
+        mylist = Addon_Genre(custom_url=BASE+'boxer/addon_list.php?g=adult')
     xbmc.executebuiltin('UpdateLocalAddons')
     dolog('UPDATED LOCAL ADDONS')
     if updaterepos:

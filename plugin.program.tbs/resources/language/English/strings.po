@@ -2237,3 +2237,35 @@ msgstr ""
 msgctxt "#30556"
 msgid "Keyword names must be a minimum of 5 characters.\nPlease try again and enter a valid name."
 msgstr ""
+
+msgctxt "#30557"
+msgid "ADD-ON INSTALL STATUS"
+msgstr ""
+
+msgctxt "#30558"
+msgid "Show failed add-on installs when restoring keyword backup."
+msgstr ""
+
+msgctxt "#30559"
+msgid "System"
+msgstr ""
+
+msgctxt "#30560"
+msgid "[COLOR gold]PARTIAL SUCCESS[/COLOR]"
+msgstr ""
+
+msgctxt "#30561"
+msgid "The keyword was successfully installed but there was %s add-on(s) that failed to install. Would you like to view the list of add-ons which failed to install?"
+msgstr ""
+
+msgctxt "#30562"
+msgid "OK I understand"
+msgstr ""
+
+msgctxt "#30563"
+msgid "ADD-ONS WHICH FAILED TO INSTALL"
+msgstr ""
+
+msgctxt "#30564"
+msgid "Our servers do not host any add-ons and the details are pulled from a number of public websites (very similar to using a search engine in your web browser) but unfortunately no download details could be found for the add-ons listed below.\n\nIf you absolutely need these on your system then please have a search online to see if you can find them and then install from zip. If you do find the content please consider updating the team at noobsandnerds.com of where you found the content and they can update their Add-on Portal library accordingly. Anything indexed on their system can be installed so long as the download links are still valid and the original developer hasn't deleted the add-on.\n\n[COLOR gold]ADD-ONS:\n[/COLOR]%s"
+msgstr ""

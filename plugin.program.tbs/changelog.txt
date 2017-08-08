@@ -1,3 +1,20 @@
+v.4.3.7.8:
+- Added backup server check genre checks and addon installs
+
+v.4.3.7.7:
+- Fixed keyword install and improved dialogs (set via add-on settings)
+
+v.4.3.7.6:
+- The +- menu now shows the custom names set in admin panel rather than defaults
+- The Add/Remove main menu items list now loads up a lot quicker (cached)
+- Fixed bug with menus not enabling/disabling correctly when changed in admin panel
+
+v.4.3.7.5:
+- Added option to show failed addon installs when installing keyword backup
+
+v.4.3.7.4:
+- If not registered keyword install will open directly into registration process
+
 v.4.3.7.3:
 - Busy symbol now only showing on startup and not on every update check
 

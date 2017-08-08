@@ -1,3 +1,7 @@
+v.3.0:
+- Changed Language so it no longer reloads profile
+- Fixed bug with adult disable service
+
 v.2.9.9.9:
 - Can now set custom icons on upper menu in admin panel
 - Only show busy if run as startup or from maintenance menu
