@@ -1,3 +1,6 @@
+v.3.0.1:
+- Added back old reboot method after build install (if android)
+
 v.3.0:
 - Changed Language so it no longer reloads profile
 - Fixed bug with adult disable service
