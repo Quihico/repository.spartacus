@@ -1,3 +1,6 @@
+v.4.3.8.3:
+- Bump to version number to try and get it updating
+
 v.4.3.8.2:
 - Edited to work with new genre system
 
