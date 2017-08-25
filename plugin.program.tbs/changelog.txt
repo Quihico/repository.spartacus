@@ -1,3 +1,16 @@
+v.4.3.8.2:
+- Edited to work with new genre system
+
+v.4.3.8.1:
+- Main Menu defaults fixed so all default items are reset
+- Fixed the sync of main menus functions when custom ones are already set
+
+v.4.3.8.0:
+- Fixed bug with removal of custom menu items
+
+v.4.3.7.9:
+- Fixed bug with dialog selects only working with the adult genre
+
 v.4.3.7.8:
 - Added backup server check genre checks and addon installs
 

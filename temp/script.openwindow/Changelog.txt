@@ -1,3 +1,22 @@
+v.3.0.1:
+- Added back old reboot method after build install (if android)
+
+v.3.0:
+- Changed Language so it no longer reloads profile
+- Fixed bug with adult disable service
+
+v.2.9.9.9:
+- Can now set custom icons on upper menu in admin panel
+- Only show busy if run as startup or from maintenance menu
+- Added Registration function for Startup Wizard (to enable Social TV features)
+
+v.2.9.9.8:
+- Added reload of skin to autoexec.py
+
+v.2.9.9.7:
+- Auto creation of autoexec.py
+- Integration of new keyword system
+
 v.2.9.9.6:
 - Fixed adult/genre filter
 

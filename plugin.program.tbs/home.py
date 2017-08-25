@@ -38,13 +38,15 @@ settings_clean   = sys.argv[1].replace('_DIALOG_PLUS_USER','').replace('_DIALOG_
 # If it's a home menu convert addon setting into redirect file
 if sys.argv[1].startswith('HOME_'):
     redirect_setting = Addon_Setting(setting=settings_clean,addon_id='plugin.program.tbs')
-    if redirect_setting == 'dialog_plus':
+    if redirect_setting == 'tvg_dialog_plus':
+        redirect_setting = sys.argv[1]+'_TVG_DIALOG_PLUS'
+    elif redirect_setting == 'dialog_plus':
         redirect_setting = sys.argv[1]+'_DIALOG_PLUS'
     elif redirect_setting == 'dialog':
         redirect_setting = sys.argv[1]+'_DIALOG'
     elif redirect_setting == 'executable':
         redirect_setting = sys.argv[1]+'_EXEC'
-    elif redirect_setting == 'super_faves':
+    elif redirect_setting.startswith('super_faves'):
         redirect_setting = sys.argv[1]+'_SF'
     elif redirect_setting == 'dialog_plus_user':
         redirect_setting = sys.argv[1]+'_DIALOG_PLUS_USER'
@@ -73,7 +75,7 @@ elif os.path.exists(legacy_path):
     runcode = Text_File(legacy_path,'r').replace('\r','')
 
 cleanname = sys.argv[1].replace("HOME_",'').replace('SUBMENU_','').replace('_DIALOG_USER','').replace('_DIALOG_PLUS_USER','').replace('_EXEC_USER','')
-cleanname = cleanname.replace('DIALOG','')
+cleanname = cleanname.replace('DIALOG','').replace('_TVG','')
 cleanname = cleanname.lower()
 mymenu    = cleanname.replace('_','').replace(' ','')
 if mymenu == 'xxx':
@@ -91,6 +93,7 @@ folderpath = xbmc.translatePath(os.path.join('special://profile/addon_data/plugi
 def Add_Content(id_array):
     from default import encryptme, Addon_Browser, Install_Addons, Sleep_If_Function_Active, Toggle_Addons
 
+    dolog('id_array: %s'%id_array)
     choice = dialog.select(String(30314),[String(30170),String(30313),String(30323)])
     if choice >= 0:
         my_text = Text_File(redirect_file,'r')
@@ -198,9 +201,9 @@ def showlist(usenan = False):
     id_array         = []
 
     if usenan:
-        addon_list = koding.Addon_Genre(custom_url=binascii.unhexlify(BASE2)+'boxer/addon_list.php?g=%s'%mymenu)
+        addon_list = koding.Addon_Genre(genre=mymenu,custom_url=binascii.unhexlify(BASE2)+'boxer/addon_list.php?g=%s'%mymenu)
         if not addon_list:
-            addon_list = koding.Addon_Genre(custom_url=BASE+'boxer/addon_list.php?g=%s'%mymenu)
+            addon_list = koding.Addon_Genre(genre=mymenu,custom_url=BASE+'boxer/addon_list.php?g=%s'%mymenu)
         for item in addon_list.items():
             name = koding.Cleanup_String(item[0])
             genre_array.append('addon~'+name+'~'+item[1])
@@ -208,7 +211,7 @@ def showlist(usenan = False):
 # Add genre list to our custom list    
     runcode_array += genre_array
 
-    if 'HOME_LIVE_TV_DIALOG_PLUS' in redirect_setting:
+    if 'HOME_LIVE_TV_TVG_DIALOG_PLUS' in redirect_setting:
         final_array.append(['-exec',String(code=30993,source='script.trtv'),"xbmc.executebuiltin('RunScript(special://home/addons/script.trtv/addon.py)')"])
 
     for line in runcode_array:

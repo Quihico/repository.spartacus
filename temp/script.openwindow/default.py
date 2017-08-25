@@ -46,6 +46,8 @@ ADDONS                     = os.path.join(HOME,'addons')
 PACKAGES                   = os.path.join(ADDONS,'packages')
 ADDON_DATA                 = xbmc.translatePath('special://profile/addon_data')
 ADDON_PATH                 = xbmcaddon.Addon(ADDONID).getAddonInfo("path")
+AUTOEXEC                   = xbmc.translatePath('special://home/userdata/autoexec.py')
+AUTOEXEC_PATH              = os.path.join(ADDON_PATH,'resources','autoexec.py')
 LANGUAGE_PATH              = os.path.join(ADDON_PATH,'resources','language')
 OPENWINDOW_DATA            = os.path.join(ADDON_DATA,ADDONID)
 RUN_WIZARD                 = os.path.join(OPENWINDOW_DATA,'RUN_WIZARD')
@@ -153,7 +155,31 @@ def show(xmlfile,exec_file):
             url_return = Encrypt('d', url_return)
             exec(url_return)            
 #-----------------------------------------------------------------------------
-# Show the keyword install menu
+# Show the Registration Screen
+def Registration():
+    backpage    = Pages('back','Registration()')
+    nextpage    = Pages('next','Registration()')
+    mydisplay = MainMenu(
+        header=30062,
+        background='register.png',
+        backbutton=30001,
+        nextbutton=30002,
+        backbuttonfunction='self.close();'+backpage,
+        nextbuttonfunction='self.close();'+nextpage,
+        selectbutton=30063,
+        toggleup='',
+        toggledown='',
+        selectbuttonfunction="xbmc.executebuiltin('RunPlugin(plugin://plugin.program.tbs/?mode=register_device)')",
+        toggleupfunction='',
+        toggledownfunction='',
+        maintext=30122,
+        noconnectionbutton=30019,
+        noconnectionfunction="xbmc.executebuiltin('ActivateWindow(home)');xbmc.executebuiltin('RunAddon(service.openelec.settings)');xbmc.executebuiltin('RunAddon(script.openwindow)')"
+        )
+    mydisplay.doModal()
+    del mydisplay
+#-----------------------------------------------------------------------------
+# Show the Android audio menu
 def Select_Audio_Android():
     backpage    = Pages('back','Select_Audio_Android()')
     nextpage    = Pages('next','Select_Audio_Android()')
@@ -247,36 +273,6 @@ def Select_Local_Content():
     mydisplay.doModal()
     del mydisplay
 #-----------------------------------------------------------------------------
-# OLD LANGUAGE SCREEN
-# def Select_Language(status = False):
-#     global registered
-#     registered = status
-#     xbmc.log('Registered status: %s' % registered)
-#     try:
-#         nextpage    = Pages('next','Select_Language()')
-#         mydisplay  = MainMenu(
-#             header=30003,
-#             background='language1.png',
-#             backbutton='',
-#             nextbutton=30002,      
-#             backbuttonfunction='',
-#             nextbuttonfunction='self.close();'+nextpage,
-#             selectbutton=30004,
-#             toggleup='',
-#             toggledown='',
-#             selectbuttonfunction="Set_Language();self.close();Load_Profile();xbmc.sleep(2000);xbmc.executebuiltin('StopScript(script.openwindow)');xbmc.executebuiltin('RunScript(script.openwindow)')",
-#             toggleupfunction='',
-#             toggledownfunction='',
-#             maintext=30005,
-#             noconnectionbutton='',
-#             noconnectionfunction=""
-#             )        
-#         mydisplay.doModal()
-#         del mydisplay
-#     except:
-#         xbmc.log('#### Set Language disabled by admin, loading: %s' % Pages('start'))
-#         exec(Pages('start'))
-#-----------------------------------------------------------------------------
 def Select_Language(status = False):
     if os.path.exists(RUN_WIZARD) and not os.path.exists(STARTUP_WIZARD):
         Set_Language()
@@ -290,32 +286,11 @@ def Select_Language(status = False):
             xbmc.executebuiltin('RunPlugin(plugin://plugin.video.metalliq/setup/silent)')
         except:
             pass
-        xbmc.sleep(2000)
-        Load_Profile()
+        exec(Pages('start'))
+        # xbmc.sleep(2000)
+        # Load_Profile()
     else:
         exec(Pages('start'))
-#-----------------------------------------------------------------------------
-# OLD REGION SCREEN - All functions stopped working on newer Kodi. They are now removed and need a complete re-work
-# def Select_Region():
-#     backpage    = Pages('back','Select_Region()')
-#     nextpage    = Pages('next','Select_Region()')
-#     mydisplay = MainMenuThreeItems(
-#         header=30006,
-#         background='region1.png',
-#         backbutton=30001,
-#         nextbutton=30002,
-#         backbuttonfunction='self.close();'+backpage,
-#         nextbuttonfunction='self.close();'+nextpage,
-#         optionbutton1=30008,
-#         optionbutton2=30007,
-#         optionbutton3=30009,
-#         option1function="Set_Timezone_Country()",
-#         option2function="Set_Region()",
-#         option3function="Set_Timezone()",
-#         maintext=30010,
-#         )
-#     mydisplay.doModal()
-#     del mydisplay
 #-----------------------------------------------------------------------------
 # Show the resolution select screen
 def Select_Resolution():
@@ -1071,13 +1046,13 @@ def Download_Extract(url,video=''):
         except:
             pass
 
-# DISABLED - seems like this may be causing android error message on 6.0
-    # if xbmc.getCondVisibility('System.Platform.Android'):
-    #     xbmc.executebuiltin('Reboot')
+# may possibly cause android error message on 6.0 but force close causes error if used as launcher anyway
+    if xbmc.getCondVisibility('System.Platform.Android'):
+        xbmc.executebuiltin('Reboot')
         
-    # else:
-    DIALOG.ok(String(30110), String(30111))
-    os._exit(1)
+    else:
+        DIALOG.ok(String(30110), String(30111))
+        os._exit(1)
 #-----------------------------------------------------------------------------
 # Show progress of download, this function is working fine as you can see in the log. It's the Image_Screen I'm having problems with picking up percentage.
 def Download_Progress(numblocks, blocksize, filesize, url):
@@ -1247,103 +1222,7 @@ def Installed_Addons(types='unknown', content ='unknown', properties = ''):
 #-----------------------------------------------------------------------------
 # Search for an item on urlshortbot and install it, can switch oems and call the keyword.php file for restoring backups (WIP)
 def Keyword_Search():
-    if not os.path.exists(PACKAGES):
-        os.makedirs(PACKAGES)
-    counter = 0
-    success = 0
-    downloadurl = ''
-    keyword     =  Keyboard(String(30031))
-    if keyword == 'masteron':
-        ADDON2.setSetting('master','true')
-        return
-    if keyword == 'masteroff':
-        ADDON2.setSetting('master','false')
-        return
-    if keyword == 'uidoff':
-        ADDON2.setSetting('userid','')
-        return
-    if keyword.startswith('uid'):
-        idsetting = keyword.replace('uid','')
-        ADDON2.setSetting('userid', Encrypt('e',idsetting))
-        return
-    elif keyword != '':
-        url='http://urlshortbot.com/totalrevolution'
-        if os.path.exists(KEYWORD_FILE):
-            url  = Text_File(KEYWORD_FILE,'r')
-        downloadurl = url+keyword
-        lib         = os.path.join(PACKAGES, keyword+'.zip')
-        urlparams   = Get_Params()
-        if urlparams != 'Unknown':
-            dp.create('Contacting Server','Attempt: 1', '', 'Please wait...')
-            while counter <3 and success == 0:
-                counter += 1
-                dp.update(0,'Attempt: '+str(counter), '', 'Please wait...')
-            if keyword.startswith('switchme'):
-                keywordoem = keyword.replace('switchme','')
-                try:
-                    link = Open_URL(url=BASE+'boxer/addtooem.php',post_type='post',payload={"x":urlparams,"o":Encrypt('e',keywordoem)})
-                except:
-                    link = 'fail'
-            else:
-                try:
-                    link = Open_URL(url=BASE+'boxer/keyword.php',post_type='post',payload={"x":urlparams,"k":Encrypt('e',keyword)})
-                except:
-                    link = 'fail'
-            dolog('LINK STATUS: %s'%link)
-            if link != False and 'Success' in link:
-                success = 1
-                dp.close()
-                if os.path.exists(xbmc.translatePath('special://home/addons/script.openwindow/functions.py')):
-                    xbmc.executebuiltin('RunScript(special://home/addons/script.openwindow/functions.py)')
-                elif os.path.exists(xbmc.translatePath('special://xbmc/addons/script.openwindow/functions.py')):
-                    xbmc.executebuiltin('RunScript(special://xbmc/addons/script.openwindow/functions.py)')
-                DIALOG.ok(String(30023),String(30086))
-            if success == 0 and keyword !='':
-                try:
-                    dolog("Attempting download "+downloadurl+" to "+lib)
-                    dp.create('KEYWORD INSTALLER', 'Downloading', '', '')
-                    Download(downloadurl,lib,dp)
-                    dolog("### Keyword "+keyword+" Successfully downloaded")
-                    dp.update(0,"", "Extracting Zip Please Wait")
-                
-                    if zipfile.is_zipfile(lib):
-                    
-                        try:
-                            Sleep_If_Function_Active(function=Extract, args=[lib, HOME, dp])
-                            dolog('## %s EXTRACTED SUCCESSFULLY' % keyword)
-                            
-                            xbmc.executebuiltin('RunScript(special://home/addons/script.openwindow/functions.py,dp)')
-                            kw_temp = xbmc.translatePath('special://profile/addon_data/script.openwindow/keyword_installed')
-                            keyword_installed = os.path.exists(kw_temp)
-                            while not keyword_installed:
-                                xbmc.sleep(1000)
-                                keyword_installed = os.path.exists(kw_temp)
-                            dialog.ok("KEYWORD INSTALLER", "","Congratulations your content has now been installed")
-                            shutil.rmtree(kw_temp)
-                            dp.close()
-                        except Exception as e:
-                            dolog("### Unable to install keyword (%s): %s" % (keyword, e))
-
-                    else:
-                        try:
-                            if os.path.getsize(KEYWORD_ZIP) > 100000:
-                                dp.create(String(30038),String(30039),'',String(30034))
-                                os.rename(KEYWORD_ZIP,restore_dir+'20150815123607.tar')
-                                dp.update(0,"",String(30040))
-                                dp.close()
-                                xbmc.executebuiltin('reboot')
-# If file downloaded is neither a zip or a tar then remove and give error message
-                            else:
-                                DIALOG.ok(String(30041),String(30042),String(30043))
-                        except:
-                            DIALOG.ok(String(30041),String(30042),String(30043))
-                    
-                except:
-                    DIALOG.ok(String(30041),String(30042),String(30043))
-
-            if os.path.exists(lib):
-                os.remove(lib)
-            dp.close()
+    xbmc.executebuiltin('RunPlugin(plugin://plugin.program.tbs/?mode=keywords)')
 #-----------------------------------------------------------------------------
 # Reload the current running profile
 def Load_Profile():
@@ -1437,8 +1316,10 @@ def Registration_Details():
 def Reset_Run_Wizard():
     if os.path.exists(STARTUP_WIZARD):
         shutil.rmtree(STARTUP_WIZARD)
-    Load_Profile()
-    # Select_Language()
+    if not os.path.exists(RUN_WIZARD):
+        os.makedirs(RUN_WIZARD)
+    # Load_Profile()
+    Select_Language()
 #-----------------------------------------------------------------------------
 # Bring up the dialog selection for choosing the language
 def Set_Language():
@@ -1750,6 +1631,8 @@ def WiFi_Check():
             Load_Profile()
 #-----------------------------------------------------------------------------
 if __name__ == '__main__':
+    if not os.path.exists(AUTOEXEC):
+        shutil.copyfile(AUTOEXEC_PATH,AUTOEXEC)
 # Create the initial folders required for add-on to work
     if not os.path.exists(PACKAGES):
         os.makedirs(PACKAGES)

@@ -94,9 +94,12 @@ ACTION_MOVE_UP   =  3
 ACTION_MOVE_DOWN =  4
 
 try:
-    adult_list = Addon_Genre(custom_url=binascii.unhexlify(BASE2)+'boxer/addon_list.php?g=adult').items()
+    adult_list = Addon_Genre(custom_url='http://totalrevolution.xyz/addons/addon_list.txt').items()
 except:
-    adult_list = Addon_Genre(custom_url=BASE+'boxer/addon_list.php?g=adult').items()
+    try:
+        adult_list = Addon_Genre().items()
+    except:
+        adult_list = []
 
 adult_addons = []
 for item in adult_list:
@@ -537,6 +540,11 @@ def Clear_Cache():
     if choice == 1:
         Wipe_Cache()
         Remove_Textures_Dialog()
+#---------------------------------------------------------------------------------------------------
+@route(mode='clear_commands')
+def Clear_Commands():
+    urlparams = encryptme('e',URL_Params())
+    Run_Code( url='boxer/Clear_Commands.php',payload={"x":urlparams} )
 #---------------------------------------------------------------------------------------------------
 # Function to clear online cookie for user_info page
 def Clear_User_Cookie():
@@ -1183,8 +1191,8 @@ def Grab_Updates(url, runtype = ''):
             Notify(String(30059),String(30007),'1000',os.path.join(ADDONS,'script.openwindow','resources','images','update_software.png'))
             url=url.replace('update&','')
         url,params = url.split('?')
+        dolog('### MAIN MENU DEFAULTS RUN MOVING ON')
         while mysuccess != 1 and failed != 1:
-            dolog('### MAIN MENU DEFAULTS RUN MOVING ON')
 
             # try:
             dolog("### URL: "+url+'?'+encryptme('e',urlparams))
@@ -1747,6 +1755,7 @@ def Main_Menu_Install(url):
     if os.path.exists(MAIN_MENUS):
         main_menu_list = encryptme('d',Text_File(MAIN_MENUS,'r'))
         main_list = eval(main_menu_list)
+        dolog(main_menu_list)
         for item in menu_list:
             try:
                 exec( '%s = "%s"' % (item[1],main_list[item[1]]) )
@@ -1814,37 +1823,37 @@ def Main_Menu_Install(url):
 
     if url == 'remove':
         listcount = Sleep_If_Function_Active(function=Main_Menu_Visibility,args=[menu_list,'',False])
-        if not xbmc.getCondVisibility('Skin.String(Custom6HomeItem.Disable)'):
+        if not xbmc.getCondVisibility('Skin.String(Custom6HomeItem.Disable)') and 'comedy' in menu_options:
             Add_Dir('%s %s'%(String(30076),comedy),'Skin.SetString(Custom6HomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_COMEDY/HOME_COMEDY_001.jpg','','')
-        if not xbmc.getCondVisibility('Skin.String(Custom3HomeItem.Disable)'):
+        if not xbmc.getCondVisibility('Skin.String(Custom3HomeItem.Disable)') and 'cooking' in menu_options:
             Add_Dir('%s %s'%(String(30076),cooking),'Skin.SetString(Custom3HomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_COOKING/HOME_COOKING_001.jpg','','')
-        if not xbmc.getCondVisibility('Skin.String(Custom4HomeItem.Disable)'):
+        if not xbmc.getCondVisibility('Skin.String(Custom4HomeItem.Disable)') and 'fitness' in menu_options:
             Add_Dir('%s %s'%(String(30076),fitness),'Skin.SetString(Custom4HomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_FITNESS/HOME_FITNESS_001.jpg','','')
-        if not xbmc.getCondVisibility('Skin.String(Custom5HomeItem.Disable)'):
+        if not xbmc.getCondVisibility('Skin.String(Custom5HomeItem.Disable)') and 'gaming' in menu_options:
             Add_Dir('%s %s'%(String(30076),gaming),'Skin.SetString(Custom5HomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_GAMING/HOME_GAMING_001.jpg','','')
-        if not xbmc.getCondVisibility('Skin.String(FavoritesHomeItem.Disable)'):
+        if not xbmc.getCondVisibility('Skin.String(FavoritesHomeItem.Disable)') and 'kids' in menu_options:
             Add_Dir('%s %s'%(String(30076),kids),'Skin.SetString(FavoritesHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_KIDS/HOME_KIDS_001.jpg','','')
-        if not xbmc.getCondVisibility('Skin.String(LiveTVHomeItem.Disable)'):
+        if not xbmc.getCondVisibility('Skin.String(LiveTVHomeItem.Disable)') and 'livetv' in menu_options:
             Add_Dir('%s %s'%(String(30076),livetv),'Skin.SetString(LiveTVHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_LIVE_TV/HOME_LIVE_TV_001.jpg','','')
-        if not xbmc.getCondVisibility('Skin.String(MovieHomeItem.Disable)'):
+        if not xbmc.getCondVisibility('Skin.String(MovieHomeItem.Disable)') and 'movies' in menu_options:
             Add_Dir('%s %s'%(String(30076),movies),'Skin.SetString(MovieHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_MOVIES/HOME_MOVIES_001.jpg','','')
-        if not xbmc.getCondVisibility('Skin.String(MusicHomeItem.Disable)'):
+        if not xbmc.getCondVisibility('Skin.String(MusicHomeItem.Disable)') and 'music' in menu_options:
             Add_Dir('%s %s'%(String(30076),music),'Skin.SetString(MusicHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_MUSIC/HOME_MUSIC_001.jpg','','')
-        if not xbmc.getCondVisibility('Skin.String(ProgramsHomeItem.Disable)'):
+        if not xbmc.getCondVisibility('Skin.String(ProgramsHomeItem.Disable)') and 'news' in menu_options:
             Add_Dir('%s %s'%(String(30076),news),'Skin.SetString(ProgramsHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_NEWS/HOME_NEWS_001.jpg','','')
-        if not xbmc.getCondVisibility('Skin.String(VideosHomeItem.Disable)'):
+        if not xbmc.getCondVisibility('Skin.String(VideosHomeItem.Disable)') and 'sports' in menu_options:
             Add_Dir('%s %s'%(String(30076),sports),'Skin.SetString(VideosHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_SPORTS/HOME_SPORTS_001.jpg','','')
-        if not xbmc.getCondVisibility('Skin.String(Custom2HomeItem.Disable)'):
+        if not xbmc.getCondVisibility('Skin.String(Custom2HomeItem.Disable)') and 'technology' in menu_options:
             Add_Dir('%s %s'%(String(30076),technology),'Skin.SetString(Custom2HomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_TECHNOLOGY/HOME_TECHNOLOGY_001.jpg','','')
-        if not xbmc.getCondVisibility('Skin.String(WeatherHomeItem.Disable)'):
+        if not xbmc.getCondVisibility('Skin.String(WeatherHomeItem.Disable)') and 'travel' in menu_options:
             Add_Dir('%s %s'%(String(30076),travel),'Skin.SetString(WeatherHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_TRAVEL/HOME_TRAVEL_001.jpg','','')
-        if not xbmc.getCondVisibility('Skin.String(TVShowHomeItem.Disable)'):
+        if not xbmc.getCondVisibility('Skin.String(TVShowHomeItem.Disable)') and 'tvshows' in menu_options:
             Add_Dir('%s %s'%(String(30076),tvshows),'Skin.SetString(TVShowHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_TV_SHOWS/HOME_TV_SHOWS_001.jpg','','')
-        if not xbmc.getCondVisibility('Skin.String(PicturesHomeItem.Disable)'):
+        if not xbmc.getCondVisibility('Skin.String(PicturesHomeItem.Disable)') and 'world' in menu_options:
             Add_Dir('%s %s'%(String(30076),world),'Skin.SetString(PicturesHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_WORLD/HOME_WORLD_001.jpg','','')
-        if not xbmc.getCondVisibility('Skin.String(ShutdownHomeItem.Disable)'):
+        if not xbmc.getCondVisibility('Skin.String(ShutdownHomeItem.Disable)') and 'youtube' in menu_options:
             Add_Dir('%s %s'%(String(30076),youtube),'Skin.SetString(ShutdownHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_YOUTUBE/HOME_YOUTUBE_001.jpg','','')
-        if not xbmc.getCondVisibility('Skin.String(MusicVideoHomeItem.Disable)'):
+        if not xbmc.getCondVisibility('Skin.String(MusicVideoHomeItem.Disable)') and 'xxx' in menu_options:
             Add_Dir('%s %s'%(String(30076),xxx),'Skin.SetString(MusicVideoHomeItem.Disable,True)','set_home_menu',False,'special://home/media/branding/backgrounds/HOME_XXX/HOME_XXX_001.jpg','','')
         if listcount > 0:
             OK_Dialog(String(30079),String(30311))
@@ -2977,7 +2986,8 @@ def Sync_Settings():
                 if setting != None:
                     if plugin == 'plugin.program.tbs':
                         cur_set = Addon_Setting(setting=setting,addon_id=plugin)
-                        if cur_set.startswith('HOME') and not cur_set.endswith('USER'):
+                        if not cur_set.endswith('user') and setting.startswith('HOME_'):
+                            dolog( 'No custom user setting for %s, setting to: %s' % (setting,value) )
                             Addon_Setting(setting=setting,value=value,addon_id=plugin)
                     counter = 0
                     for res_line in res_lines:

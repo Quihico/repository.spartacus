@@ -21,6 +21,7 @@ ADDON_ID         = 'script.openwindow'
 ADDON_PATH       = xbmcaddon.Addon(ADDON_ID).getAddonInfo("path")
 NON_REGISTERED   = xbmc.translatePath('special://profile/addon_data/script.openwindow/unregistered')
 ADDONS           = xbmc.translatePath('special://home/addons')
+AUTOEXEC         = xbmc.translatePath('special://home/userdata/autoexec.py')
 ADDON_DATA       = xbmc.translatePath('special://profile/addon_data')
 GUISETTINGS      = xbmc.translatePath('special://profile/guisettings.xml')
 MEDIA            = xbmc.translatePath('special://home/media')
@@ -33,6 +34,7 @@ INSTALL_ORIG     = os.path.join(PACKAGES, 'INSTALL_COMPLETE')
 INSTALL_COMPLETE = os.path.join(ADDON_DATA, ADDON_ID, 'INSTALL_COMPLETE')
 TBS              = os.path.join(ADDONS, 'plugin.program.tbs')
 INTERNET_ICON    = os.path.join(ADDON_PATH,'resources','images','internet.png')
+AUTOEXEC_PATH    = os.path.join(ADDON_PATH,'resources','autoexec.py')
 #---------------------------------------------------------------------------------------------------
 # Base domain checker
 def My_Base():
@@ -49,32 +51,6 @@ def My_Base():
     Addon_Setting(setting='base',value=BASE)
 #---------------------------------------------------------------------------------------------------
 My_Base()
-while xbmc.Player().isPlaying():
-    xbmc.sleep(500)
-
-if not os.path.exists(PACKAGES):
-    os.makedirs(PACKAGES)
-
-if os.path.exists(INSTALL_ORIG):
-    try:
-        os.makedirs(INSTALL_COMPLETE)
-        shutil.rmtree(INSTALL_ORIG, ignore_errors=True)
-    except Exception as e:
-        xbmc.log(str(e))
-
-if os.path.exists(RUN_ORIG):
-    try:
-        os.makedirs(RUN_WIZARD)
-        shutil.rmtree(RUN_ORIG, ignore_errors=True)
-    except Exception as e:
-        xbmc.log(str(e))
-
-if os.path.exists(STARTUP_ORIG):
-    try:
-        os.makedirs(STARTUP_WIZARD)
-        shutil.rmtree(STARTUP_ORIG, ignore_errors=True)
-    except Exception as e:
-        xbmc.log(str(e))
 
 try:
     Check_License()
@@ -83,34 +59,59 @@ except:
     if not os.path.exists(NON_REGISTERED):
         os.makedirs(NON_REGISTERED)
 
-if not os.path.exists(INSTALL_COMPLETE) and os.path.exists(TBS):
-    xbmc.executebuiltin('Notification(Installing new updates,Please wait...,10000,%s)' % INTERNET_ICON)
-    xbmc.log('### Partial install found, forcing new update')
-    try:
-        shutil.rmtree(TBS, ignore_errors=True)
-    except Exception as e:
-        xbmc.log('Failed to remove: %s' % e)
-    try:
-        shutil.rmtree(os.path.join(ADDON_DATA, ADDON_ID), ignore_errors=True)
-    except Exception as e:
-        xbmc.log('Failed to remove: %s' % e)
-    xbmc.executebuiltin('Quit')
-
 if not os.path.exists(STARTUP_WIZARD) and not os.path.exists(RUN_WIZARD):
     try:
         os.makedirs(RUN_WIZARD)
     except:
         pass
-    xbmc.sleep(500)
 
-if os.path.exists(RUN_WIZARD):
-    if os.path.exists(xbmc.translatePath('special://home/addons/script.openwindow/default.py')):
-        xbmc.executebuiltin('RunScript(special://home/addons/script.openwindow/default.py,service)')
-    elif os.path.exists(xbmc.translatePath('special://xbmc/addons/script.openwindow/default.py')):
-        xbmc.executebuiltin('RunScript(special://xbmc/addons/script.openwindow/default.py,service)')
+# Check to see if the autoexec file exists
+autoexec_exists = False
+if os.path.exists(AUTOEXEC):
+    contents = Text_File(AUTOEXEC,'r')
+    if '# STARTUP WIZARD AUTOEXEC' in contents:
+        autoexec_exists = True
 
-elif os.path.exists(INSTALL_COMPLETE):
-    if os.path.exists(xbmc.translatePath('special://home/addons/script.openwindow/functions.py')):
-        xbmc.executebuiltin('RunScript(special://home/addons/script.openwindow/functions.py,service)')
-    elif os.path.exists(xbmc.translatePath('special://xbmc/addons/script.openwindow/functions.py')):
-        xbmc.executebuiltin('RunScript(special://xbmc/addons/script.openwindow/functions.py,service)')
+# LEGACY CODE
+if not autoexec_exists:
+    if not os.path.exists(AUTOEXEC):
+        shutil.copyfile(AUTOEXEC_PATH,AUTOEXEC)
+    
+    while xbmc.Player().isPlaying():
+        xbmc.sleep(500)
+
+    if not os.path.exists(PACKAGES):
+        os.makedirs(PACKAGES)
+
+    if os.path.exists(INSTALL_ORIG):
+        try:
+            os.makedirs(INSTALL_COMPLETE)
+            shutil.rmtree(INSTALL_ORIG, ignore_errors=True)
+        except Exception as e:
+            xbmc.log(str(e))
+
+    if os.path.exists(RUN_ORIG):
+        try:
+            os.makedirs(RUN_WIZARD)
+            shutil.rmtree(RUN_ORIG, ignore_errors=True)
+        except Exception as e:
+            xbmc.log(str(e))
+
+    if os.path.exists(STARTUP_ORIG):
+        try:
+            os.makedirs(STARTUP_WIZARD)
+            shutil.rmtree(STARTUP_ORIG, ignore_errors=True)
+        except Exception as e:
+            xbmc.log(str(e))
+
+    if os.path.exists(RUN_WIZARD):
+        if os.path.exists(xbmc.translatePath('special://home/addons/script.openwindow/default.py')):
+            xbmc.executebuiltin('RunScript(special://home/addons/script.openwindow/default.py,service)')
+        elif os.path.exists(xbmc.translatePath('special://xbmc/addons/script.openwindow/default.py')):
+            xbmc.executebuiltin('RunScript(special://xbmc/addons/script.openwindow/default.py,service)')
+
+    elif os.path.exists(INSTALL_COMPLETE):
+        if os.path.exists(xbmc.translatePath('special://home/addons/script.openwindow/functions.py')):
+            xbmc.executebuiltin('RunScript(special://home/addons/script.openwindow/functions.py,service)')
+        elif os.path.exists(xbmc.translatePath('special://xbmc/addons/script.openwindow/functions.py')):
+            xbmc.executebuiltin('RunScript(special://xbmc/addons/script.openwindow/functions.py,service)')
